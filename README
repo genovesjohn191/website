@@ -1,0 +1,13 @@
+How to npm install (run the projects)
+-clone the repo
+-cd to specific project folder (ex. cd sscgi_public_facing)
+-npm install or npm install --verbose (for more detail logs)
+-ng serve -o
+ 
+If you are stack up in npm install try the following steps
+-re-clone the repo
+-cd to specific project folder (ex. cd sscgi_public_facing)
+-npm config set strict-ssl false
+-npm install or npm install --verbose (for more detail logs)
+-npm config set strict-ssl true
+-ng serve -o
