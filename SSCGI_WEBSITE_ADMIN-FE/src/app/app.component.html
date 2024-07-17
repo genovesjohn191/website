@@ -1,0 +1,64 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- Main Sidebar -->
+  <mat-sidenav #sidenav mode="side" opened [ngClass]="{'close': sidebar}">
+    <div class="sidenav-cont">
+      <div class="topnav">
+        <div class="nav-header">
+          <img class="sscgiLogo" src="../../../assets/Images/Logo.png" alt="" (click)="toggleSidebar()">
+          <p *ngIf="!sidebar" class="sscgiTitle">Systems and software Consulting group inc.</p>
+          <!-- Toggle button with ngIf to hide when sidebar is closed -->
+          <!-- <button mat-icon-button *ngIf="!sidebar" (click)="toggleSidebar()">
+            <mat-icon>{{ sidebar ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+          </button> -->
+        </div>
+        <div class="collapsable-nav-cont">
+          <div class="tabs-cont" *ngFor="let tab of collapsableTabs">
+            <div class="collapsable-item" (click)="toggleTab(tab)">
+              <div>
+                <img [src]="tab.icon" alt="">
+                <a *ngIf="!sidebar" mat-line>{{tab.name}}</a>
+              </div>
+              <mat-icon *ngIf="!sidebar" mat-list-icon [ngClass]="{'expanded': tab.expanded}" class="arrow-icon">keyboard_arrow_down</mat-icon>
+            </div>
+            <div class="subtab-cont" [ngClass]="{'expanded': tab.expanded}" *ngIf="tab.expanded">
+              <div class="subtab-item" *ngFor="let subtab of tab.subtabs" [routerLink]="subtab.link" routerLinkActive="active" (click)="setActiveTab(subtab)">
+                <div>
+                  <img [src]="subtab.icon" alt="">
+                  <a mat-line>{{subtab.name}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collapsable-nav-cont">
+        <div class="tabs-cont" *ngFor="let tab of bottomTabs">
+          <div class="bottomTabs-item" [routerLink]="tab.link" routerLinkActive="active" (click)="setActiveTab(tab)">
+            <div>
+              <img [src]="tab.icon" alt="">
+              <a *ngIf="!sidebar" mat-line>{{tab.name}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content [ngClass]="{'adjustmargin': sidebar}">
+    <!-- Header Content -->
+    <div class="page-header">
+      <div>
+        <img [src]="activeTab.icon">
+        <p mat-line>{{activeTab.name}}</p>
+      </div>
+      <div>
+        <img src="../assets/Images/User Shield.png">
+        <p mat-line>SSCGI DEV</p>
+        <span class="role-type">Admin</span>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,164 @@
+.sidenav-container {
+  height: 100%;
+}
+
+*{
+  margin: 0;
+}
+
+a{
+  font-weight: 500;
+  font-size: .875rem;
+}
+  
+mat-sidenav {
+  text-transform: uppercase;
+    border-radius: 0px;
+    width: 20%;
+    background: #F7F7F7;
+    color: #000000;
+    padding: 32px 16px;
+}
+
+.close{
+  width: auto;
+}
+
+.adjustmargin{
+  margin-left: 72px !important;
+}
+
+mat-list-item{
+  padding: 0;
+}
+
+.sidenav-cont, .topnav{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.sidenav-cont{
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+}
+
+.nav-header{
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sscgiLogo{
+  aspect-ratio: 1/1;
+  width: 40px;
+}
+
+.sscgiTitle{
+  font-size: .875rem;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.collapsable-nav-cont{
+  gap: 10px;
+}
+
+.collapsable-nav-cont, .tabs-cont{
+  display: flex;
+  flex-direction: column;
+}
+
+.collapsable-item{
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collapsable-item div, .subtab-item div, .bottomTabs-item div{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+}
+
+.bottomTabs-item, .subtab-item div{
+  padding: 6px;
+}
+
+.subtab-item:hover, .bottomTabs-item:hover{
+  background-color: #00000031;
+  color: #166534;
+}
+
+.subtab-item, .bottomTabs-item{
+  border-radius: 6px;
+  cursor: pointer;
+  padding-left: 26px;
+}
+
+.bottomTabs-item{
+  padding-left: 6px;
+}
+
+.subtab-cont {
+  padding-top: 6px;
+  border-top: 1px solid #00000079;
+  max-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: max-height 0.5s ease-out;
+}
+
+.subtab-cont.expanded {
+  max-height: 1000px; /* Arbitrary large value to ensure it expands to the full height */
+}
+
+.arrow-icon {
+  transition: transform 0.2s ease-out;
+}
+
+.arrow-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.active {
+  background-color: #00000031;
+  color: #166534;
+}
+
+mat-sidenav-content{
+  padding: 32px;
+}
+
+.page-header, .page-header div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-header div{
+  gap: 10px;
+  font-size: 1.125rem;
+  justify-content: flex-start;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.role-type{
+  text-transform: none;
+  font-size: .825rem;
+  padding:6px 12px;
+  color: #ffffff;
+  border-radius: 50px;
+  background-color: #166534;
+}
+  
+  

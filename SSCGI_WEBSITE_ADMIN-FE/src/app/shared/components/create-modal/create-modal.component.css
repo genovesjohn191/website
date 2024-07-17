@@ -1,0 +1,47 @@
+h1{
+    margin: 0;
+}
+
+
+.modal-cont{
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(22, 101, 52, 0.5);
+    justify-content: flex-start;
+}
+
+.modal-header h1{
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.form-cont{
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-cont h1{
+    font-size: 1.125rem;
+}
+
+.basic-button{
+    padding: 12px 24px;
+    border-radius: 5px;
+    width: 48%;
+    min-width: 116px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
