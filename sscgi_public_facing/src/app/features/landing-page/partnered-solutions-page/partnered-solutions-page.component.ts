@@ -12,41 +12,55 @@ import Swiper from 'swiper';
   templateUrl: './partnered-solutions-page.component.html',
   styleUrl: './partnered-solutions-page.component.css'
 })
-export class PartneredSolutionsPageComponent implements OnInit {
-  partners = [
-    { name: 'Partner 1', image: 'assets/images/partner1.png' },
-    { name: 'Partner 2', image: 'assets/images/partner2.png' },
-    { name: 'Partner 3', image: 'assets/images/partner3.png' },
-    // Add more partners as needed
+export class PartneredSolutionsPageComponent implements AfterViewInit {
+
+  slides = [
+    { image: 'assets/carousel-icon/onbase.png', title: 'Title 1', subtext: 'Subtext 1' },
+    { image: 'assets/carousel-icon/adrenalinmax.png', title: 'Title 2', subtext: 'Subtext 2' },
+    { image: 'assets/carousel-icon/allcloud.png', title: 'Title 3', subtext: 'Subtext 3' },
+    { image: 'assets/carousel-icon/aml.png', title: 'Title 4', subtext: 'Subtext 4' },
+    { image: 'assets/carousel-icon/crm.png', title: 'Title 5', subtext: 'Subtext 5' },
+    { image: 'assets/carousel-icon/signinghub.png', title: 'Title 6', subtext: 'Subtext 6' },
   ];
-
-  hoveredSlide: any = null;
-
-  constructor() { }
-
-  ngOnInit(): void {
-    const swiper = new Swiper('.swiper-container', {
-      slidesPerView: 3,
-      spaceBetween: 30,
+  
+  ngAfterViewInit(): void {
+    const swiper = new Swiper('.mySwiper', {
+      effect:"coverflow",
+      grabCursor:true,
+      speed:600,
+      slidesPerView: 5,
+      spaceBetween: 0,
       centeredSlides: true,
-      loop: true,
-      autoplay: {
-        delay: 2500,
-        disableOnInteraction: false,
+      loop:true,
+      coverflowEffect:{
+        rotate:0,
+        stretch:20,
+        depth:300,
+        modifier:1,
+        slideShadows:true,
       },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
-    });
+      on: {
+        slideChange: function () {
+        
+          const slides = document.querySelectorAll('.swiper-slide');
+          slides.forEach((slide, index) => {
+            if (index === this.activeIndex) {
+              slide.classList.add('swiper-slide-active');
+              slide.classList.remove('swiper-slide-prev', 'swiper-slide-next');
+            } else if (index === this.activeIndex - 1 || index === this.activeIndex + 1) {
+              slide.classList.remove('swiper-slide-active');
+              slide.classList.add('swiper-slide-prev', 'swiper-slide-next');
+            } else {
+              slide.classList.remove('swiper-slide-active', 'swiper-slide-prev', 'swiper-slide-next');
+            }
+          });
+        }
+      },
 
-    swiper.on('slideChange', () => {
-      this.hoveredSlide = null;
     });
   }
-
-  onSwiper(event: any): void {
-    // Handle swiper events if needed
-  }
- 
 }

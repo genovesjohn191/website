@@ -1,11 +1,33 @@
-<div class="swiper-container" (swiper)="onSwiper($event)">
+<div class="page-container">
+  <h1 class="page-title">Our Partnered Solutions</h1>
+  <p class="page-subtext">
+    We have established strategic partnerships with industry-leading organizations to complement our expertise and
+    deliver comprehensive solutions to our clients.
+  </p>
+
+  <div class="swiper mySwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide" *ngFor="let partner of partners" [ngClass]="{'enlarged': hoveredSlide === partner}">
-        <img [src]="partner.image" [alt]="partner.name">
+      <div class="swiper-slide" *ngFor="let slide of slides">
+        <div class="slide-content">
+          <img src="{{ slide.image }}" alt="{{ slide.title }}" class="slide-image">
+          <div class="slide-text">
+          </div>
+        </div>
       </div>
     </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
     <!-- Add Navigation -->
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
   </div>
-  
+
+  <div class="additional-content">
+    <h2 class="additional-title">Enterprise Content Management Software</h2>
+    <p class="additional-subtext">
+      Onbase Enterprise Content Management software puts your content into context, so you can use it to make smarter
+      and faster business decisions. Our system empowers your organization to become more agile...
+    </p>
+    <a href="#" class="learn-more">Learn more...</a>
+  </div>
+</div>
