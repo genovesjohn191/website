@@ -1,0 +1,11 @@
+<div class="swiper-container" (swiper)="onSwiper($event)">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" *ngFor="let partner of partners" [ngClass]="{'enlarged': hoveredSlide === partner}">
+        <img [src]="partner.image" [alt]="partner.name">
+      </div>
+    </div>
+    <!-- Add Navigation -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+  

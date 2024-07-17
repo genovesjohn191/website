@@ -1,0 +1,112 @@
+.custom-nav {
+    position: relative;
+}
+
+.nav-item {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.nav-link {
+    display: inline-block;
+    padding: 5px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    font-size: 0.756rem;
+    line-height: 150%;
+    position: relative;
+}
+
+.sub-nav {
+    display: none;
+    position: absolute;
+    top: calc(100% - 20px);
+    background-color: white;
+    z-index: 1000;
+    border-radius: 5px;
+    left: -3%;
+}
+
+.nav-item:hover .sub-nav {
+    display: block;
+}
+
+.sub-nav-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sub-nav-title {
+    font-weight: bolder;
+    color: #166534;
+    font-size: 0.875rem;
+    line-height: 150%;
+    text-align: left;
+    margin: 0;
+    padding: 5px;
+}
+
+.sub-nav-section {
+    padding: 5px 15px;
+}
+
+.sub-nav-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.sub-nav-link {
+    display: block;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    font-size: 0.756rem;
+    line-height: 150%;
+    margin: 2px 0;
+    border-radius: 5px;
+    padding: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+    width: max-content;
+}
+
+.sub-nav-link:hover {
+    background-color: #f0f0f0;
+    color: #166534;
+}
+
+.arrow-icon {
+    margin: 0;
+    vertical-align: bottom;
+    font-size: 1.688rem;
+}
+.menu {
+    display: none;
+}
+
+/* Mobile*/
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .menu {
+        display: inline-block; /* Show the menu icon */
+    }
+
+    .custom-nav {
+        display: none; /* Hide the custom navigation for tablets */
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .menu {
+        display: inline-block; /* Show the menu icon */
+    }
+
+    .custom-nav {
+        display: none; /* Hide the custom navigation for smartphones */
+    }
+}

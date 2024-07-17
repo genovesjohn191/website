@@ -1,0 +1,38 @@
+.sticky-widget {
+    position: fixed;
+    top: 30%;
+    right: -140px; /* Adjust to match the design */
+    width: 200px;
+    height: 50px;
+    background-color: #166534; /* Green background color */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 25px 0 0 25px; /* Rounded edges */
+    transition: right 0.3s;
+    z-index: 500;
+  }
+  
+  .sticky-widget.open {
+    right: 0;
+  }
+  
+  .widget-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 10px; /* Padding to center the text */
+  }
+  
+  .question-mark {
+    margin-top: 5px;
+    margin-right: 150px;
+  }
+  .contact-form {
+    margin-left: 30px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+  }

@@ -1,0 +1,23 @@
+<nav class="custom-nav">
+    <div *ngFor="let item of navBarItem" class="nav-item" [class.hover]="item.isShowed"
+        (mouseenter)="item.isShowed = true" (mouseleave)="item.isShowed = false">
+        <p class="nav-link" [routerLink]="item.link">
+            {{ item.name | uppercase }}
+            <mat-icon class="arrow-icon" *ngIf="item.subItems">
+                {{ item.isShowed ? 'keyboard_arrow_up' :'keyboard_arrow_down' }}
+            </mat-icon>
+        </p>
+        <div *ngIf="item.subItems" class="sub-nav">
+            <div class="sub-nav-group">
+                <div *ngFor="let subItem of item.subItems" class="sub-nav-section">
+                    <p class="sub-nav-title">{{ subItem.title | uppercase }}</p>
+                    <div class="sub-nav-links">
+                        <p *ngFor="let linkItem of subItem.items" class="sub-nav-link" [routerLink]="linkItem.link">
+                            {{ linkItem.name | uppercase }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

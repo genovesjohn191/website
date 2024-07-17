@@ -1,0 +1,171 @@
+.footer-logo {
+  height: 150px;
+}
+
+.footer-container {
+  padding: 20px;
+  background-color: #1D1D1D;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  z-index: 5;
+  position: relative;
+}
+
+.footer-content {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.left-section {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.location-section {
+  margin-top: 20px;
+}
+
+.info-sections {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Added for better wrapping on smaller screens */
+}
+
+.info-column {
+  display: inline-block;
+  margin-bottom: 20px; 
+}
+
+.info-section {
+  margin-right: 20px;
+}
+
+.info-title {
+  font-size: 22.79px;
+  color: #4CFF8E;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 100;
+}
+
+.info-subtext {
+  font-size: 15.19px;
+  font-weight: 100;
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+  line-height: 20px;
+}
+
+.footer-icons {
+  gap: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.footer-icons i {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.download-brochure {
+  border-radius: 11px;
+  background-color: #030303;
+  color: #D7FFE6;
+  border-color: #D7FFE6;
+  padding: 10px 20px;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.footer-divider {
+  border: 0;
+  border-top: 1px solid #ffffff;
+  margin: 20px 0;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Added for better wrapping on smaller screens */
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* Added for better wrapping on smaller screens */
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-copyright {
+  color: #ffffff;
+}
+
+/* Media Queries */
+
+/* Tablet View */
+@media screen and (max-width: 1024px) {
+  .footer-content {
+      padding: 30px;
+  }
+
+  .info-sections {
+      flex-direction: column;
+  }
+
+  .info-section {
+      margin-right: 0;
+  }
+}
+
+/* Phone View */
+@media screen and (min-width: 300px) and (max-width: 767px) {
+  .footer-logo {
+    height: 120px;
+  }
+
+  .footer-content {
+      padding: 20px;
+  }
+
+  .info-sections {
+      flex-direction: column;
+  }
+
+  .info-section {
+      margin-right: 0;
+  }
+
+  .footer-icons {
+      align-items: flex-start;
+  }
+
+  .footer-icons i {
+      margin-right: 0;
+  }
+
+  .download-brochure {
+      margin-top: 10px;
+  }
+
+  .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .footer-links {
+    display: flex;
+    font-size: 14px;
+    gap: 18px;
+}
+}
