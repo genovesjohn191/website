@@ -27,7 +27,7 @@
 
     <div class="fields-cont margin-bot">
       <h1 class="form-header">Role Policy Information</h1>
-      <button mat-flat-button class="basic-button selectall" (click)="selectAll()">Select All</button>
+      <button mat-flat-button class="basic-button selectall" (click)="toggleSelectAll()">{{selectAll}}</button>
     </div>
 
     <div formArrayName="rolePolicies" class="checkBoxContainer">

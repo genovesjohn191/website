@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
@@ -24,7 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class CreateModalComponent {
   roleForm!: FormGroup;
-
+  selectAll: string = 'Select All';
   rolePolicies = [
     { name: 'Role', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
     { name: 'Employee', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
@@ -35,7 +35,7 @@ export class CreateModalComponent {
     { name: 'Applicants', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] }
   ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<CreateModalComponent>) { }
 
   ngOnInit(): void {
     this.roleForm = this.fb.group({
@@ -43,7 +43,7 @@ export class CreateModalComponent {
       roleName: ['', Validators.required],
       description: [''],
       rolePolicies: this.fb.array(this.rolePolicies.map(policy => this.createPolicyGroup(policy)))
-    });
+    }, { validators: this.rolePoliciesValidator });
   }
 
   createPolicyGroup(policy: { name: string, options: string[] }): FormGroup {
@@ -62,7 +62,27 @@ export class CreateModalComponent {
     return this.rolePoliciesArray.at(policyIndex).get('options') as FormArray;
   }
 
+  rolePoliciesValidator(formGroup: FormGroup): { [key: string]: any } | null {
+    const rolePoliciesArray = formGroup.get('rolePolicies') as FormArray;
+    for (let i = 0; i < rolePoliciesArray.length; i++) {
+      const policyGroup = rolePoliciesArray.at(i) as FormGroup;
+      const enabled = policyGroup.get('enabled')?.value;
+      const optionsArray = policyGroup.get('options') as FormArray;
+      const anyOptionSelected = optionsArray.controls.some(control => control.value);
+
+      if (enabled && !anyOptionSelected) {
+        return { rolePolicyRequired: true };
+      }
+    }
+    return null;
+  }
+
   onSubmit() {
+    if (this.roleForm.invalid) {
+      // Optionally, you can highlight invalid fields here
+      return;
+    }
+
     const formValue = this.roleForm.value;
     const transformedRolePolicies = formValue.rolePolicies.map((policy: any, index: number) => ({
       name: policy.name,
@@ -79,6 +99,9 @@ export class CreateModalComponent {
     };
 
     console.log(transformedFormValue);
+    
+    // Close the modal
+    this.dialogRef.close();
   }
 
   toggleOptions(policyIndex: number) {
@@ -94,11 +117,18 @@ export class CreateModalComponent {
     });
   }
 
-  selectAll() {
-    this.rolePoliciesArray.controls.forEach((policyGroup) => {
-      policyGroup.get('enabled')?.setValue(true); // Set parent checkbox to true
+  toggleSelectAll() {
+    const allChecked = this.rolePoliciesArray.controls.every((policyGroup) => {
       const options = policyGroup.get('options') as FormArray;
-      options.controls.forEach((control) => control.setValue(true)); // Set all child checkboxes to true
+      return policyGroup.get('enabled')?.value && options.controls.every((control) => control.value);
+    });
+
+    this.selectAll = allChecked ? 'Select All' : 'Unselect All';
+
+    this.rolePoliciesArray.controls.forEach((policyGroup) => {
+      policyGroup.get('enabled')?.setValue(!allChecked);
+      const options = policyGroup.get('options') as FormArray;
+      options.controls.forEach((control) => control.setValue(!allChecked));
     });
   }
 }

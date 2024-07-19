@@ -55,7 +55,7 @@ h1{
 .form{
     display: flex;
     flex-direction: column;
-
+    width: 100%;
 }
 
 .fields-cont{
@@ -81,6 +81,7 @@ h1{
 
 .checkBoxContainer {
     display: flex;
+    gap: 24px;
     flex-wrap: wrap;
 }
 
@@ -91,10 +92,21 @@ h1{
 }
 
 .parentCheckBox{
-    flex: 1 1 33.33%;
+    padding: 6px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    gap: 6px;
+    flex: 1 1 47%;
 }
 
 .childCheckBox{
-    padding-left: 40px;
+    flex-direction: row;
+    gap: 0;
+    justify-content: space-evenly;
 }
 
+@media (max-width: 1530px) {
+    .parentCheckBox {
+      flex: 1 1 100%; /* Make the element take up 100% of the width */
+    }
+  }
