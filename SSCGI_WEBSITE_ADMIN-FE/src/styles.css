@@ -28,6 +28,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .mat-mdc-outlined-button.cancel:not(:disabled) {
-    color: red !important;
-    border-color: red !important;
+    color: #283396 !important;
+    border-color: #283396 !important;
+}
+
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+    max-width: none !important;
+    min-width: var(--mat-dialog-container-min-width, 0)!important;
+}
+
+.mat-mdc-dialog-container-with-actions .mat-mdc-dialog-content {
+    padding: 24px 24px 0px 24px !important;
+}
+
+
+.mat-mdc-unelevated-button.selectall:not(:disabled) {
+    background-color: #283396 !important;
+}
+
+.basic-button{
+    padding: 12px 24px;
+    border-radius: 5px;
+    min-width: 116px;
 }

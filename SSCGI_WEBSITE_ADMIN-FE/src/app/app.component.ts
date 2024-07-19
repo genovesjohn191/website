@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,8 +31,8 @@ interface Tab {
 export class AppComponent {
   title = 'SSCGI-WEBSITE-ADMINFE';
   activeTab: SubTab = { name: '', link: '', icon: '', active: false };
-  sidebar: boolean = false;
   showSidebar: boolean = true;
+  sidebar: boolean = window.innerWidth <= 1350;
   
   collapsableTabs: Tab[] = [
     {
@@ -78,6 +78,12 @@ export class AppComponent {
         this.setActiveTabByUrl(event.url);
       }
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.sidebar = window.innerWidth <= 1350;
+    console.log(this.sidebar)
   }
 
   setActiveTabByUrl(url: string): void {

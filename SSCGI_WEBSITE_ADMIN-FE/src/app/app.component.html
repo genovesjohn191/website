@@ -1,6 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
   <!-- Main Sidebar -->
-  <mat-sidenav #sidenav mode="side" opened [ngClass]="{'close': sidebar}">
+  <mat-sidenav #sidenav mode="side" opened [ngClass]="{'open': !sidebar, 'close': sidebar}">
     <div class="sidenav-cont">
       <div class="topnav">
         <div class="nav-header">
@@ -46,7 +46,7 @@
   </mat-sidenav>
 
   <!-- Main Content -->
-  <mat-sidenav-content [ngClass]="{'adjustmargin': sidebar}">
+  <mat-sidenav-content [ngClass]="{'largemargin': !sidebar, 'smallmargin': sidebar}">
     <!-- Header Content -->
     <div class="page-header">
       <div>

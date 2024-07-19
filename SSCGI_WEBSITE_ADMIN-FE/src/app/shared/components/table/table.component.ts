@@ -91,7 +91,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   openCreateModal(): void {
     const dialogRef = this.matDialog.open(CreateModalComponent, {
-      width: "1000px",
+      width: '60vw',
       data: { /* You can pass data here if needed */ }
     });
   
