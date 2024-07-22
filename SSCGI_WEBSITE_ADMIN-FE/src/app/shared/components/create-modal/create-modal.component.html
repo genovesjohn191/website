@@ -1,53 +1,48 @@
 <div mat-dialog-title class="modal-header">
-  <img src="../../../../assets/Images/Hierarchy.png">
-  <h1>Role Create</h1>
+  <img [src]="icon" alt="">
+  <h1>{{ formConfig.title }}</h1>
 </div>
 <mat-dialog-content class="mat-typography">
 
-  <!--Form for Create Role-->
-  <form [formGroup]="roleForm" class="form">
-    <h1 class="form-header margin-bot">Role Information</h1>
-
+  <!--Dynamic Form-->
+  <form [formGroup]="dynamicForm" class="form">
+    <h1 class="form-header margin-bot" *ngIf="module === 'role-management'">Role Information</h1>
     <div class="fields-cont">
-      <mat-form-field appearance="outline" class="fields">
-        <mat-label>Role Code</mat-label>
-        <input matInput formControlName="roleCode" required>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="fields">
-        <mat-label>Role Name</mat-label>
-        <input matInput formControlName="roleName" required>
-      </mat-form-field>
+        <mat-form-field *ngFor="let field of formConfig.fields" appearance="outline" class="fields" [ngClass]="{'single-line-textarea': field.type === 'textarea'}">
+          <mat-label>{{ field.label }}</mat-label>
+          <ng-container [ngSwitch]="field.type">
+            <input *ngSwitchCase="'text'" matInput [formControlName]="field.key" [required]="field.required!">
+            <input *ngSwitchCase="'email'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+            <input *ngSwitchCase="'number'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+            <textarea *ngSwitchCase="'textarea'" matInput [formControlName]="field.key" [type]="field.type" ></textarea>
+          </ng-container>
+        </mat-form-field>
     </div>
 
-    <mat-form-field appearance="outline" class="fields">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description"></textarea>
-    </mat-form-field>
-
-    <div class="fields-cont margin-bot">
+    <!-- Role Policy checkbox-->
+    <div *ngIf="formConfig.policies" class="fields-cont margin-bot">
       <h1 class="form-header">Role Policy Information</h1>
       <button mat-flat-button class="basic-button selectall" (click)="toggleSelectAll()">{{selectAll}}</button>
     </div>
 
-    <div formArrayName="rolePolicies" class="checkBoxContainer">
+    <div formArrayName="rolePolicies" *ngIf="formConfig.policies" class="checkBoxContainer">
       <div class="parentCheckBox" *ngFor="let policy of rolePoliciesArray.controls; let i=index" [formGroupName]="i">
-        
         <mat-checkbox formControlName="enabled" (change)="toggleOptions(i)">
           {{ policy.get('name')?.value }}
         </mat-checkbox>
-        
         <div *ngIf="policy.get('enabled')?.value" formArrayName="options" class="childCheckBox">
           <mat-checkbox *ngFor="let option of getOptionsArray(i).controls; let j=index" [formControlName]="j">
-            {{ rolePolicies[i].options[j] }}
+            {{ formConfig.policies[i].options[j] }}
           </mat-checkbox>
         </div>
       </div>
     </div>
+    <!-- End of Role Policy checkbox -->
+
   </form>
 
 </mat-dialog-content>
 <mat-dialog-actions class="buttons">
   <button mat-stroked-button [mat-dialog-close]="true" class="modal-button cancel">Cancel</button>
-  <button mat-flat-button class="modal-button" (click)="onSubmit()">Create</button>
+  <button mat-flat-button class="modal-button" (click)="onSubmit()">Submit</button>
 </mat-dialog-actions>

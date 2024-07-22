@@ -64,11 +64,11 @@ h1{
     justify-content: space-between;
     gap: 16px;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .fields {
-    flex: 1;
-    width: 100%;
+    flex: 1 1 30%;
 }
 
 .margin-bot{
@@ -99,6 +99,10 @@ h1{
     flex: 1 1 47%;
 }
 
+.single-line-textarea{
+    flex: 1 1 100%;
+}
+
 .childCheckBox{
     flex-direction: row;
     gap: 0;
@@ -109,4 +113,8 @@ h1{
     .parentCheckBox {
       flex: 1 1 100%; /* Make the element take up 100% of the width */
     }
+/* 
+    .fields{
+        flex: 1 1 47%;
+    } */
   }

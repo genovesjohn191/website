@@ -11,6 +11,7 @@ import { TableComponent } from '../../../shared/components/table/table.component
 export class EmployeeManagementComponent {
   link = "user-management/employee-management/"
   module = 'employee-management'
+  icon = '/assets/Images/Badge.png'
   myData = [
     { employeeNumber: 123456789, employeeName: "John Doe", contactNumber: "0912345678", email: "johndoe@gmail.com" },
     { employeeNumber: 987654321, employeeName: "Jane Smith", contactNumber: "0987654321", email: "janesmith@gmail.com" },
@@ -41,6 +42,19 @@ export class EmployeeManagementComponent {
     { key: 'email', header: 'Email' },
     { key: 'actions', header: 'Actions' }
   ];
+
+  createModalData: any = {
+    title: 'Employee Create',
+    fields: [
+      { key: 'firstName', label: 'First Name', type: 'text', required: true },
+      { key: 'middleName', label: 'Middle Name', type: 'text' },
+      { key: 'lastName', label: 'Last Name', type: 'text', required: true },
+      { key: 'employeeNumber', label: 'Employee Number', type: 'text', required: true },
+      { key: 'contactNumber', label: 'Contact Number', type: 'text' },
+      { key: 'email', label: 'Email', type: 'email', required: true },
+      { key: 'address', label: 'Address', type: 'text' },
+    ]
+  };
 
   constructor() {}
 

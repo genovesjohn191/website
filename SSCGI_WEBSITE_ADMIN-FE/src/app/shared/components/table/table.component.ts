@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, AfterViewInit, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,6 +37,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() columns: { key: string, header: string }[] = [];
   @Input() link: string = '';
   @Input() module: string = ''
+  @Input() createModalData: any = {};
+  @Input() icon : string = ''
   
   displayedColumns: string[] = []; 
   dataSource = new MatTableDataSource<any>(this.data);
@@ -49,7 +51,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   constructor(private matDialog: MatDialog) {}
 
   ngOnInit(): void {
-  
     console.log(this.link)
     this.displayedColumns = this.columns.map(col => col.key);
     this.dataSource.data = this.data;
@@ -91,14 +92,18 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   openCreateModal(): void {
     const dialogRef = this.matDialog.open(CreateModalComponent, {
-      width: '60vw',
-      data: { /* You can pass data here if needed */ }
+      // height: '70vh',
+      width: '70vw',
+      data: {
+        ...this.createModalData,
+        module: this.module,
+        icon:this.icon
+      }
     });
   
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // Handle the result if needed
     });
   }
-
+  
 }
