@@ -37,6 +37,11 @@ export class HomegrownSolutionsPageComponent implements AfterViewInit {
       image: "assets/i360.png",
       subtext: "Our Integral 360 AML Watchlist Screening & Monitoring Involves mechanisms and systems that allow financial institutions to identify and monitor the financial activies..."
     },
+    {
+      title: "Watchlist Screening and Monitoring Tool",
+      image: "assets/i360.png",
+      subtext: "Our Integral 360 AML Watchlist Screening & Monitoring Involves mechanisms and systems that allow financial institutions to identify and monitor the financial activies..."
+    },
     
 
     

@@ -1,0 +1,132 @@
+.services-container {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 2rem;
+  }
+  
+  .title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .subtext-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .subtext-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .subtext-icon i {
+    font-size: 20px;
+    color: #166534;
+  }
+  
+  .swiper {
+    width: 100%;
+  }
+  
+  .swiper-slide {
+    height: 300px;
+    width: 170px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 6px 9px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+  }
+  
+  .slide-content img {
+    max-width: 100px;
+    margin-bottom: 1rem;
+  }
+  
+  .slide-content h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #166534;
+    margin: 0.5rem 0;
+  }
+  
+  .slide-content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .read-more {
+    color: #166534;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: #166534;
+  }
+  
+  .slide-subtext-container,
+  .additional-content {
+    margin-top: 1rem;
+  }
+  
+  .slide-subtext {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #166534;
+  }
+  
+  .additional-subtext {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #555;
+  }
+
+  .icon-bg{
+    border-radius: 12px;
+    background-color: #F3F7F4;
+    padding: 10px;
+  }
+  
+
+  @media screen and (max-width: 1024px) {
+
+
+
+}
+
+/* phone view */
+@media screen and (min-width: 300px) and (max-width: 767px) {
+
+    .swiper-slide {
+        margin-left: -30px;
+        height: 300px;
+        width: 170px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 6px 9px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+
+}

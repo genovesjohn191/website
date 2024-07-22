@@ -10,6 +10,7 @@ import { HomegrownSolutionsPageComponent } from './homegrown-solutions-page/home
 import { FooterComponent } from '../../core/footer/footer.component';
 import { WidgetComponent } from '../../core/widget/widget.component';
 import { PartneredSolutionsPageComponent } from './partnered-solutions-page/partnered-solutions-page.component';
+import { ServiceOfferedPageComponent } from './service-offered-page/service-offered-page.component';
 
 @Component({
   selector: 'sscgi-landing-page',
@@ -23,7 +24,8 @@ import { PartneredSolutionsPageComponent } from './partnered-solutions-page/part
     HomegrownSolutionsPageComponent,
     FooterComponent,
     WidgetComponent,
-    PartneredSolutionsPageComponent
+    PartneredSolutionsPageComponent,
+    ServiceOfferedPageComponent
   ],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'

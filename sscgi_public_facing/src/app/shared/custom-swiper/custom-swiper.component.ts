@@ -33,7 +33,7 @@ export class CustomSwiperComponent implements AfterViewInit  {
    
     const slidesPerView = size === 'mobile' ? 1 : 5;
     const stretch = size === 'mobile' ? 20 : 60;
-    this.swiper = new Swiper('.swiper', {
+    this.swiper = new Swiper('.mySwiper1', {
       effect: 'coverflow',
       grabCursor: true,
       speed: 900,
@@ -41,6 +41,7 @@ export class CustomSwiperComponent implements AfterViewInit  {
       spaceBetween: 0,
       centeredSlides: true,
       loop: true,
+      slideToClickedSlide: true,
       coverflowEffect: {
         rotate: 0,
         stretch: 0,

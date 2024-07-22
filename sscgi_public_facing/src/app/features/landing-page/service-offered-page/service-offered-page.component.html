@@ -1,0 +1,39 @@
+<div class="services-container">
+    <h2 class="title">Services Offered</h2>
+    <div class="subtext-icons">
+        <div class="subtext-icon">
+            <div class="icon-bg">
+                <img src="assets/service-offer-icon/truck-fast.png">
+            </div>
+            <span>Fast to deploy</span>
+        </div>
+        <div class="subtext-icon">
+            <div class="icon-bg">
+                <img src="assets/service-offer-icon/award.png">
+            </div>
+            <span>Easy to learn</span>
+        </div>
+        <div class="subtext-icon">
+            <div class="icon-bg">
+                <img src="assets/service-offer-icon/dollar-circle.png">
+            </div>
+            <span>Future rich</span>
+        </div>
+    </div>
+    <div class="swiper mySwiper2">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" *ngFor="let service of services">
+                <div class="slide-content">
+                    <img [src]="service.icon" [alt]="service.title" class="slide-image">
+                    <h3>{{ service.title }}</h3>
+                    <p>{{ service.description }}</p>
+                    <a href="{{ service.link }}" class="read-more">Read more</a>
+                </div>
+            </div>
+        </div>
+        <!-- Add Navigation -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+</div>
