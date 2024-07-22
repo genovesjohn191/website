@@ -1,23 +1,24 @@
-<div class="swiper-container" *ngIf="cardContext.length > 2">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide" *ngFor="let card of cardContext">
-        <mat-card class="solution-card">
-          <mat-card-content>
-            <h2 class="card-title">{{ card.title }}</h2>
-            <img class="card-image" [src]="card.image" alt="Card Image">
-            <p class="card-subtext">{{ card.subtext }}</p>
-            <div class="read-more">
-              <span>Read more</span>
-              <mat-icon>keyboard_arrow_right</mat-icon>
-            </div>
-          </mat-card-content>
-        </mat-card>
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" *ngFor="let slide of slides">
+      <div class="slide-content">
+        <img [src]="slide.image" [alt]="slide.title" class="slide-image">
       </div>
     </div>
-    <!-- Add Arrows -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
   </div>
-  
+  <!-- Add Pagination -->
+  <div class="swiper-pagination"></div>
+  <!-- Add Navigation -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+</div>
+
+<div class="slide-subtext-container">
+  <p class="slide-subtext">{{ currentTitle }}</p>
+</div>
+
+<div class="additional-content">
+  <p class="additional-subtext">
+    {{ currentSubtext }}
+  </p>
+</div>
