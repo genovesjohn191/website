@@ -6,20 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-interface SubTab {
-  name: string;
-  link: string;
-  icon: string;
-  active: boolean;
-}
-
-interface Tab {
-  name: string;
-  icon: string; // Icon for main tab
-  subtabs: SubTab[];
-  expanded: boolean; // Track expansion state
-}
+import { Tab, SubTab } from './shared/interfaces/tabs-model'; 
 
 @Component({
   selector: 'app-root',
