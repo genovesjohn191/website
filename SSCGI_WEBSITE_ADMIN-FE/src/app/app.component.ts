@@ -24,38 +24,38 @@ export class AppComponent {
   collapsableTabs: Tab[] = [
     {
       name: 'User Management',
-      icon: '../../../assets/Images/Admin Settings Male.png',
+      icon: 'assets/Images/Admin Settings Male.png',
       subtabs: [
-        { name: 'Role Management', link: '/user-management/role-management', icon: '../../../assets/Images/Hierarchy.png', active: false },
-        { name: 'Employee Management', link: '/user-management/employee-management', icon: '../../../assets/Images/Badge.png', active: false },
-        { name: 'User Account Management', link: '/user-management/user-account-management', icon: '../../../assets/Images/Male User.png', active: false },
+        { name: 'Role Management', link: '/user-management/role-management', icon: 'assets/Images/Hierarchy.png', active: false },
+        { name: 'Employee Management', link: '/user-management/employee-management', icon: 'assets/Images/Badge.png', active: false },
+        { name: 'User Account Management', link: '/user-management/user-account-management', icon: 'assets/Images/Male User.png', active: false },
       ],
       expanded: false
     },
     {
       name: 'System Setup',
-      icon: '../../../assets/Images/Support.png',
+      icon: 'assets/Images/Support.png',
       subtabs: [
-        { name: 'Section Formatting', link: '/system-setup/section-formatting', icon: '../../../assets/Images/Web Design.png', active: false },
-        { name: 'Email Template', link: '/system-setup/email-template', icon: '../../../assets/Images/Document Header.png', active: false },
+        { name: 'Section Formatting', link: '/system-setup/section-formatting', icon: 'assets/Images/Web Design.png', active: false },
+        { name: 'Email Template', link: '/system-setup/email-template', icon: 'assets/Images/Document Header.png', active: false },
       ],
       expanded: false
     },
     {
       name: 'Transactions',
-      icon: '../../../assets/Images/Gears.png',
+      icon: 'assets/Images/Gears.png',
       subtabs: [
-        { name: 'Career Vacancies', link: '/transactions/career-vacancies', icon: '../../../assets/Images/New Job.png', active: false },
-        { name: 'Applicants', link: '/transactions/applicants', icon: '../../../assets/Images/Applicant.png', active: false },
+        { name: 'Career Vacancies', link: '/transactions/career-vacancies', icon: 'assets/Images/New Job.png', active: false },
+        { name: 'Applicants', link: '/transactions/applicants', icon: 'assets/Images/Applicant.png', active: false },
       ],
       expanded: false
     },
   ];
 
   bottomTabs: SubTab[]= [
-      { name: 'My Profile', link: '/my-profile', icon: '../../../assets/Images/User.png', active: false },
-      { name: 'Setup Security', link: '/setup-security', icon: '../../../assets/Images/Protect.png', active: false },
-      { name: 'Logout', link: '/login', icon: '../../../assets/Images/Logout.png', active: false } 
+      { name: 'My Profile', link: '/my-profile', icon: 'assets/Images/User.png', active: false },
+      { name: 'Setup Security', link: '/setup-security', icon: 'assets/Images/Protect.png', active: false },
+      { name: 'Logout', link: '/login', icon: 'assets/Images/Logout.png', active: false } 
   ]
 
   constructor(private router: Router) {

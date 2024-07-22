@@ -9,8 +9,9 @@ import { TableComponent } from '../../../shared/components/table/table.component
   styleUrls: ['./role-management.component.css']
 })
 export class RoleManagementComponent implements OnInit {
- link = "usermanagement/role-management"
+  link = "usermanagement/role-management"
   module = 'role-management'
+  icon = '/assets/Images/Hierarchy.png'
   myData = [
     { code: "Admin", roleName: "Admin", description: "Administrator with full access" },
     { code: "Editor", roleName: "Editor", description: "Can edit content" },
@@ -40,6 +41,24 @@ export class RoleManagementComponent implements OnInit {
     { key: 'description', header: 'Description' },
     { key: 'actions', header: 'Actions' }
   ];
+
+  createModalData: any = {
+    title: 'Role Create',
+    fields: [
+      { key: 'roleCode', label: 'Role Code', type: 'text', required: true },
+      { key: 'roleName', label: 'Role Name', type: 'text', required: true },
+      { key: 'description', label: 'Description', type: 'textarea' }
+    ],
+    policies: [
+      { name: 'Role', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
+      { name: 'Employee', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
+      { name: 'User Account', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
+      { name: 'Section Formatting', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
+      { name: 'Email Template', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
+      { name: 'Career Vacancies', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
+      { name: 'Applicants', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] }
+    ]
+  };
 
   constructor() {}
 
