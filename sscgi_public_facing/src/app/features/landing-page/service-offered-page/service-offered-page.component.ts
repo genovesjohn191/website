@@ -80,14 +80,10 @@ export class ServiceOfferedPageComponent {
       slidesPerView: 5,
       spaceBetween: 50,
       loop: true,
-      slideToClickedSlide: true,
+      centeredSlides: true,
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
-      },
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
       },
       on: {
         slideChange: () => {

@@ -13,6 +13,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "stylePreprocessorOptions": {
+            "includePaths": [
+              "src/styles"
+            ]
+          },
             "outputPath": "dist/sscgi-public-facing",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -26,7 +31,7 @@
           ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.css",
+              "src/styles/styles.scss",
               "src/assets/styles/fonts.css"
             ],
             "scripts": []
@@ -83,7 +88,8 @@
                 "src/assets"            
             ],
             "styles": [
-              "src/styles.css",
+              "src/custom-theme.scss",
+              "src/styles/styles.scss",
               "src/assets/styles/fonts.css"
             ],
             "scripts": []
