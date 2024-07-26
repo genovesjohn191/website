@@ -1,0 +1,122 @@
+h1{
+    margin: 0;
+}
+
+.form-header{
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.icon{
+    filter: invert(100%);
+}
+
+.modal-cont {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(22, 101, 52, 0.5);
+    justify-content: flex-start;
+}
+
+.modal-header h1 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.modal-button, .basic-button {
+    padding: 12px 24px;
+    border-radius: 5px;
+    min-width: 116px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.fields-cont {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.fields {
+    flex: 1 1 30%;
+}
+
+.margin-bot {
+    margin-bottom: 20px;
+}
+
+.checkBoxContainer {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.parentCheckBox, .childCheckBox {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.parentCheckBox {
+    padding: 6px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    gap: 5px;
+    flex: 1 1 48%;
+    height: fit-content;
+}
+
+.childCheckBox {
+    flex-direction: row;
+    gap: 0;
+    justify-content: space-evenly;
+}
+
+.single-line-textarea {
+    flex: 1 1 100%;
+    height: fit-content !important;
+}
+
+.date {
+    max-width: 296px;
+    cursor: pointer;
+}
+
+.textarea {
+    resize: none;
+    height: 250px !important;
+}
+
+/* Media Queries */
+@media (max-width: 1530px) {
+    .parentCheckBox {
+        flex: 1 1 100%; /* Make the element take up 100% of the width */
+    }
+
+    /* Uncomment if needed */
+    /* .fields {
+        flex: 1 1 47%;
+    } */
+}
