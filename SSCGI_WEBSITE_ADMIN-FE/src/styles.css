@@ -51,3 +51,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-radius: 5px;
     min-width: 116px;
 }
+
+.date .mat-mdc-form-field-infix {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    max-height: 56px !important;
+}
+.description{
+    max-height: auto !important;
+}   
+
+.mat-internal-form-field {
+    width: 100% !important;
+}
+
+.mdc-form-field>label {
+    margin-right: 0 !important;
+    width: 100% !important;
+}

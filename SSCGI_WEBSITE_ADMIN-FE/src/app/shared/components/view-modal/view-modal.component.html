@@ -1,0 +1,37 @@
+<div mat-dialog-title class="modal-header">
+    <img [src]="icon" class="icon">
+    <h1 class="form-header">View {{ module }} Details</h1>
+</div>
+
+<mat-dialog-content class="mat-typography">
+    <div class="form">
+        <h1 class="form-header margin-bot" *ngIf="module === 'role'">Role Information</h1>
+        <div class="fields-cont" >
+            <mat-form-field class="fields" *ngFor="let field of fieldKeys()" [ngClass]="{'single-line-textarea': field === 'description',  'date':field === 'date'}">
+                <mat-label>{{ formatLabel(field) }}</mat-label>
+                <ng-container >
+                    <input readonly="true" matInput placeholder="Ex. Pizza" [value]="details[field] || 'N/A'">
+                </ng-container>
+            </mat-form-field>
+
+            <div *ngIf="details.policies" class="fields-cont">
+                <h1 class="form-header">Role Policy Information</h1>
+            </div>
+            <div *ngIf="details.policies" class="checkBoxContainer">
+                <div *ngFor="let policy of details.policies" class="parentCheckBox margin-bot">
+                    <mat-checkbox disabled [checked]="policy.checked">{{ policy.name }}</mat-checkbox>
+                    <div class="childCheckBox" *ngIf="policy.checked">
+                        <mat-checkbox disabled *ngFor="let option of getOptions(policy)" [checked]="option.value">
+                            {{ option.key }}
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="buttons">
+    <button mat-stroked-button [mat-dialog-close]="true" class="modal-button cancel">Cancel</button>
+</mat-dialog-actions>

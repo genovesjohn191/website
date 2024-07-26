@@ -1,0 +1,62 @@
+<div mat-dialog-title class="modal-header">
+    <img [src]="icon" alt="" class="icon">
+    <h1 class="form-header">Edit {{ module }} Details</h1>
+  </div>
+  <mat-dialog-content class="mat-typography">
+    <!--Dynamic Form-->
+    <form [formGroup]="dynamicForm" class="form">
+      <h1 class="form-header margin-bot" *ngIf="module === 'role-management'">Role Information</h1>
+      <div class="fields-cont">
+        <mat-form-field *ngFor="let field of formConfig.fields" appearance="outline" class="fields"
+          [ngClass]="{'single-line-textarea': field.type === 'textarea' || field.key === 'description',  'date':field.type === 'date'}"
+          (click)="field.type === 'date' && picker.open()">
+          <mat-label>{{ field.label }}</mat-label>
+          <ng-container [ngSwitch]="field.type">
+            <input *ngSwitchCase="'text'" matInput [formControlName]="field.key" [required]="field.required!">
+            <input *ngSwitchCase="'email'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+            <input *ngSwitchCase="'number'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+            <textarea class="textarea" *ngSwitchCase="'textarea'" matInput [formControlName]="field.key" [type]="field.type"></textarea>
+            <input *ngSwitchCase="'date'" matInput [matDatepicker]="picker" [formControlName]="field.key" [required]="field.required!" readonly="true">
+            <mat-datepicker-toggle *ngSwitchCase="'date'" matIconSuffix [for]="picker">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+  
+            <mat-select *ngSwitchCase="'select'" [formControlName]="field.key" [required]="field.required!">
+              <mat-option *ngFor="let option of field.options" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+  
+          </ng-container>
+        </mat-form-field>
+      </div>
+  
+      <!-- Role Policy checkbox-->
+      <div *ngIf="formConfig.policies" class="fields-cont margin-bot">
+        <h1 class="form-header">Role Policy Information</h1>
+        <button mat-flat-button class="basic-button selectall" (click)="toggleSelectAll()">{{selectAll}}</button>
+      </div>
+  
+      <div formArrayName="rolePolicies" *ngIf="formConfig.policies" class="checkBoxContainer">
+        <div class="parentCheckBox margin-bot" *ngFor="let policy of rolePoliciesArray.controls; let i=index" [formGroupName]="i" (click)="toggleOptions(i)">
+          <mat-checkbox formControlName="checked" (change)="updateSelectAllText()">
+            {{ policy.get('name')?.value }}
+          </mat-checkbox>
+          <div *ngIf="policy.get('checked')?.value" formArrayName="options" class="childCheckBox">
+            <mat-checkbox *ngFor="let option of getOptionsArray(i).controls; let j=index" [formControlName]="j" (change)="updateSelectAllText()">
+              {{ formConfig.policies[i].options[j] }}
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <!-- End of Role Policy checkbox -->
+  
+    </form>
+  
+  </mat-dialog-content>
+  <mat-dialog-actions class="buttons">
+    <button mat-stroked-button [mat-dialog-close]="true" class="modal-button cancel">Cancel</button>
+    <button mat-flat-button class="modal-button" (click)="onSubmit()">Submit</button>
+  </mat-dialog-actions>
+  
