@@ -10,9 +10,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
-import { CreateModalComponent } from '../create-modal/create-modal.component';
-import { ViewModalComponent } from '../view-modal/view-modal.component';
-import { EditModalComponent } from '../edit-modal/edit-modal.component';
+import { CRUDmodalComponent } from '../crudmodal/crudmodal.component';
 
 @Component({
   selector: 'app-table',
@@ -29,7 +27,6 @@ import { EditModalComponent } from '../edit-modal/edit-modal.component';
     MatSort,
     MatSortModule,
     RouterModule,
-    CreateModalComponent,
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
@@ -54,7 +51,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     // console.log(this.link)
     this.displayedColumns = this.columns.map(col => col.key);
     this.dataSource.data = this.data;
-     console.log(this.displayedColumns)  
+    // console.log(this.displayedColumns)  
     // console.log(this.dataSource.data)
   }
 
@@ -75,52 +72,19 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteElement(element: any): void {
-    // console.log('Delete', element);
-    // Implement delete functionality here
-  }
-
-  openEditModal(data:any):void{
-    // console.log(data)
-    const dialogRef = this.matDialog.open(EditModalComponent,{
-      width:'70vw',
+  openCrudModal(data:any, mode:string):void{
+    const dialogWidth = mode === 'delete' ? '30vw' : '70vw';
+    const dialogRef = this.matDialog.open(CRUDmodalComponent,{
+      width:dialogWidth,
       data:{
         details: data,
         module: this.module,
-        form:this.createModalData
+        form:this.createModalData,
+        mode: mode
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
-    });
-  }
-
-  openCreateModal(): void {
-    const dialogRef = this.matDialog.open(CreateModalComponent, {
-      width: '70vw',
-      data: {
-        ...this.createModalData,
-        module: this.module,
-      }
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
-    });
-  }
-  
-
-  openViewModal(data:any): void{
-    // console.log(data)
-    const dialogRef = this.matDialog.open(ViewModalComponent,{
-      width:'70vw',
-      data:{
-        details: data,
-        module: this.module,
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log('The dialog was closed');
+      
     });
   }
 

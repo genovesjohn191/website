@@ -199,7 +199,7 @@ export class RoleManagementComponent implements OnInit {
     fields: [
       { key: 'roleCode', label: 'Role Code', type: 'text', required: true },
       { key: 'roleName', label: 'Role Name', type: 'text', required: true },
-      { key: 'description', label: 'Description', type: 'text' },
+      { key: 'description', label: 'Description', type: 'text', fullWidth: true },
     ],
     policies: [
       { name: 'Role', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },

@@ -5,7 +5,7 @@
         <mat-icon>search</mat-icon>
       </div>
       <div class="buttons" >
-        <button mat-flat-button class="basic-button" (click)="module !== 'section-formatting' ? openCreateModal() : redirectTo('create')">Create</button>
+        <button mat-flat-button class="basic-button" (click)="module !== 'section-formatting' ? openCrudModal(null,'create') : redirectTo('create')">Create</button>
 
         <button mat-stroked-button class="basic-button">Restore</button>
       </div>
@@ -26,13 +26,13 @@
 
               <ng-container *ngSwitchCase="'actions'">
                 <div class="actions-cell">
-                  <button mat-mini-fab class="editbtn" (click)="module !== 'section-formatting' ? openEditModal(element) : redirectTo('edit')">
+                  <button mat-mini-fab class="editbtn" (click)="module !== 'section-formatting' ? openCrudModal(element,'edit') : redirectTo('edit')">
                     <img src="../../../../assets/Images/Edit Property.png">
                   </button>
-                  <button mat-mini-fab class="viewbtn" (click)="module !== 'section-formatting' ? openViewModal(element) : redirectTo('view')">
+                  <button mat-mini-fab class="viewbtn" (click)="module !== 'section-formatting' ? openCrudModal(element, 'view') : redirectTo('view')">
                     <img src="../../../../assets/Images/View.png">
                   </button>
-                  <button mat-mini-fab class="deletebtn" (click)="deleteElement(element)">
+                  <button mat-mini-fab class="deletebtn" (click)="openCrudModal(element, 'delete')">
                     <img src="../../../../assets/Images/Trash.png">
                   </button>
                 </div>

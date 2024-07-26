@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormConfig } from '../../interfaces/form-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-edit-modal',
+  selector: 'app-crudmodal',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,68 +28,82 @@ import { MatIconModule } from '@angular/material/icon';
     MatNativeDateModule,
     MatIconModule,
   ],
-  templateUrl: './edit-modal.component.html',
-  styleUrls: ['./edit-modal.component.css'] // Fixed typo here from styleUrl to styleUrls
+  templateUrl: './crudmodal.component.html',
+  styleUrl: './crudmodal.component.css'
 })
-export class EditModalComponent {
+export class CRUDmodalComponent implements OnInit {
   dynamicForm!: FormGroup;
   selectAll: string = 'Select All';
   formConfig: FormConfig;
   module: string = '';
-  icon: string = 'assets/Images/Edit Property.png';
+  icon: string = '';
+  mode: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<EditModalComponent>,
+    private dialogRef: MatDialogRef<CRUDmodalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.formConfig = data.form;
-    const mod = data.module.split('-')
-    this.module = mod[0]
+    this.mode = data.mode;
+    const mod = data.module.split('-');
+    this.module = mod[0];
+    if(this.mode === 'view'){
+      this.icon = 'assets/Images/View.png'
+    }else if(this.mode === 'edit'){
+      this.icon = 'assets/Images/Edit Property.png'
+    }else if (this.mode === 'create'){
+      this.icon = 'assets/Images/Create.png'
+    }else if(this.mode === 'delete'){
+      this.icon = 'assets/Images/Trash.png'
+    }
   }
 
   ngOnInit(): void {
-    // Initialize form controls
-    this.dynamicForm = this.fb.group(
-      this.formConfig.fields.reduce((controls, field) => {
-        controls[field.key] = [
-          this.data.details[field.key] || '', // Initialize with existing value
-          field.required ? Validators.required : null
-        ];
-        return controls;
-      }, {} as { [key: string]: any })
-    );
-  
-    // Initialize role policies if present
-    if (this.formConfig.policies) {
-      this.dynamicForm.addControl('rolePolicies', this.fb.array(
-        this.formConfig.policies.map(policy => this.createPolicyGroup(policy))
-      ));
-  
-      // Populate the rolePolicies array with existing data
-      const rolePoliciesArray = this.dynamicForm.get('rolePolicies') as FormArray;
-      rolePoliciesArray.controls.forEach((policyControl: AbstractControl, index: number) => {
-        const policyGroup = policyControl as FormGroup; // Cast to FormGroup
-        const existingPolicy = (this.data.details.policies || [])[index];
-        const options = (policyGroup as FormGroup).get('options') as FormArray;
-        // console.log(options.value)
-        if (existingPolicy) {
-          policyGroup.patchValue({
-            checked: existingPolicy.checked,
-            options: Array.isArray(existingPolicy.options) ? existingPolicy.options : []
-          });
-          const optionExist = Object.values(existingPolicy.options)
+    const details = this.data?.details || {};
 
-          options.controls.forEach((control, i=index) => {
-            control.setValue(optionExist[i])
-          });
-          // console.log(options.value)
+    if(this.mode !== 'delete')
+    {
+      this.dynamicForm = this.fb.group(
+        this.formConfig.fields.reduce((controls, field) => {
+          controls[field.key] = new FormControl(
+            { value: details[field.key] || '', disabled: this.mode === 'view' },
+            field.required ? Validators.required : null
+          );
+          return controls;
+        }, {} as { [key: string]: any })
+      );
+  
+      if (this.formConfig.policies) {
+        this.dynamicForm.addControl('rolePolicies', this.fb.array(
+          this.formConfig.policies.map(policy => this.createPolicyGroup(policy))
+        ));
+  
+        const rolePoliciesArray = this.dynamicForm.get('rolePolicies') as FormArray;
+        rolePoliciesArray.controls.forEach((policyControl: AbstractControl, index: number) => {
+          const policyGroup = policyControl as FormGroup;
+          const existingPolicy = (details.policies || [])[index];
+          const options = policyGroup.get('options') as FormArray;
+  
+          if (existingPolicy) {
+            policyGroup.patchValue({
+              checked: existingPolicy.checked,
+              options: Array.isArray(existingPolicy.options) ? existingPolicy.options : []
+            });
+  
+            const optionExist = Object.values(existingPolicy.options);
+            options.controls.forEach((control, i) => {
+              control.setValue(optionExist[i]);
+            });
+          }
+        });
+  
+        if (this.mode === 'view') {
+          rolePoliciesArray.disable();
         }
-        
-      });
+      }
     }
   }
-  
 
   createPolicyGroup(policy: { name: string, options: string[] }): FormGroup {
     return this.fb.group({
@@ -126,6 +140,7 @@ export class EditModalComponent {
 
   onSubmit() {
     if (this.dynamicForm.invalid) {
+      console.log('Invalid');
       return;
     }
 
@@ -164,23 +179,23 @@ export class EditModalComponent {
   toggleSelectAll() {
     if (!this.formConfig.policies) return;
 
-    const allChecked = this.rolePoliciesArray.controls.every((policyGroup) => {
-        const options = policyGroup.get('options') as FormArray;
-        return policyGroup.get('checked')?.value && options.controls.every((control) => control.value);
+    const allChecked = this.rolePoliciesArray.controls.every(policyGroup => {
+      const options = policyGroup.get('options') as FormArray;
+      return policyGroup.get('checked')?.value && options.controls.every(control => control.value);
     });
 
     this.selectAll = allChecked ? 'Select All' : 'Unselect All';
-    this.rolePoliciesArray.controls.forEach((policyGroup) => {
+    this.rolePoliciesArray.controls.forEach(policyGroup => {
       (policyGroup as FormGroup).get('checked')?.setValue(!allChecked);
       const options = (policyGroup as FormGroup).get('options') as FormArray;
-      options.controls.forEach((control) => control.setValue(!allChecked));
+      options.controls.forEach(control => control.setValue(!allChecked));
     });
   }
 
   updateSelectAllText() {
-    const allChecked = this.rolePoliciesArray.controls.every((policyGroup) => {
+    const allChecked = this.rolePoliciesArray.controls.every(policyGroup => {
       const options = (policyGroup as FormGroup).get('options') as FormArray;
-      return (policyGroup as FormGroup).get('checked')?.value && options.controls.every((control) => control.value);
+      return (policyGroup as FormGroup).get('checked')?.value && options.controls.every(control => control.value);
     });
 
     this.selectAll = allChecked ? 'Unselect All' : 'Select All';

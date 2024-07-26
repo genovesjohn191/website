@@ -3,7 +3,8 @@ export interface FormField {
     label: string;
     type: string;
     required?: boolean;
-    options?: string[]; 
+    options?: string[];
+    fullWidth?: boolean; 
 }
   
 export interface FormConfig {

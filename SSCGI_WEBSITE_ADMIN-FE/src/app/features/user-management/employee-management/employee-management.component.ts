@@ -38,7 +38,7 @@ export class EmployeeManagementComponent {
       { key: 'employeeNumber', label: 'Employee Number', type: 'text', required: true },
       { key: 'contactNumber', label: 'Contact Number', type: 'text' },
       { key: 'email', label: 'Email', type: 'email', required: true },
-      { key: 'address', label: 'Address', type: 'text' },
+      { key: 'address', label: 'Address', type: 'text', fullWidth:true},
     ]
   };
 

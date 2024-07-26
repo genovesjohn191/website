@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TableComponent } from '../../../shared/components/table/table.component';
+import { FormConfig } from '../../../shared/interfaces/form-model';
 
 @Component({
   selector: 'app-email-template',
@@ -92,6 +93,19 @@ export class EmailTemplateComponent {
     { key: 'createdDate', header: 'Created Date' },
     { key: 'actions', header: 'Actions' }
   ];
+
+  createModalData: FormConfig = {
+    title: 'Employee Create',
+    fields: [
+      { key: 'firstName', label: 'First Name', type: 'text', required: true },
+      { key: 'middleName', label: 'Middle Name', type: 'text' },
+      { key: 'lastName', label: 'Last Name', type: 'text', required: true },
+      { key: 'employeeNumber', label: 'Employee Number', type: 'text', required: true },
+      { key: 'contactNumber', label: 'Contact Number', type: 'text' },
+      { key: 'email', label: 'Email', type: 'email', required: true },
+      { key: 'address', label: 'Address', type: 'text' },
+    ]
+  };
 
   constructor() {}
 }
