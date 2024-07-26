@@ -3,7 +3,7 @@ export interface FormField {
     label: string;
     type: string;
     required?: boolean;
-    options?: string[];
+    selectOptions?: string[];
     fullWidth?: boolean; 
 }
   

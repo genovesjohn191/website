@@ -1,0 +1,50 @@
+<div class="content">
+    <div class="preview-cont">
+        <p class="title">Preview</p>
+        <app-section-preview [backgroundStyle]="backgroundStyle"></app-section-preview>
+    </div>
+
+    <form [formGroup]="sectionForm" class="form">
+        <p class="title">Select Page</p>
+        <div div class="fields-cont">
+            
+            <mat-form-field class="fields single-line-textarea" appearance="outline">
+                <mat-label>Page</mat-label>
+                <mat-select formControlName="page" [required]="field.required">
+                    <mat-option *ngFor="let option of field.selectOptions" [value]="option">
+                    {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field class="fields" appearance="outline">
+                <mat-label>Section Name</mat-label>
+                <input matInput formControlName="sectionName" required />
+            </mat-form-field>
+    
+            <mat-form-field class="fields" appearance="outline">
+                <mat-label>Sequence</mat-label>
+                <mat-select formControlName="sequence" required>
+                    <mat-option *ngFor="let option of sequenceOptions" [value]="option">
+                    {{ option }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field class="fields single-line-textarea" appearance="outline">
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="description" required />
+            </mat-form-field>
+
+        </div>
+
+        <p class="title">Set Background</p>
+        <div div class="fields-cont">
+            <mat-form-field class="fields" appearance="outline">
+                <mat-label>Background Color</mat-label>
+                <input matInput formControlName="background" placeholder="Enter background color (e.g., #f0f0f0 or rgba(0,0,0,0.1))" />
+            </mat-form-field>
+        </div>
+    </form>
+</div>
+  

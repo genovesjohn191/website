@@ -53,6 +53,11 @@ h1{
     padding: 26px 0;
 }
 
+.delete-message{
+    font-size: 18px;
+    font-weight: 500;
+}
+
 .fields-cont {
     display: flex;
     align-items: center;

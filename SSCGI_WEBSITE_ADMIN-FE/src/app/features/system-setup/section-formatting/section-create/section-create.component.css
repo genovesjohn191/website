@@ -1,0 +1,45 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 0px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.fields-cont {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.fields {
+    flex: 1 1 30%;
+}
+
+.single-line-textarea {
+    flex: 1 1 100%;
+    height: fit-content !important;
+}
+
+.title{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.preview-cont{
+    border-radius: 5px;
+    border: 1px solid #000000;
+    padding: 16px;  
+}
+
+p{
+    margin: 0;
+}

@@ -12,20 +12,28 @@
           (click)="field.type === 'date' && picker.open()">
           <mat-label>{{ field.label }}</mat-label>
           <ng-container [ngSwitch]="field.type">
+
             <input *ngSwitchCase="'text'" matInput [formControlName]="field.key" [required]="field.required!">
+            
             <input *ngSwitchCase="'email'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+
             <input *ngSwitchCase="'number'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+
             <textarea class="textarea" *ngSwitchCase="'textarea'" matInput [formControlName]="field.key" [type]="field.type"></textarea>
+
             <input *ngSwitchCase="'date'" matInput [matDatepicker]="picker" [formControlName]="field.key" [required]="field.required!" readonly="true">
+
             <mat-datepicker-toggle *ngSwitchCase="'date'" matIconSuffix [for]="picker">
               <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+
             <mat-select *ngSwitchCase="'select'" [formControlName]="field.key" [required]="field.required!">
-              <mat-option *ngFor="let option of field.options" [value]="option">
+              <mat-option *ngFor="let option of field.selectOptions" [value]="option">
                 {{ option }}
               </mat-option>
             </mat-select>
+
           </ng-container>
         </mat-form-field>
       </div>
@@ -52,7 +60,7 @@
     </form>
   
     <div *ngIf="mode === 'delete'" class="delete-cont">
-      <h1 class="form-header">Are you sure you want to delete this {{module}}?</h1>
+      <h1 class="delete-message">Are you sure you want to delete this {{module}}?</h1>
   </div>
   </mat-dialog-content>
   
