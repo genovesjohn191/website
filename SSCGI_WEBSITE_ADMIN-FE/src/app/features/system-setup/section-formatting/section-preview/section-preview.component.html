@@ -1,3 +1,23 @@
-<section class="default" [style.background]="backgroundStyle">
-    <p>Section Formatting</p>
+<section class="default" [style.background]="backgroundStyle" [ngClass]="sectionStyle">
+    <ng-container *ngFor="let element of elements">
+        <ng-container [ngSwitch]="element.type">
+
+          <div *ngSwitchCase="'div'" [ngClass]="element.style">
+            <ng-container *ngIf="element.isParent">
+              <ng-container *ngFor="let celement of element.children">
+                <ng-container [ngSwitch]="celement.type">
+                  <div *ngSwitchCase="'div'" [ngClass]="celement.style">{{ celement.text }}</div>
+                  <p [ngStyle]="getTextStyle(element)" *ngSwitchCase="'p'" [ngClass]="celement.style">{{ celement.text }}</p>
+                  <button *ngSwitchCase="'button'" [ngClass]="celement.style">{{ celement.text }}</button>
+                  <h1 [ngStyle]="getTextStyle(element)" *ngSwitchCase="'h1'" [ngClass]="celement.style">{{ celement.text }}</h1>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <p [ngStyle]="getTextStyle(element)" *ngSwitchCase="'p'" [ngClass]="element.style">{{ element.text }}</p>
+          <button *ngSwitchCase="'button'" [ngClass]="element.style">{{ element.text }}</button>
+          <h1 [ngStyle]="getTextStyle(element)" *ngSwitchCase="'h1'" [ngClass]="element.style">{{ element.text }}</h1>
+        </ng-container>
+    </ng-container>
 </section>

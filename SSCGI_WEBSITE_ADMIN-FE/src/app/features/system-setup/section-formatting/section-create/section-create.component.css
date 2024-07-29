@@ -1,8 +1,8 @@
 .content{
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    padding: 32px 0px;
+    gap: 16px;
+    padding: 32px 0px 64px;
 }
 
 .form {
@@ -13,11 +13,63 @@
 
 .fields-cont {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    width: 100%;
+    /* width: 100%; */
     flex-wrap: wrap;
+}
+
+.header-cont{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #000000;
+    padding: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0 ;
+}
+
+.remove-margin{
+    margin: 0;
+}
+
+.header-cont.closed{
+    background-color: #00000031;
+    color: #166534;
+}
+
+.arrow-icon {
+    transition: transform 0.2s ease-out;
+}
+
+.arrow-icon.closed {
+    transform: rotate(180deg);
+}
+
+.header-cont:hover{
+    background-color: #00000031;
+    color: #166534;
+}
+
+.children{
+    width: 90%;
+    margin: auto;
+}
+
+.children div{
+    width: 100%;
+}
+
+.children .addbutton{
+    width: 100%;
+}
+
+.element-group{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .fields {
@@ -35,11 +87,34 @@
 }
 
 .preview-cont{
-    border-radius: 5px;
-    border: 1px solid #000000;
-    padding: 16px;  
+    border: 1px solid #000000; 
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 p{
     margin: 0;
+}
+
+
+.margin {
+    margin: 20px 0px;
+}
+
+.upload-cont{
+    position: relative;
+    width: 100%;
+}
+
+.upload-btn{
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+}
+
+.elements{
+    border-radius: 5px;
+    border: 1px solid #000000;
+    padding: 16px;
 }
