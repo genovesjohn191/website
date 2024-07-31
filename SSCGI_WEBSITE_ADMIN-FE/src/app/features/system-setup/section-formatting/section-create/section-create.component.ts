@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { SectionPreviewComponent } from '../section-preview/section-preview.component';
+import { divStyles, sectionStyles, fontStyles, fontWeights, fontFamilies, fontSizes, textAlignments } from '../styles';
 
 @Component({
   selector: 'app-section-create',
@@ -49,46 +50,13 @@ export class SectionCreateComponent implements OnInit {
     { name: 'Button', value: 'button' }
   ];
 
-  divStyles = [
-    { name: 'Three Column', style: 'three-column-style' },
-    { name: 'Two Column', style: 'two-column-style' },
-    { name: 'One Column', style: 'one-column-style' },
-    { name: 'One Column Left Half', style: 'one-column-left-half-style' },
-    { name: 'One Column Right Half', style: 'one-column-right-half-style' }
-  ];
-
-  sectionStyles = [
-    { name: 'One Column', style: 'one-column-style' },
-    { name: 'Two Column', style: 'two-column-style' },
-    { name: 'Three Column', style: 'three-column-style' }
-  ];
-
-  fontStyles = [
-    { name: 'Normal', value: 'normal' },
-    { name: 'Italic', value: 'italic' },
-    { name: 'Oblique', value: 'oblique' }
-  ];
-
-  fontWeights = [
-    { name: 'Normal', value: 'normal' },
-    { name: 'Bold', value: 'bold' },
-    { name: 'Bolder', value: 'bolder' },
-    { name: 'Lighter', value: 'lighter' }
-  ];
-
-  fontFamilies = [
-    'Arial', 'Courier New', 'Georgia', 'Times New Roman', 'Verdana'
-  ];
-
-  fontSizes = [
-    '12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px'
-  ];
-
-  textAlignments = [
-    { name: 'Left', value: 'left' },
-    { name: 'Center', value: 'center' },
-    { name: 'Right', value: 'right' }
-  ];
+  divStyles = divStyles;
+  sectionStyles = sectionStyles;
+  fontStyles = fontStyles;
+  fontWeights = fontWeights;
+  fontFamilies = fontFamilies;
+  fontSizes = fontSizes;
+  textAlignments = textAlignments;
 
   backgroundImageName = '';
   backgroundImageFile: string | ArrayBuffer | null = null;
@@ -96,6 +64,8 @@ export class SectionCreateComponent implements OnInit {
   sequenceOptions = Array.from({ length: 10 }, (_, i) => i + 1);
 
   sectionForm!: FormGroup;
+  elementRelations: { [key: string]: string[] } = {};
+  elementIdCounter = 1; // Counter to keep track of element IDs
 
   constructor(private fb: FormBuilder) {}
 
@@ -106,8 +76,12 @@ export class SectionCreateComponent implements OnInit {
       sequence: ['', Validators.required],
       description: ['', Validators.required],
       backgroundColor: [''],
-      sectionStyle: [''],
-      elements: this.fb.array([])
+      backgroundImage: [''],
+      sectionLayout: [''],
+      elements: this.fb.array([]),
+      height:'auto',
+      padding: '16px',
+      gap:'16px'
     });
   }
 
@@ -115,34 +89,76 @@ export class SectionCreateComponent implements OnInit {
     return this.sectionForm.get('elements') as FormArray;
   }
 
-  addElement(parentIndex?: number): void {
+  addElement(parentId?: number): void {
+    const elementId = this.elementIdCounter++;
     const elementGroup = this.fb.group({
+      id: [elementId],
       elementType: ['', Validators.required],
       elementText: [''],
-      isParent: [false],
-      style: '',
-      children: this.fb.array([]),
+      parentId: [parentId || null],
+      isParent: false,
+      divLayout: '',
+      divBackground:'',
       fontStyle: ['normal'],
       fontColor: ['#000000'],
       fontWeight: ['normal'],
       fontFamily: ['Arial'],
       fontSize: ['16px'],
-      textAlignment: ['left']
+      textAlignment: ['left'],
+      children: this.fb.array([]) // Add a FormArray for child elements
     });
-    if (parentIndex !== undefined) {
-      (this.elements.at(parentIndex).get('children') as FormArray).push(elementGroup);
-    } else {
-      this.elements.push(elementGroup);
+  
+    // Add element to the form array
+    this.elements.push(elementGroup);
+  
+    // If parentId is provided, add this element as a child of the specified parent
+    if (parentId) {
+      const parent = this.findElementGroupById(parentId);
+      if (parent) {
+        const childrenArray = parent.get('children') as FormArray;
+        childrenArray.push(elementGroup);
+      }
     }
   }
-
-  removeElement(index: number, childIndex?: number): void {
-    if (childIndex !== undefined) {
-      (this.elements.at(index).get('children') as FormArray).removeAt(childIndex);
-    } else {
-      this.elements.removeAt(index);
+  
+  removeElement(index: number): void {
+    const elementGroup = this.elements.at(index);
+    const elementId = elementGroup.get('id')?.value;
+  
+    // Remove element from parent's children list
+    const parentId = elementGroup.get('parentId')?.value;
+    if (parentId) {
+      const parent = this.findElementGroupById(parentId);
+      if (parent) {
+        const childrenArray = parent.get('children') as FormArray;
+        const childIndex = childrenArray.controls.findIndex(child => child.get('id')?.value === elementId);
+        if (childIndex > -1) {
+          childrenArray.removeAt(childIndex);
+        }
+      }
     }
+  
+    // Remove element itself
+    this.elements.removeAt(index);
   }
+  
+  private findElementGroupById(id: number): FormGroup | null {
+    for (let i = 0; i < this.elements.length; i++) {
+      const group = this.elements.at(i) as FormGroup;
+      if (group.get('id')?.value === id) {
+        return group;
+      }
+      const children = group.get('children') as FormArray;
+      for (let j = 0; j < children.length; j++) {
+        const childGroup = children.at(j) as FormGroup;
+        if (childGroup.get('id')?.value === id) {
+          return childGroup;
+        }
+      }
+    }
+    return null;
+  }
+  
 
   get backgroundStyle(): string {
     const backgroundColor = this.sectionForm.get('backgroundColor')?.value;
@@ -153,7 +169,7 @@ export class SectionCreateComponent implements OnInit {
   }
 
   get sectionStyle(): string {
-    return this.sectionForm.get('sectionStyle')?.value || '';
+    return this.sectionForm.get('sectionLayout')?.value || '';
   }
   
   onFileChange(event: Event): void {
@@ -165,6 +181,7 @@ export class SectionCreateComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.backgroundImageFile = reader.result;
+        this.sectionForm.patchValue({ backgroundImage: this.backgroundImageFile });
       };
     }
   }
@@ -179,48 +196,26 @@ export class SectionCreateComponent implements OnInit {
     this.sectionForm.get('backgroundColor')?.setValue('');
   }
 
-  getFormattedElements() {
-    const formatElement = (elementGroup: FormGroup): any => {
-      const childrenArray = elementGroup.get('children') as FormArray;
-      return {
-        type: elementGroup.get('elementType')?.value,
-        text: elementGroup.get('elementText')?.value,
-        isParent: elementGroup.get('isParent')?.value,
-        style: elementGroup.get('style')?.value,
-        fontStyle: elementGroup.get('fontStyle')?.value,
-        fontColor: elementGroup.get('fontColor')?.value,
-        fontWeight: elementGroup.get('fontWeight')?.value,
-        fontFamily: elementGroup.get('fontFamily')?.value,
-        fontSize: elementGroup.get('fontSize')?.value,
-        textAlignment: elementGroup.get('textAlignment')?.value,
-        children: childrenArray.controls.map(child => formatElement(child as FormGroup))
-      };
-    };
-
-    return this.elements ? this.elements.controls.map(control => formatElement(control as FormGroup)) : [];
-  }
-
-  getChildren(index: number): FormArray {
-    return this.elements.at(index).get('children') as FormArray;
-  }
-
   onElementTypeChange(index: number): void {
     const elementType = this.elements.at(index).get('elementType')?.value;
-    this.elements.at(index).get('isParent')?.setValue(elementType === 'div');
+    const elementId = this.elements.at(index).get('id')?.value;
+    if (elementType === 'div') {
+      this.elements.at(index).get('isParent')?.setValue(true);
+    } else {
+      this.elements.at(index).get('isParent')?.setValue(false);
+      delete this.elementRelations[elementId];
+    }
   }
 
-  toggle(type:string){
-    if(type ==='selectPage'){
-      this.selectPage = !this.selectPage
-      console.log(this.selectPage)
-    }else if(type ==='preview'){
-      this.preview = !this.preview
-    }else if (type ==='background'){
-      this.background = !this.background
-    }else if (type === 'element'){
-      this.element = !this.element
-    }else if (type === 'layout'){
-      this.sectionLayout = !this.sectionLayout
+  toggle(type: string) {
+    if (type === 'selectPage') {
+      this.selectPage = !this.selectPage;
+    } else if (type === 'preview') {
+      this.preview = !this.preview;
+    } else if (type === 'element') {
+      this.element = !this.element;
+    } else if (type === 'sectionLayout') {
+      this.sectionLayout = !this.sectionLayout;
     }
   }
 }

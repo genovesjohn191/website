@@ -1,5 +1,6 @@
 p, h1{
     margin: 0;
+    word-wrap: break-word;
 }
 
 .default{
@@ -10,23 +11,15 @@ p, h1{
 }
 
 .two-column-style, .one-column-style, .three-column-style, .one-column-left-half-style, .one-column-right-half-style{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
+    display: grid;
 }
 
 .one-column-style{
-    flex-direction: column;
+    grid-template-columns: 100%;
 }
 
-.one-column-left-half-style {
-    width: 50%;
-    align-self: flex-start;
+.two-column-style{
+    grid-template-columns: 49% 49%;
+    gap: 16px;
 }
 
-.one-column-right-half-style {
-    width: 50%;
-    align-self: flex-end;
-}

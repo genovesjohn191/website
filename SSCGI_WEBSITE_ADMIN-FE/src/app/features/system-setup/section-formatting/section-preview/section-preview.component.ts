@@ -6,40 +6,67 @@ import { Component, Input, SimpleChanges } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './section-preview.component.html',
-  styleUrl: './section-preview.component.css'
+  styleUrls: ['./section-preview.component.css'] // styleUrl should be styleUrls
 })
 export class SectionPreviewComponent {
-  @Input() backgroundStyle: string | undefined;
-  @Input() sectionStyle: string | undefined;
+  @Input() sectionData: any;
+  
+  backgroundStyle: string = '';
+  sectionLayout: string = '';
   @Input() elements: Array<{ 
-    type: string, 
-    text?: string, 
-    style?: string, 
-    isParent?: boolean, 
-    children?: Array<any>,
-    buttonType?: string,
+    id: number;
+    style?: string;
+    isParent?: boolean;
+    children?: any[];
+    buttonType?: string;
+    elementType: string;
+    parentId?: number | null;
+    divLayout?: string;
+    divBackground?: string;
+    fontStyle?: string;
+    fontColor?: string;
+    fontWeight?: string;
+    fontFamily?: string;
+    fontSize?: string;
+    textAlignment?: string;
+    elementText?: string
   }> = [];
 
-  style = {};
+
+  style: { [key: string]: string } = {}; // Initialize style as an object
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['backgroundStyle']) {
-      this.updateStyle();
+    if (changes['sectionData']) {
+      this.elements = this.sectionData?.elements || []; // Use optional chaining and fallback
+      if (this.sectionData?.backgroundImage) {
+        this.backgroundStyle = `url(${this.sectionData.backgroundImage})`;
+      } else {
+        this.backgroundStyle = this.sectionData?.backgroundColor || '';
+      }
+      this.sectionLayout = this.sectionData?.sectionLayout || '';
+      this.updateStyle()
+      console.log(this.sectionData)
     }
-    // console.log(this.backgroundStyle)
   }
 
   updateStyle(): void {
+    // Initialize the base style with section-specific styles
+    this.style = {
+      'padding': this.sectionData.padding || '0px',
+      'height': this.sectionData.height || 'auto',
+      'gap': this.sectionData.gap || '0px',
+    };
+  
+    // Add background-related styles based on backgroundStyle
     if (this.backgroundStyle?.startsWith('url')) {
-      this.style = { 
-        'background-image': this.backgroundStyle, 
-      };
+      this.style['background-image'] = this.backgroundStyle;
     } else {
-      this.style = { 'background-color': this.backgroundStyle || '' };
+      this.style['background-color'] = this.backgroundStyle || '';
     }
   }
+  
 
-  getTextStyle(element: any): { [key: string]: string } {
+  getTextStyle(element: any) {
     return {
       'font-style': element.fontStyle || 'normal',
       'color': element.fontColor || '#000000',
@@ -49,4 +76,5 @@ export class SectionPreviewComponent {
       'text-align': element.textAlignment || 'left'
     };
   }
+
 }

@@ -1,26 +1,17 @@
 <div class="content">
-  <!-- Preview Section -->
-  <div class="cont">
-    <div class="header-cont" [ngClass]="{'closed': !preview, 'remove-margin': !preview}" (click)="toggle('preview')">
-      <p class="title">Preview</p>
-      <mat-icon mat-list-icon [ngClass]="{'closed': preview}" class="arrow-icon">keyboard_arrow_down</mat-icon>
-    </div>
-    <div class="preview-cont" *ngIf="preview">
-      <app-section-preview [backgroundStyle]="backgroundStyle" [elements]="getFormattedElements()" [sectionStyle]="sectionStyle"></app-section-preview>
-    </div>
-  </div>
-
   <!-- Section Form -->
   <form [formGroup]="sectionForm" class="form">
     
     <!-- Page Selection -->
-    <div class="cont">
+    <section class="cont">
+
       <div class="header-cont" [ngClass]="{'closed': !selectPage}" (click)="toggle('selectPage')">
-        <p class="title">Select Page</p>
+        <p class="title">Section Details</p>
         <mat-icon mat-list-icon [ngClass]="{'closed': selectPage}" class="arrow-icon">keyboard_arrow_down</mat-icon>
       </div>
+
       <div class="fields-cont" *ngIf="selectPage">
-        <mat-form-field class="fields single-line-textarea" appearance="outline">
+        <mat-form-field class="fields" appearance="outline">
           <mat-label>Page</mat-label>
           <mat-select formControlName="page">
             <mat-option *ngFor="let option of pageOptions" [value]="option">{{ option }}</mat-option>
@@ -44,35 +35,25 @@
           <mat-error *ngIf="sectionForm.get('description')?.hasError('required')">Description is required</mat-error>
         </mat-form-field>
       </div>
-    </div>
+
+    </section>
     
     <!-- Section Style -->
-    <div class="cont">
-      <div class="header-cont" [ngClass]="{'closed': !sectionLayout}" (click)="toggle('layout')">
+    <section class="cont">
+
+      <div class="header-cont" [ngClass]="{'closed': !sectionLayout}" (click)="toggle('sectionLayout')">
         <p class="title">Set Section Style</p>
         <mat-icon mat-list-icon [ngClass]="{'closed': sectionLayout}" class="arrow-icon">keyboard_arrow_down</mat-icon>
       </div>
+
       <div class="fields-cont" *ngIf="sectionLayout">
         <mat-form-field class="fields" appearance="outline">
-          <mat-label>Section Style</mat-label>
-          <mat-select formControlName="sectionStyle">
+          <mat-label>Section Layout</mat-label>
+          <mat-select formControlName="sectionLayout">
             <mat-option *ngFor="let style of sectionStyles" [value]="style.style">{{ style.name }}</mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
-    </div>
 
-    <!-- Background -->
-    <div class="cont">
-      <div class="header-cont" [ngClass]="{'closed': !background}" (click)="toggle('background')">
-        <p class="title">Set Background</p>
-        <mat-icon mat-list-icon [ngClass]="{'closed': background}" class="arrow-icon">keyboard_arrow_down</mat-icon>
-      </div>
-      <div class="fields-cont" *ngIf="background">
-        <mat-form-field class="fields" appearance="outline">
-          <mat-label>Background Color</mat-label>
-          <input matInput formControlName="backgroundColor" type="color" />
-        </mat-form-field>
         <mat-form-field class="fields upload-cont" appearance="outline">
           <mat-label>Background Image</mat-label>
           <input matInput [value]="backgroundImageName" (click)="triggerFileInputClick()" readonly />
@@ -80,17 +61,59 @@
           <button mat-button type="button" class="upload-btn" *ngIf="!backgroundImageFile || !backgroundImageName" (click)="triggerFileInputClick()">Upload Image</button>
           <button mat-button type="button" class="upload-btn" *ngIf="backgroundImageFile || backgroundImageName" (click)="removeImage()">Remove Image</button>
         </mat-form-field>
+        
+        <mat-form-field class="fields colorPicker" appearance="outline">
+          <mat-label>Background Color</mat-label>
+          <input matInput formControlName="backgroundColor" type="color" />
+        </mat-form-field>
+
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Height of Section</mat-label>
+          <input matInput formControlName="height" required />
+        </mat-form-field>
+
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Padding</mat-label>
+          <input matInput formControlName="padding" required />
+        </mat-form-field>
+
+        <mat-form-field class="fields" appearance="outline">
+          <mat-label>Gap between each Elements</mat-label>
+          <input matInput formControlName="gap" required />
+        </mat-form-field>
       </div>
-    </div>
+
+    </section>
+
+    <!-- Preview Section -->
+    <section class="cont margin-bot">
+
+      <div class="header-cont" [ngClass]="{'closed': !preview, 'remove-margin': !preview}" (click)="toggle('preview')">
+        <p class="title">Section Preview</p>
+        <mat-icon mat-list-icon [ngClass]="{'closed': preview}" class="arrow-icon">keyboard_arrow_down</mat-icon>
+      </div>
+
+      <div class="preview-cont" *ngIf="preview">
+        <app-section-preview [sectionData]="sectionForm.value"></app-section-preview>
+      </div>
+
+    </section>
 
     <!-- Create Elements -->
-    <div class="cont">
+    <section class="cont">
+      
       <div class="header-cont" [ngClass]="{'closed': !element}" (click)="toggle('element')">
         <p class="title">Create Elements</p>
         <mat-icon mat-list-icon [ngClass]="{'closed': element}" class="arrow-icon">keyboard_arrow_down</mat-icon>
       </div>
+
       <div class="element-group" formArrayName="elements" *ngIf="element">
         <div *ngFor="let element of elements.controls; let i = index" [formGroupName]="i" class="fields-cont elements">
+          <p class="title single-line-textarea">Element # {{element.get('id')?.value}} 
+            <span class="title single-line-textarea" *ngIf="element.get('parentId')?.value !== null">This element is under / child element of the Element # {{element.get('parentId')?.value}}</span>
+          </p>
+          
+
           <!-- Element Type -->
           <mat-form-field class="fields" appearance="outline">
             <mat-label>Element Type</mat-label>
@@ -98,38 +121,46 @@
               <mat-option *ngFor="let type of elementTypes" [value]="type.value">{{ type.name }}</mat-option>
             </mat-select>
           </mat-form-field>
+          
+          <!-- Div Style -->
+          <mat-form-field class="fields" *ngIf="element.get('elementType')?.value === 'div'" appearance="outline">
+            <mat-label>Container Layout</mat-label>
+            <mat-select formControlName="divLayout">
+              <mat-option *ngFor="let style of divStyles" [value]="style.style">{{ style.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
           <!-- Conditionally Render Controls Based on Element Type -->
           <ng-container *ngIf="element.get('elementType')?.value === 'p' || element.get('elementType')?.value === 'h1'">
-            <mat-form-field class="fields" appearance="outline">
+            <mat-form-field class="style-fields" appearance="outline">
               <mat-label>Font Style</mat-label>
               <mat-select formControlName="fontStyle">
                 <mat-option *ngFor="let style of fontStyles" [value]="style.value">{{ style.name }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field class="fields" appearance="outline">
+            <mat-form-field class="style-fields" appearance="outline">
               <mat-label>Font Color</mat-label>
               <input matInput formControlName="fontColor" type="color" />
             </mat-form-field>
-            <mat-form-field class="fields" appearance="outline">
+            <mat-form-field class="style-fields" appearance="outline">
               <mat-label>Font Weight</mat-label>
               <mat-select formControlName="fontWeight">
                 <mat-option *ngFor="let weight of fontWeights" [value]="weight.value">{{ weight.name }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field class="fields" appearance="outline">
+            <mat-form-field class="style-fields" appearance="outline">
               <mat-label>Font Family</mat-label>
               <mat-select formControlName="fontFamily">
                 <mat-option *ngFor="let family of fontFamilies" [value]="family">{{ family }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field class="fields" appearance="outline">
+            <mat-form-field class="style-fields" appearance="outline">
               <mat-label>Font Size</mat-label>
               <mat-select formControlName="fontSize">
                 <mat-option *ngFor="let size of fontSizes" [value]="size">{{ size }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field class="fields" appearance="outline">
+            <mat-form-field class="style-fields" appearance="outline">
               <mat-label>Text Alignment</mat-label>
               <mat-select formControlName="textAlignment">
                 <mat-option *ngFor="let align of textAlignments" [value]="align.value">{{ align.name }}</mat-option>
@@ -137,50 +168,22 @@
             </mat-form-field>
           </ng-container>
 
-          <!-- Text or Div Style -->
           <mat-form-field class="fields single-line-textarea" appearance="outline" *ngIf="element.get('elementType')?.value && element.get('elementType')?.value !== 'div'">
             <mat-label>Text</mat-label>
             <input matInput formControlName="elementText" *ngIf="element.get('elementType')?.value !== 'p'" />
             <textarea matInput formControlName="elementText" *ngIf="element.get('elementType')?.value === 'p'"></textarea>
           </mat-form-field>
-          <mat-form-field class="fields" *ngIf="element.get('elementType')?.value === 'div'" appearance="outline">
-            <mat-label>Div Style</mat-label>
-            <mat-select formControlName="style">
-              <mat-option *ngFor="let style of divStyles" [value]="style.style">{{ style.name }}</mat-option>
-            </mat-select>
-          </mat-form-field>
 
-          <!-- Remove Element Button -->
-          <button mat-raised-button color="warn" type="button" (click)="removeElement(i)">Remove</button>
-
-          <!-- Children Elements -->
-          <div *ngIf="element.get('isParent')?.value" class="children">
-            <div formArrayName="children">
-              <div *ngFor="let child of getChildren(i).controls; let j = index" [formGroupName]="j" class="fields-cont">
-                <!-- Child Element Type -->
-                <mat-form-field class="fields" appearance="outline">
-                  <mat-label>Element Type</mat-label>
-                  <mat-select formControlName="elementType" required>
-                    <mat-option *ngFor="let type of elementTypes" [value]="type.value">{{ type.name }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <!-- Child Element Text -->
-                <mat-form-field class="fields" appearance="outline">
-                  <mat-label>Text</mat-label>
-                  <input matInput formControlName="elementText" />
-                </mat-form-field>
-                <!-- Remove Child Element Button -->
-                <button mat-raised-button color="warn" type="button" (click)="removeElement(i, j)">Remove</button>
-              </div>
-              <!-- Add Child Element Button -->
-              <button mat-raised-button color="primary" type="button" class="addbutton" (click)="addElement(i)">Add Child Element</button>
-            </div>
-          </div>
+          <ng-container *ngIf="element.get('elementType')?.value === 'div' && element.get('isParent')?.value" >
+            <button mat-flat-button class="add-btn basic-button" type="button" (click)="addElement(element.get('id')?.value)">Add Child Element</button>
+          </ng-container>
         </div>
+
         <!-- Add Element Button -->
-        <button mat-raised-button color="primary" type="button" (click)="addElement()">Add Element</button>
+        <button mat-flat-button class="add-btn basic-button" type="button" (click)="addElement()">Add Element</button>
       </div>
-    </div>
+
+    </section>
 
   </form>
 </div>
