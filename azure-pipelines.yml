@@ -24,7 +24,12 @@ stages:
         
     - powershell: |
         # Get the list of changed files in the sscgi_public_facing directory
-        $changedFiles = git diff --name-only HEAD^ HEAD | Where-Object { $_ -like 'sscgi_public_facing/*' }
+        $commitId = "$(Build.SourceVersion)"
+        $previousCommitId = "$(Build.SourceVersionPrevious)"
+        
+        # Fetch changes between the previous commit and the current commit
+        git fetch --depth=2
+        $changedFiles = git diff --name-only $previousCommitId $commitId | Where-Object { $_ -like 'sscgi_public_facing/*' }
 
         if ([string]::IsNullOrEmpty($changedFiles)) {
           Write-Output "No changes detected in sscgi_public_facing."
