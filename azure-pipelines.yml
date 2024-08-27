@@ -21,6 +21,26 @@ stages:
       inputs:
         versionSource: 'spec'
         versionSpec: '20.x'
+        
+    - script: |
+        # Get the list of changed files in the sscgi_public_facing directory
+        changedFiles=$(git diff --name-only HEAD^ HEAD | grep '^sscgi_public_facing/')
+        
+        # Check if there are any changed files
+        if [ -z "$changedFiles" ]; then
+          echo "No changes detected in sscgi_public_facing."
+          echo "##vso[task.setvariable variable=modifiedPath;]"" # Set to empty if no changes
+        else
+          echo "Changed files in sscgi_public_facing:"
+          echo "$changedFiles"
+          echo "##vso[task.setvariable variable=modifiedPath;]$changedFiles"
+        fi
+      displayName: 'Capture and Set Modified Path Variable'
+      workingDirectory: $(Build.SourcesDirectory)
+
+    - script: |
+        echo "Modified Path: $(modifiedPath)"
+      displayName: 'Print Modified Path Variable'
     - task: CmdLine@2
       displayName: 'Install npm dependencies for sscgi_public_facing'
       inputs:
