@@ -21,37 +21,6 @@ stages:
       inputs:
         versionSource: 'spec'
         versionSpec: '20.x'
-        
-    - powershell: |
-        # Fetch all changes in the repository
-        git fetch --depth=2
-
-        # Get the list of changed files in the sscgi_public_facing directory
-        $commitId = $(Build.SourceVersion)
-        $previousCommitId = $(git rev-parse HEAD^)
-        
-        # Ensure that the previous commit ID is available
-        if ([string]::IsNullOrEmpty($previousCommitId)) {
-          Write-Output "No previous commit found."
-          Write-Output "##vso[task.setvariable variable=modifiedPath;]"; # Set to empty if no changes
-        } else {
-          $changedFiles = git diff --name-only $previousCommitId $commitId | Where-Object { $_ -like 'sscgi_public_facing/*' }
-
-          if ([string]::IsNullOrEmpty($changedFiles)) {
-            Write-Output "No changes detected in sscgi_public_facing."
-            Write-Output "##vso[task.setvariable variable=modifiedPath;]"; # Set to empty if no changes
-          } else {
-            Write-Output "Changed files in sscgi_public_facing:"
-            Write-Output $changedFiles
-            Write-Output "##vso[task.setvariable variable=modifiedPath;]$changedFiles"
-          }
-        }
-      displayName: 'Capture and Set Modified Path Variable'
-      workingDirectory: $(Build.SourcesDirectory)
-
-    - script: |
-        echo "Modified Path: $(modifiedPath)"
-      displayName: 'Print Modified Path Variable'
     - task: CmdLine@2
       displayName: 'Install npm dependencies for sscgi_public_facing'
       inputs:
