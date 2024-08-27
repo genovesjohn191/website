@@ -4,7 +4,7 @@ trigger:
     - main
   paths:
     include:
-    - sscgi_public_facing/*
+    - SSCGI_WEBSITE_ADMIN-FE/*
 pool:
   vmImage: 'windows-latest'
   
@@ -14,20 +14,20 @@ steps:
     versionSource: 'spec'
     versionSpec: '20.x'
 - task: CmdLine@2
-  displayName: 'Install npm dependencies for sscgi_public_facing'
+  displayName: 'Install npm dependencies for SSCGI_WEBSITE_ADMIN-FE'
   inputs:
     script: |
       npm install
-    workingDirectory: $(Build.SourcesDirectory)/sscgi_public_facing
+    workingDirectory: $(Build.SourcesDirectory)/SSCGI_WEBSITE_ADMIN-FE
 - task: CmdLine@2
-  displayName: 'Build Artifacts for sscgi_public_facing'
+  displayName: 'Build Artifacts for SSCGI_WEBSITE_ADMIN-FE'
   inputs:
     script: |
-      npx ng build --output-path=$(Build.ArtifactStagingDirectory)/sscgi_public_facing
-    workingDirectory: $(Build.SourcesDirectory)/sscgi_public_facing
+      npx ng build --output-path=$(Build.ArtifactStagingDirectory)/SSCGI_WEBSITE_ADMIN-FE
+    workingDirectory: $(Build.SourcesDirectory)/SSCGI_WEBSITE_ADMIN-FE
 - task: PublishBuildArtifacts@1
   inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)/sscgi_public_facing'
-    artifactName: 'sscgi_public_facing_build'
-  displayName: 'Publish Build Artifact for sscgi_public_facing'
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/SSCGI_WEBSITE_ADMIN-FE'
+    artifactName: 'SSCGI_WEBSITE_ADMIN-FE_build'
+  displayName: 'Publish Build Artifact for SSCGI_WEBSITE_ADMIN-FE'
 
