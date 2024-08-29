@@ -1,61 +1,4 @@
 <div class="content">
-<<<<<<< HEAD
-    <div class="cont1">
-      <div class="search-container">
-        <input class="searchinput" type="text" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="applyFilter($event)" />
-        <mat-icon>search</mat-icon>
-      </div>
-      <div class="buttons" >
-        <button mat-flat-button class="basic-button" (click)="module !== 'section-formatting' ? openCrudModal(null,'create') : redirectTo('create')">Create</button>
-
-        <button mat-stroked-button class="basic-button">Restore</button>
-      </div>
-    </div>
-  
-    <div class="mat-elevation-z8 cont2">
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  
-        <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="{'actions-column': column.key === 'actions'}"> {{ column.header }} </th>
-          
-          <td mat-cell *matCellDef="let element" [ngClass]="{'actions-column': column.key === 'actions'}">
-            <ng-container [ngSwitch]="column.key">
-              
-              <ng-container *ngSwitchCase="'name'">
-                {{ element['firstName'] + ' ' + element['middleName'] + ' ' + element['lastName'] }}
-              </ng-container>
-
-              <ng-container *ngSwitchCase="'actions'">
-                <div class="actions-cell">
-                  <button mat-mini-fab class="editbtn" (click)="module !== 'section-formatting' ? openCrudModal(element,'edit') : redirectTo('edit')">
-                    <img src="../../../../assets/Images/Edit Property.png">
-                  </button>
-                  <button mat-mini-fab class="viewbtn" (click)="module !== 'section-formatting' ? openCrudModal(element, 'view') : redirectTo('view')">
-                    <img src="../../../../assets/Images/View.png">
-                  </button>
-                  <button mat-mini-fab class="deletebtn" (click)="openCrudModal(element, 'delete')">
-                    <img src="../../../../assets/Images/Trash.png">
-                  </button>
-                </div>
-              </ng-container>
-
-              <ng-container *ngSwitchDefault>
-                {{ element[column.key] }}
-              </ng-container>
-            </ng-container>
-          </td>
-        </ng-container>
-        
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-  
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </div>
-  </div>
-  
-=======
   <div class="cont1">
     <div class="search-container">
       <input class="searchinput" type="text" placeholder="Search..." [(ngModel)]="searchTerm"
@@ -118,4 +61,3 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
->>>>>>> master
