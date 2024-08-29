@@ -1,11 +1,24 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { RoleData } from '../../../shared/interfaces/role-model';
 import { FormConfig } from '../../../shared/interfaces/form-model';
+=======
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { TableComponent } from '../../../shared/components/table/table.component';
+import { RoleData } from '../../../shared/interfaces/role-model';
+import { FormConfig } from '../../../shared/interfaces/form-model';
+import { UserManagementService } from '../user-management-service/user-management.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
+import { MatTableDataSource } from '@angular/material/table';
+>>>>>>> master
 
 @Component({
   selector: 'app-role-management',
   standalone: true,
+<<<<<<< HEAD
   imports: [TableComponent],
   templateUrl: './role-management.component.html',
   styleUrls: ['./role-management.component.css']
@@ -191,10 +204,38 @@ export class RoleManagementComponent implements OnInit {
     { key: 'roleCode', header: 'Code' }, // changed from code to roleCode
     { key: 'roleName', header: 'Role Name' },
     { key: 'description', header: 'Description' },
+=======
+  imports: [TableComponent,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    CommonModule
+  ],
+  templateUrl: './role-management.component.html',
+  styleUrls: ['./role-management.component.css']
+})
+export class RoleManagementComponent implements AfterViewInit {
+  link = "usermanagement/role-management";
+  module = 'role-management';
+  icon = '/assets/Images/Hierarchy.png';
+  loading: boolean = false;
+
+
+  data: RoleData[] = [];
+  
+  myColumns = [
+    { key: 'description', header: 'Description' },
+    { key: 'roleCode', header: 'Code' }, // changed from code to roleCode
+    { key: 'roleName', header: 'Role Name' },
+
+>>>>>>> master
     { key: 'actions', header: 'Actions' }
   ];
 
   createModalData: FormConfig = {
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     title: 'Role Create',
     fields: [
       { key: 'roleCode', label: 'Role Code', type: 'text', required: true },
@@ -209,6 +250,7 @@ export class RoleManagementComponent implements OnInit {
       // },
     ],
     policies: [
+<<<<<<< HEAD
       { name: 'Role', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
       { name: 'Employee', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
       { name: 'User Account', options: ['Create', 'Edit', 'View', 'Delete', 'Restore'] },
@@ -222,4 +264,63 @@ export class RoleManagementComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+=======
+      { rolePolicyName: 'Role', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
+      { rolePolicyName: 'Employee', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
+      { rolePolicyName: 'User Account', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
+      { rolePolicyName: 'Section Formatting', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
+      { rolePolicyName: 'Email Template', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
+      { rolePolicyName: 'Career Vacancies', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
+      { rolePolicyName: 'Applicants', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] }
+    ]
+
+  };
+
+
+  constructor(private service: UserManagementService, private snackBar: MatSnackBar) { }
+
+  ngAfterViewInit(): void {
+    this.getRoleList();
+  }
+
+
+  onSubmit(result: any): void {
+    console.log(result)
+    this.loading = true;
+    console.log('Submit event triggered:', result);
+
+    this.service.createRole(result).subscribe({
+      next: (data) => {
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getRoleList();
+        } else if (data == null) {
+          this.showSnackBar('Error creating role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  showSnackBar(message: string): void {
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
+  }
+
+  getRoleList() {
+    this.service.getRole().subscribe(data => {
+      this.data = data
+    })
+  }
+
+
+>>>>>>> master
 }

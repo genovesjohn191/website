@@ -28,7 +28,11 @@ export class AppComponent {
       subtabs: [
         { name: 'Role Management', link: '/user-management/role-management', icon: 'assets/Images/Hierarchy.png', active: false },
         { name: 'Employee Management', link: '/user-management/employee-management', icon: 'assets/Images/Badge.png', active: false },
+<<<<<<< HEAD
         { name: 'User Account Management', link: '/user-management/user-account-management', icon: 'assets/Images/Male User.png', active: false },
+=======
+        { name: 'User Account Management', link: '/user-management/user-account', icon: 'assets/Images/Male User.png', active: false },
+>>>>>>> master
       ],
       expanded: false
     },

@@ -5,6 +5,10 @@ import { EmailTemplateComponent } from './features/system-setup/email-template/e
 import { SectionCreateComponent } from './features/system-setup/section-formatting/section-create/section-create.component';
 import { RoleManagementComponent } from './features/user-management/role-management/role-management.component';
 import { EmployeeManagementComponent } from './features/user-management/employee-management/employee-management.component';
+<<<<<<< HEAD
+=======
+import { UserAccountManagementComponent } from './features/user-management/user-account-management/user-account-management.component';
+>>>>>>> master
 
 export const routes: Routes = [
     { path: '', redirectTo: 'system-setup/section-formatting', pathMatch: 'full' },
@@ -22,5 +26,10 @@ export const routes: Routes = [
     //employee management routes
     {path: 'user-management/employee-management', component: EmployeeManagementComponent},
 
+<<<<<<< HEAD
+=======
+    {path: 'user-management/user-account', component: UserAccountManagementComponent},
+
+>>>>>>> master
     { path: '**', redirectTo: 'system-setup/section-formatting' },
 ];
