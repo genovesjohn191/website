@@ -1,0 +1,29 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="over" class="sidenav">
+      <nav class="mobile-nav">
+        <div *ngFor="let item of navBarItem" class="mobile-nav-item" [ngClass]="{ 'showed': item.isShowed }">
+          <div class="mobile-nav-link-container" (click)="toggleSubItems(item)">
+            <a class="mobile-nav-link" [routerLink]="item.link">
+              {{ item.name | uppercase }}
+            </a>
+            <mat-icon class="arrow-icon" *ngIf="item.subItems">
+              {{ item.isShowed ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+            </mat-icon>
+          </div>
+          <div class="mobile-nav-line" *ngIf="item.isShowed"></div> <!-- Line under item when expanded -->
+          <div *ngIf="item.isShowed" class="mobile-sub-nav">
+            <div *ngFor="let subItem of item.subItems" class="mobile-sub-nav-section">
+              <p class="mobile-sub-nav-title">{{ subItem.title | uppercase }}</p>
+              <div *ngFor="let linkItem of subItem.items" class="mobile-sub-nav-link" [routerLink]="linkItem.link">
+                {{ linkItem.name | uppercase }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  

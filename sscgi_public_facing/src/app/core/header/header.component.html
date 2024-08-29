@@ -1,0 +1,15 @@
+<mat-toolbar class="header">
+    <div class="logo">
+        <img [src]="logoPath" alt="Logo">
+        <span class="title"> {{title | uppercase}}</span>
+    </div>
+    <span class="spacer"></span>
+
+    <sscgi-nav-bar></sscgi-nav-bar>
+
+    <mat-icon class="menu" (click)="toggleSidenav()">menu</mat-icon>
+ 
+</mat-toolbar>
+<sscgi-nav-bar-mobile-view #sidenav></sscgi-nav-bar-mobile-view>
+
+

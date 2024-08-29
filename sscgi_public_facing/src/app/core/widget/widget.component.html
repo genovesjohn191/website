@@ -1,0 +1,12 @@
+<div class="sticky-widget" [class.open]="isOpen" (click)="toggleWidget()">
+    <div class="widget-content">
+        <div class="question-mark" style="position: fixed;">
+            <img src="assets/widget_questionmark.png" alt="">
+        </div>
+        <div class="contact-form" *ngIf="isOpen">
+            Get in Touch
+            <hr>
+            View our Privacy Policy
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="swiper mySwiper1">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" *ngFor="let slide of slides">
+      <div class="slide-content">
+        <img [src]="slide.image" [alt]="slide.title" class="slide-image">
+      </div>
+    </div>
+  </div>
+  <!-- Add Navigation -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+</div>
+
+<div class="slide-subtext-container">
+  <p class="slide-subtext">{{ currentTitle }}</p>
+</div>
+
+<div class="additional-content">
+  <p class="additional-subtext">
+    {{ currentSubtext }}
+  </p>
+</div>

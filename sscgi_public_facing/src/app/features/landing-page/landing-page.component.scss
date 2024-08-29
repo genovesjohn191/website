@@ -1,0 +1,178 @@
+
+@import 'variables';
+
+.container {
+    position: relative;
+}
+
+.background-image {
+    width: 100%;
+    height: auto;
+}
+
+.overlay {
+    top: 0;
+    left: 0;
+    height: 98%;
+    padding: 40px;
+}
+
+.text-content {
+    position: absolute;
+    left: 7%;
+    top: 7%;
+    max-width: 400px;
+
+}
+
+.main-text {
+    font-size: $landing-page-title-font-size;
+    font-family: $landing-page-title-font-family;
+    font-weight: $landing-page-title-font-weight;
+    line-height: 76.4px;
+    text-align: $landing-page-title-text-align;
+    color: $landing-page-title-color;
+    margin: 0;
+}
+
+.highlight-text {
+    color: $landing-page-title-color2;
+    font-size: $landing-page-title2-font-size;
+    font-weight: $landing-page-title2-font-weight;
+}
+
+.sub-text {
+    margin-top: 20px;
+    font-size: $landing-page-subtext-font-size ;
+    font-family: $landing-page-subtext-font-family;
+    font-weight: $landing-page-subtext-font-weight;
+    color: $landing-page-subtext-color;
+    line-height: 26.7px;
+
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.primary-action {
+    background-color: $landing-page-left-button-bg-color;
+    color: $landing-page-left-button-font-color!important;
+    font-family: $landing-page-left-button-font-family;
+    font-weight: $landing-page-left-button-font-weight;
+    display: flex;
+    align-items: center;
+    font-size: $landing-page-left-button-font-size;
+}
+.button-left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    background-color: $landing-page-left-button-bg-color;
+    border-radius: $landing-page-left-button-border-radius;
+    border-color: $landing-page-left-button-border-color;
+    border-style: $landing-page-left-button-border-style;
+    border-width: $landing-page-left-button-border-width;
+}
+
+
+
+.secondary-action {
+    background-color: $landing-page-right-button-bg-color;
+    color: $landing-page-right-button-font-color !important;
+    font-family: $landing-page-right-button-font-family;
+    font-weight: $landing-page-right-button-font-weight;
+    display: flex;
+    align-items: center;
+    font-size: $landing-page-right-button-font-size;
+}
+
+
+.button-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    background-color: $landing-page-right-button-bg-color;
+    border-radius: $landing-page-right-button-border-radius;
+    border-color: $landing-page-right-button-border-color;
+    border-style: $landing-page-right-button-border-style;
+    border-width: $landing-page-right-button-border-width;
+}
+
+.button-right :hover {
+    cursor: pointer;
+    background-color: white;
+}
+
+/* Mobile View */
+
+/* tablet view */
+@media screen and (max-width: 1024px) {
+    .text-content {
+        position: absolute;
+        left: 7%;
+        top: 7%;
+        max-width: 400px;
+
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 40%;
+        padding: 40px;
+    }
+
+
+}
+
+/* phone view */
+@media screen and (min-width: 300px) and (max-width: 767px) {
+
+    .text-content {
+        position: absolute;
+        left: 7%;
+        top: 7%;
+        max-width: 300px;
+
+    }
+
+    .main-text {
+        font-size: 3.75rem;
+        font-family: "Inter", sans-serif;
+        font-weight: bold;
+        line-height: 75px;
+        text-align: left;
+        color: black;
+        margin: 0;
+    }
+
+    .sub-text[_ngcontent-ng-c610753257] {
+        margin-top: 20px;
+        font-size: 1rem;
+        font-family: "Inter", sans-serif;
+        line-height: 26.7px;
+        color: #364050;
+    }
+
+    .buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        padding: 40px;
+    }
+}

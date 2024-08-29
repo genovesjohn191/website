@@ -1,0 +1,38 @@
+<div class="container">
+    <h1 class="title">{{ title }}</h1>
+    <p class="sub-text">{{ subtext }}</p>
+    <div class="swiper-container" *ngIf="isMobile || cardContext.length > 2">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" *ngFor="let card of cardContext">
+                <mat-card class="solution-card">
+                    <mat-card-content>
+                        <h2 class="card-title">{{ card.title }}</h2>
+                        <img class="card-image" [src]="card.image" alt="Card Image">
+                        <p class="card-subtext">{{ card.subtext }}</p>
+                        <div class="read-more">
+                            <span>Read more</span>
+                            <mat-icon>keyboard_arrow_right</mat-icon>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+
+    <!-- mobile view  -->
+    <div class="cards-container" *ngIf="!isMobile && cardContext.length <= 2">
+        <mat-card *ngFor="let card of cardContext" class="solution-card">
+            <mat-card-content>
+                <h2 class="card-title">{{ card.title }}</h2>
+                <img class="card-image" [src]="card.image" alt="Card Image">
+                <p class="card-subtext">{{ card.subtext }}</p>
+                <div class="read-more">
+                    <span>Read more</span>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

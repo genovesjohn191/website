@@ -1,0 +1,24 @@
+<section class="default" [ngStyle]="style" [ngClass]="sectionLayout">
+    <ng-container *ngFor="let element of elements ">
+        <ng-container *ngIf="element.parentId === null" [ngSwitch]="element.elementType">
+
+          <div *ngSwitchCase="'div'" [ngClass]="element.style">
+            <ng-container *ngIf="element.isParent">
+              <ng-container *ngFor="let celement of element.children">
+                <ng-container [ngSwitch]="celement.elementType">
+                  <div *ngSwitchCase="'div'" [ngClass]="celement.style">{{ celement.elementText }}</div>
+                  <p [ngStyle]="getTextStyle(celement)" *ngSwitchCase="'p'" [ngClass]="celement.style">{{ celement.elementText }}</p>
+                  <button *ngSwitchCase="'button'" [ngClass]="celement.style">{{ celement.elementText }}</button>
+                  <h1 [ngStyle]="getTextStyle(celement)" *ngSwitchCase="'h1'" [ngClass]="celement.style">{{ celement.elementText }}</h1>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <p [ngStyle]="getTextStyle(element)" *ngSwitchCase="'p'" [ngClass]="element.style">{{ element.elementText }}</p>
+          <button *ngSwitchCase="'button'" [ngClass]="element.style">{{ element.elementText }}</button>
+          <h1 [ngStyle]="getTextStyle(element)" *ngSwitchCase="'h1'" [ngClass]="element.style">{{ element.elementText }}</h1>
+          
+        </ng-container>
+    </ng-container>
+</section>

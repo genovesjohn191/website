@@ -1,0 +1,95 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 0px;
+}
+
+.cont1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cont2{
+    margin-bottom: 32px;
+    box-shadow: none;
+
+}
+
+.cont2 table{
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.buttons{
+    display: flex;
+    gap: 10px;
+}
+
+.basic-button{
+    padding: 12px 24px;
+    border-radius: 5px;
+    min-width: 116px;
+}
+
+.search-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+}
+
+.searchinput{
+    width: 25dvw;
+    border:none;
+    background-color: transparent;
+    font-size: .875rem;
+    font-weight: 500;
+}
+
+input:focus {
+    outline: none;
+}
+
+table {
+    width: 100%;
+}
+
+.actions-header, .actions-cell {
+    white-space: nowrap;
+    padding: 0 8px;
+    width: 10%;
+}
+
+.actions-cell button {
+margin: 0 4px;
+}
+
+.actions-column {
+    max-width: 200px;
+  }
+
+.editbtn, .viewbtn, .deletebtn{
+    color: #ffffff;
+    box-shadow: none;
+    border-radius: 50px;
+}
+
+.editbtn{
+    background-color: #28965A;
+}
+
+.deletebtn{
+    background-color: #962828;
+}
+
+.viewbtn{
+    background-color: #283396;
+}
+
+
+
+  

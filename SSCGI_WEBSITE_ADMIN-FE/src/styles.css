@@ -1,0 +1,72 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-mdc-header-row {
+    background-color: #166534 !important;
+    color: #ffffff !important;
+}
+
+.mat-mdc-row:hover {
+    cursor: pointer;
+    background-color: #f7f7f7 !important;
+    color: #000000 !important;
+}
+
+.mat-sort-header-arrow {
+    color: white !important;
+}
+
+.mat-mdc-unelevated-button:not(:disabled) {
+    background-color: #166534 !important;
+}
+
+.mat-mdc-outlined-button:not(:disabled) {
+    color: #FFCD29 !important;
+    border-color: #FFCD29 !important;
+}
+
+.mat-mdc-outlined-button.cancel:not(:disabled) {
+    color: #283396 !important;
+    border-color: #283396 !important;
+}
+
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+    max-width: none !important;
+    min-width: var(--mat-dialog-container-min-width, 0)!important;
+}
+
+.mat-mdc-dialog-container-with-actions .mat-mdc-dialog-content {
+    padding: 24px 24px 0px 24px !important;
+}
+
+
+.mat-mdc-unelevated-button.selectall:not(:disabled) {
+    background-color: #283396 !important;
+}
+
+.basic-button{
+    padding: 12px 24px;
+    border-radius: 5px;
+    min-width: 116px;
+}
+
+.date .mat-mdc-form-field-infix {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    max-height: 56px !important;
+}
+.description{
+    max-height: auto !important;
+}   
+
+.mat-internal-form-field {
+    width: 100% !important;
+}
+
+.mdc-form-field>label {
+    margin-right: 0 !important;
+    width: 100% !important;
+}

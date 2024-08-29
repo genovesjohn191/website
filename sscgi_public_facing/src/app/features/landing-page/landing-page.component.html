@@ -1,0 +1,41 @@
+<sscgi-widget></sscgi-widget>
+
+<div class="container">
+    <img *ngIf="screenSize === 'desktop'" [src]="landingBGPath" alt="Background Image" class="background-image">
+    <img *ngIf="screenSize === 'mobile'" [src]="landingBGMobileViewPath" alt="Background Image" class="background-image">
+    <div class="overlay">
+        <div class="text-content">
+            <h1 class="main-text">
+                {{titleTop}} <span class="highlight-text">{{titleBottom}}</span>
+            </h1>
+            <p class="sub-text">{{ subText }}</p>
+            <div class="buttons">
+                <div class="button-left">
+                    <button mat-button class="primary-action">{{leftButtonText}}</button>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </div>
+                <div class="button-right">
+                    <button mat-button class="secondary-action">{{rightButtonText}}</button>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section>
+        <sscgi-homegrown-solutions-page></sscgi-homegrown-solutions-page>
+    </section>
+    
+    <section>
+        <sscgi-partnered-solutions-page></sscgi-partnered-solutions-page>
+    </section>
+    
+    <section>
+        <sscgi-service-offered-page></sscgi-service-offered-page>
+    </section>
+
+    <section>
+        <sscgi-footer></sscgi-footer>
+    </section>
+
+</div>
