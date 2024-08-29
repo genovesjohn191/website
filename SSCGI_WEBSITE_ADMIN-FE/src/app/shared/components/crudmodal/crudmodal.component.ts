@@ -210,8 +210,8 @@ export class CRUDmodalComponent implements OnInit {
       Policies: transformedRolePolicies
     };
 
-    this.formSubmitted.emit(transformedFormValue);
-
+    this.formSubmitted.emit({ mode: this.mode, ...transformedFormValue });
+    this.dialogRef.close({ mode: this.mode, ...transformedFormValue });
     this.dialogRef.close(transformedFormValue);
 
   }

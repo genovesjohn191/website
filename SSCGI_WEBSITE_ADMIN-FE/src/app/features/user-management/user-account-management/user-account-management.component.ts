@@ -7,6 +7,7 @@ import { UserManagementService } from '../user-management-service/user-managemen
 import { Employee } from '../../../shared/interfaces/employee-model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-account-management',
@@ -15,6 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     TableComponent,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    CommonModule
   ],
   templateUrl: './user-account-management.component.html',
   styleUrl: './user-account-management.component.css'

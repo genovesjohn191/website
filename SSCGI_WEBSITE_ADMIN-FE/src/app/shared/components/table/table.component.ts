@@ -13,6 +13,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CRUDmodalComponent } from '../crudmodal/crudmodal.component';
 import { UserManagementService } from '../../../features/user-management/user-management-service/user-management.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-table',
@@ -29,7 +30,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSort,
     MatSortModule,
     RouterModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
@@ -40,14 +42,15 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() link: string = '';
   @Input() module: string = ''
   @Input() createModalData: any = {};
-  @Output() submitTriggered = new EventEmitter<any>();
+  @Output() submitTriggered = new EventEmitter<[any, string]>();
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<any>(this.data);
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
 
   searchTerm: string = '';
-
+  loading: boolean = true; 
+  callBack:boolean = false;
   constructor(private matDialog: MatDialog, private router: Router, private service: UserManagementService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -57,10 +60,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.link)
+    this.loadData();
     this.displayedColumns = this.columns.map(col => col.key);
-
-    // console.log(this.displayedColumns)  
+    console.log(this.dataSource.data)
 
   }
 
@@ -81,6 +83,19 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
+  loadData(): void {
+    this.loading = true;
+    this.callBack = false; // Hide callback message initially
+  
+    // Simulate data loading with a delay
+    setTimeout(() => {
+      // Replace this with actual data fetching
+      this.dataSource.data = this.data;  
+      this.loading = false; // Data has been loaded
+    });  
+  }
+  
+
   openCrudModal(data: any, mode: string): void {
     const dialogWidth = mode === 'delete' ? '30vw' : '70vw';
     const dialogRef = this.matDialog.open(CRUDmodalComponent, {
@@ -91,13 +106,16 @@ export class TableComponent implements OnInit, AfterViewInit {
         form: this.createModalData,
         mode: mode
       }
+      
     });
+    localStorage.setItem("personId",data.personId)
+    this.service.personId = localStorage.getItem("personId")
     dialogRef.afterClosed().subscribe(result => {
-
+    localStorage.clear();
       if (result == null) {
 
       } else {
-        this.submitTriggered.emit(result); // Emit the result when the modal is closed 
+        this.submitTriggered.emit([result,mode]); // Emit the result when the modal is closed 
       }
 
     });

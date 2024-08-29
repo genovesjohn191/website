@@ -89,7 +89,30 @@ margin: 0 4px;
 .viewbtn{
     background-color: #283396;
 }
-
+.no-data-message {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-size: 16px;
+  }
+  .loading-spinner {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Ensure it appears above other content */
+    width: 100%; /* Ensure it covers the width of the table */
+    height: 100%; /* Ensure it covers the height of the table */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .mat-spinner {
+    width: 50px; /* Set spinner size */
+    height: 50px; /* Set spinner size */
+  }
 
 
   

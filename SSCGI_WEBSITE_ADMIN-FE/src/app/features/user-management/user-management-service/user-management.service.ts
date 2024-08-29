@@ -10,11 +10,14 @@ import { RoleData } from '../../../shared/interfaces/role-model';
 })
 export class UserManagementService {
 
+  public personId:any;
+
   private createRoleUrl = environment.apiUrl + "Role/createRole";
   private getRoleUrl = environment.apiUrl + "Role/getRoleList"
 
   private getPeopleUrl = environment.apiUrl + "People/getPeopleList";
   private createPeopleUrl = environment.apiUrl + "People/createPeople";
+  private updatePeopleUrl = environment.apiUrl + "People/updatePerson"
 
   private createUserAccUrl = environment.apiUrl + "UserAccount/createUserAcc"
   private getUserAccUrl = environment.apiUrl + "UserAccount/getUserAccList"
@@ -42,6 +45,16 @@ export class UserManagementService {
     );
   }
 
+  updatePeople(form: any) {
+    let options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+    return this.http.put<any>(`${this.updatePeopleUrl}/${this.personId}`, form).
+      pipe(
+        map(data => data),
+        retry(3),
+        catchError(this.handleError)
+      )
+
+  }
 
   createPeople(form: any): Observable<any> {
     let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };

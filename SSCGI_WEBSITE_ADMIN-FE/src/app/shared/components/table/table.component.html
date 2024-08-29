@@ -14,8 +14,13 @@
   </div>
 
   <div class="mat-elevation-z8 cont2">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
         <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="{'actions-column': column.key === 'actions'}">
           {{ column.header }} </th>
@@ -56,8 +61,10 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
     </table>
 
+    <div *ngIf="dataSource.data.length === 0" class="no-data-message">No records found</div>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
