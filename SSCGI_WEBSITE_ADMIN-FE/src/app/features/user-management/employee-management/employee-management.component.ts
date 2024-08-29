@@ -1,27 +1,20 @@
 import { Component } from '@angular/core';
 import { TableComponent } from '../../../shared/components/table/table.component';
 import { FormConfig } from '../../../shared/interfaces/form-model';
-<<<<<<< HEAD
-=======
 import { UserManagementService } from '../user-management-service/user-management.service';
 import { Employee } from '../../../shared/interfaces/employee-model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
->>>>>>> master
 
 @Component({
   selector: 'app-employee-management',
   standalone: true,
-<<<<<<< HEAD
-  imports: [TableComponent],
-=======
   imports: [TableComponent,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     CommonModule
   ],
->>>>>>> master
   templateUrl: './employee-management.component.html',
   styleUrls: ['./employee-management.component.css']
 })
@@ -29,11 +22,8 @@ export class EmployeeManagementComponent {
   link = "user-management/employee-management/"
   module = 'employee-management'
   icon = '/assets/Images/Badge.png'
-<<<<<<< HEAD
-=======
   data: Employee[] = [];
   loading: boolean = false;
->>>>>>> master
   myData = [
     { firstName: "John", middleName: "", lastName: "Doe", employeeNumber: 123456789, contactNumber: "0912345678", email: "johndoe@gmail.com", address: "123 Main St" },
     { firstName: "Jane", middleName: "", lastName: "Smith", employeeNumber: 987654321, contactNumber: "0987654321", email: "janesmith@gmail.com", address: "456 Elm St" },
@@ -63,11 +53,6 @@ export class EmployeeManagementComponent {
     ]
   };
 
-<<<<<<< HEAD
-  constructor() {}
-
-  ngOnInit(): void {}
-=======
   constructor(private service:UserManagementService , private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
@@ -128,5 +113,4 @@ export class EmployeeManagementComponent {
 
 
 
->>>>>>> master
 }
