@@ -11,7 +11,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { CRUDmodalComponent } from '../crudmodal/crudmodal.component';
-import { UserManagementService } from '../../../features/user-management/user-management-service/user-management.service';
+import { UserManagementService } from '../../../features/tabs/user-management/user-management-service/user-management.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environments';
+import { environment } from '../../../../../environments/environments';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, retry, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RoleData } from '../../../shared/interfaces/role-model';
+import { RoleData } from '../../../../shared/interfaces/role-model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +47,7 @@ export class UserManagementService {
 
   updatePeople(form: any) {
     let options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+    // this.personId = localStorage.getItem("personId")
     return this.http.put<any>(`${this.updatePeopleUrl}/${this.personId}`, form).
       pipe(
         map(data => data),
@@ -112,8 +113,6 @@ export class UserManagementService {
     }
     return throwError('Something bad happened, please try again later');
   }
-
-
 
   showSnackBar(message: string): void {
     this.snackBar.open(message, '', {

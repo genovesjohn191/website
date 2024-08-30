@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { TableComponent } from '../../../shared/components/table/table.component';
-import { RoleData } from '../../../shared/interfaces/role-model';
-import { FormConfig } from '../../../shared/interfaces/form-model';
+import { TableComponent } from '../../../../shared/components/table/table.component';
+import { RoleData } from '../../../../shared/interfaces/role-model';
+import { FormConfig } from '../../../../shared/interfaces/form-model';
 import { UserManagementService } from '../user-management-service/user-management.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';

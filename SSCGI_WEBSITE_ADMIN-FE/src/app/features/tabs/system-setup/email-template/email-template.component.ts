@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { TableComponent } from '../../../shared/components/table/table.component';
-import { FormConfig } from '../../../shared/interfaces/form-model';
+import { TableComponent } from '../../../../shared/components/table/table.component';
+import { FormConfig } from '../../../../shared/interfaces/form-model';
 
 @Component({
   selector: 'app-email-template',
