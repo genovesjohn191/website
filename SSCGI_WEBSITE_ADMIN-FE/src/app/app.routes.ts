@@ -6,6 +6,7 @@ import { SectionCreateComponent } from './features/system-setup/section-formatti
 import { RoleManagementComponent } from './features/user-management/role-management/role-management.component';
 import { EmployeeManagementComponent } from './features/user-management/employee-management/employee-management.component';
 import { UserAccountManagementComponent } from './features/user-management/user-account-management/user-account-management.component';
+import { SetPasswordPageComponent } from './features/set-password-page/set-password-page.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'system-setup/section-formatting', pathMatch: 'full' },
@@ -25,5 +26,9 @@ export const routes: Routes = [
 
     {path: 'user-management/user-account', component: UserAccountManagementComponent},
 
-    { path: '**', redirectTo: 'system-setup/section-formatting' },
+    {path:'set-password', component: SetPasswordPageComponent},
+
+    // { path: '**', redirectTo: 'system-setup/section-formatting' },
+
+    
 ];

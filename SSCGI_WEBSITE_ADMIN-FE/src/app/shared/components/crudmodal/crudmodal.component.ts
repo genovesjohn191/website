@@ -187,34 +187,35 @@ export class CRUDmodalComponent implements OnInit {
     return null;
   }
 
-  onSubmit() {
-    if (this.dynamicForm.invalid) {
-      console.log('Invalid');
-      return;
+    onSubmit() {
+      if (this.dynamicForm.invalid) {
+        console.log('Invalid');
+        return;
+      }
+
+      const formValue = this.dynamicForm.value;
+      const transformedRolePolicies = this.formConfig.policies ? formValue.Policies
+        .filter((policy: any) => policy.isChecked) // Only include checked policies
+        .map((policy: any, index: number) => ({
+          rolePolicyName: policy.name,
+          isChecked: policy.isChecked,
+          options: [this.formConfig.policies![index].options.reduce((acc: any, option: string, i: number) => {
+            acc[option] = policy.options[i];
+            return acc;
+          }, {})
+        ]
+        })) : [];
+
+      const transformedFormValue = {
+        ...formValue,
+        Policies: transformedRolePolicies
+      };
+
+      this.formSubmitted.emit({ mode: this.mode, ...transformedFormValue });
+      this.dialogRef.close({ mode: this.mode, ...transformedFormValue });
+      this.dialogRef.close(transformedFormValue);
+
     }
-
-    const formValue = this.dynamicForm.value;
-    const transformedRolePolicies = this.formConfig.policies ? formValue.Policies
-      .filter((policy: any) => policy.isChecked) // Only include checked policies
-      .map((policy: any, index: number) => ({
-        rolePolicyName: policy.name,
-        isChecked: policy.isChecked,
-        options: this.formConfig.policies![index].options.reduce((acc: any, option: string, i: number) => {
-          acc[option] = policy.options[i];
-          return acc;
-        }, {})
-      })) : [];
-
-    const transformedFormValue = {
-      ...formValue,
-      Policies: transformedRolePolicies
-    };
-
-    this.formSubmitted.emit({ mode: this.mode, ...transformedFormValue });
-    this.dialogRef.close({ mode: this.mode, ...transformedFormValue });
-    this.dialogRef.close(transformedFormValue);
-
-  }
 
   toggleOptions(policyIndex: number) {
     const policy = this.rolePoliciesArray.at(policyIndex);

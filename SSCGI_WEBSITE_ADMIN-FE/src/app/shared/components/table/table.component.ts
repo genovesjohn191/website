@@ -49,8 +49,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort | undefined;
 
   searchTerm: string = '';
-  loading: boolean = true; 
-  callBack:boolean = false;
+  loading: boolean = true;
+  callBack: boolean = false;
   constructor(private matDialog: MatDialog, private router: Router, private service: UserManagementService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,15 +86,15 @@ export class TableComponent implements OnInit, AfterViewInit {
   loadData(): void {
     this.loading = true;
     this.callBack = false; // Hide callback message initially
-  
+
     // Simulate data loading with a delay
     setTimeout(() => {
       // Replace this with actual data fetching
-      this.dataSource.data = this.data;  
+      this.dataSource.data = this.data;
       this.loading = false; // Data has been loaded
-    });  
+    });
   }
-  
+
 
   openCrudModal(data: any, mode: string): void {
     const dialogWidth = mode === 'delete' ? '30vw' : '70vw';
@@ -106,16 +106,19 @@ export class TableComponent implements OnInit, AfterViewInit {
         form: this.createModalData,
         mode: mode
       }
-      
+
     });
-    localStorage.setItem("personId",data.personId)
-    this.service.personId = localStorage.getItem("personId")
+    let personId: any;
+    personId = data?.personId
+    localStorage.setItem("personId", personId);
+    this.service.personId = localStorage.getItem("personId");
+
     dialogRef.afterClosed().subscribe(result => {
-    localStorage.clear();
+      localStorage.clear();
       if (result == null) {
 
       } else {
-        this.submitTriggered.emit([result,mode]); // Emit the result when the modal is closed 
+        this.submitTriggered.emit([result, mode]); // Emit the result when the modal is closed 
       }
 
     });

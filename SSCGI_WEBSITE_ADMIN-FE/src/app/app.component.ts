@@ -7,11 +7,12 @@ import { MatSidenavModule} from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Tab, SubTab } from './shared/interfaces/tabs-model'; 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,MatSidenavModule, MatListModule, MatIconModule, CommonModule, MatExpansionModule, RouterModule],
+  imports: [RouterOutlet,MatSidenavModule, MatListModule, MatIconModule, CommonModule, MatExpansionModule, RouterModule,ReactiveFormsModule,FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

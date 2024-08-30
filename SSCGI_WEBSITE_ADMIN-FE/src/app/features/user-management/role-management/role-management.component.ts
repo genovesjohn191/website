@@ -72,11 +72,11 @@ export class RoleManagementComponent implements AfterViewInit {
 
 
   onSubmit(result: any): void {
-    console.log(result)
+    console.log(result[0])
     this.loading = true;
     console.log('Submit event triggered:', result);
 
-    this.service.createRole(result).subscribe({
+    this.service.createRole(result[0]).subscribe({
       next: (data) => {
         if (data && data.message) {
           this.showSnackBar(data.message);

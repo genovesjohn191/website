@@ -48,19 +48,23 @@ export class UserAccountManagementComponent {
     this.getUserAccountList();
   }
   onSubmit(result: any): void {
-
+    this.loading = true;
+    console.log(result)
     const form = {
-      personId: result.person.value,
-      roleId: result.roleId.value,
-      expireDate: result.expiryDate,
+      personId: result[0].person.value,
+      roleId: result[0].roleId.value,
+      expireDate: result[0].expiryDate,
       createdByUserId: 1433,
     };
 
     this.service.createUserAccount(form).subscribe({
       next: (data) => {
+
+        console.log(this.loading)
         if (data && data.message) {
           this.getUserAccountList();
           this.showSnackBar(data.message);
+          this.loading = false;
           ;
         } else if (data == null) {
           this.showSnackBar('Error creating user. Please try again.');
