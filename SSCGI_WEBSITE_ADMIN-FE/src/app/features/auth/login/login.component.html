@@ -1,0 +1,63 @@
+<div *ngIf="loading" class="spinner-container">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <div class="reset-password-container">
+      <mat-card class="reset-password-card">
+        <img src="assets/Images/SSCGI2.png" alt="Logo" class="logo" />
+    
+        <h3 class="company-name">
+          Systems and Software Consulting Group Inc.
+          <br />
+          <span class="tagline">"We Design, You Decide"</span>
+        </h3>
+    
+        <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+          <!-- New Password Field -->
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              ngModel
+              name="email"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hideRePassword ? 'password' : 'text'"
+              ngModel
+              name="password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="togglePasswordVisibility('reEnter')"
+            >
+              <mat-icon>{{ hideRePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+          </mat-form-field>
+    
+          <!-- Submit Button -->
+          <button
+            mat-raised-button
+            color="primary"
+            class="submit-button"
+            type="submit"
+          >
+            Login
+          </button>
+        </form>
+    
+        <footer class="footer">
+          Powered by
+          <br />
+          Systems and Software Consulting Group Inc.
+          <br />
+          Copyright © 2024.
+        </footer>
+      </mat-card>
+    </div>
+    
