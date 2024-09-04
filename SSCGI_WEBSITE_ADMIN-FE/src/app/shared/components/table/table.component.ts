@@ -114,7 +114,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.service.personId = localStorage.getItem("personId");
 
     dialogRef.afterClosed().subscribe(result => {
-      localStorage.clear();
       if (result == null) {
 
       } else {

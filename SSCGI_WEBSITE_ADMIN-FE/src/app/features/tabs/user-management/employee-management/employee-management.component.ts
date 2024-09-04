@@ -85,7 +85,7 @@ export class EmployeeManagementComponent {
           }
         },
         error: (error) => {
-          console.error('Error:', error);
+          this.showSnackBar("The email address is already in use. Please use a different email.");
           this.loading = false;
         },
         complete: () => {

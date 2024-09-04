@@ -4,13 +4,14 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { catchError, map, Observable, retry, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoleData } from '../../../../shared/interfaces/role-model';
+import { AuthService } from '../../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserManagementService {
 
-  public personId:any;
+  public personId: any;
 
   private createRoleUrl = environment.apiUrl + "Role/createRole";
   private getRoleUrl = environment.apiUrl + "Role/getRoleList"
@@ -22,12 +23,15 @@ export class UserManagementService {
   private createUserAccUrl = environment.apiUrl + "UserAccount/createUserAcc"
   private getUserAccUrl = environment.apiUrl + "UserAccount/getUserAccList"
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private authService: AuthService) { }
 
   getUserAccount(): Observable<any> {
-    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
 
-    return this.http.get(this.getUserAccUrl, options).pipe(
+    return this.http.get(this.getUserAccUrl, { headers: headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -36,9 +40,12 @@ export class UserManagementService {
 
 
   createUserAccount(form: any): Observable<any> {
-    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
 
-    return this.http.post(this.createUserAccUrl, form, options).pipe(
+    return this.http.post(this.createUserAccUrl, form, { headers: headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -46,9 +53,12 @@ export class UserManagementService {
   }
 
   updatePeople(form: any) {
-    let options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
     // this.personId = localStorage.getItem("personId")
-    return this.http.put<any>(`${this.updatePeopleUrl}/${this.personId}`, form).
+    return this.http.put<any>(`${this.updatePeopleUrl}/${this.personId}`, form, { headers: headers }).
       pipe(
         map(data => data),
         retry(3),
@@ -58,9 +68,12 @@ export class UserManagementService {
   }
 
   createPeople(form: any): Observable<any> {
-    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
 
-    return this.http.post(this.createPeopleUrl, form, options).pipe(
+    return this.http.post(this.createPeopleUrl, form, { headers: headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -69,9 +82,12 @@ export class UserManagementService {
 
 
   getPeople(): Observable<any> {
-    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
 
-    return this.http.get(this.getPeopleUrl, options).pipe(
+    return this.http.get(this.getPeopleUrl, { headers: headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -79,9 +95,12 @@ export class UserManagementService {
   }
 
   createRole(form: any): Observable<any> {
-    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
 
-    return this.http.post(this.createRoleUrl, form, options).pipe(
+    return this.http.post(this.createRoleUrl, form, { headers: headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -90,9 +109,12 @@ export class UserManagementService {
 
 
   getRole(): Observable<any> {
-    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
-
-    return this.http.get(this.getRoleUrl, options).pipe(
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    console.log(headers)
+    return this.http.get(this.getRoleUrl, { headers: headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))

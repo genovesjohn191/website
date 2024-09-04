@@ -41,6 +41,10 @@ export class AuthService {
     return !!localStorage.getItem('token')
   }
 
+  getToken(){
+    return localStorage.getItem('token')
+  }
+
    //function for handling errors
    private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
