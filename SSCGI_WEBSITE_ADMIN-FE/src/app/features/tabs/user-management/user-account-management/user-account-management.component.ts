@@ -81,7 +81,6 @@ export class UserAccountManagementComponent {
 
   getUserAccountList() {
     this.service.getUserAccount().subscribe(data => {
-      console.log(data);
       this.data = data;
     })
   }

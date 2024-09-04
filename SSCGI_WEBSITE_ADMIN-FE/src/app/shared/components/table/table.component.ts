@@ -62,8 +62,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadData();
     this.displayedColumns = this.columns.map(col => col.key);
-    console.log(this.dataSource.data)
-
   }
 
   ngAfterViewInit() {
@@ -110,8 +108,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
     let personId: any;
     personId = data?.personId
-    localStorage.setItem("personId", personId);
-    this.service.personId = localStorage.getItem("personId");
+    this.service.personId = personId;
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == null) {

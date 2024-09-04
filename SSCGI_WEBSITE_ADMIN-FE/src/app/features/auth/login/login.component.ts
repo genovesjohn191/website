@@ -32,12 +32,16 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   hidePassword = true;
   hideRePassword = true;
+  incorrectAttempts: number = 0; // Track failed attempts
+  showCaptcha: boolean = false; // Control CAPTCHA visibility
 
   ngOnInit(): void {
     localStorage.clear();
   }
 
-  constructor(private authService: AuthService, private snackBar: MatSnackBar, private router: Router) { }
+  constructor(private authService: AuthService, 
+    private snackBar: MatSnackBar, 
+    private router: Router,) { }
   togglePasswordVisibility(type: string) {
     if (type === 'new') {
       this.hidePassword = !this.hidePassword;
@@ -47,9 +51,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(form: any) {
-    console.log(form)
     this.loading = true;
-
     this.authService.login(form).subscribe({
       next: (data) => {
         if (data[0].token == null) {
@@ -58,6 +60,7 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           this.router.navigate(['/tabs/system-setup/section-formatting'])
           localStorage.setItem('token', data[0].token)
+          localStorage.setItem('personId',data[0].personId)
           this.showSnackBar(data[0].message);
         }
       },

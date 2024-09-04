@@ -1,27 +1,36 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Tab, SubTab } from "../../shared/interfaces/tabs-model" 
+import { Tab, SubTab } from "../../shared/interfaces/tabs-model"
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserManagementService } from './user-management/user-management-service/user-management.service';
 
 @Component({
   selector: 'app-tabs',
   standalone: true,
-  imports: [RouterOutlet,MatSidenavModule, MatListModule, MatIconModule, CommonModule, MatExpansionModule, RouterModule,ReactiveFormsModule,FormsModule],
+  imports: [RouterOutlet, MatSidenavModule, MatListModule, MatIconModule, CommonModule, MatExpansionModule, RouterModule, ReactiveFormsModule, FormsModule],
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.css'
 })
-export class TabsComponent {
+export class TabsComponent implements OnInit {
   title = 'SSCGI-WEBSITE-ADMINFE';
   activeTab: SubTab = { name: '', link: '', icon: '', active: false };
   showSidebar: boolean = true;
   sidebar: boolean = window.innerWidth <= 1350;
-  
+  personId: any;
+  data: any = {};
+
+  ngOnInit(): void {
+
+    this.personId = localStorage.getItem('personId')
+    this.getPeopleById(this.personId)
+  }
+
   collapsableTabs: Tab[] = [
     {
       name: 'User Management',
@@ -53,13 +62,13 @@ export class TabsComponent {
     },
   ];
 
-  bottomTabs: SubTab[]= [
-      { name: 'My Profile', link: '/my-profile', icon: 'assets/Images/User.png', active: false },
-      { name: 'Setup Security', link: '/setup-security', icon: 'assets/Images/Protect.png', active: false },
-      { name: 'Logout', link: '/login', icon: 'assets/Images/Logout.png', active: false } 
+  bottomTabs: SubTab[] = [
+    { name: 'My Profile', link: '/my-profile', icon: 'assets/Images/User.png', active: false },
+    { name: 'Setup Security', link: '/setup-security', icon: 'assets/Images/Protect.png', active: false },
+    { name: 'Logout', link: '/login', icon: 'assets/Images/Logout.png', active: false }
   ]
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private service: UserManagementService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showSidebar = !this.router.url.includes('login');
@@ -92,12 +101,19 @@ export class TabsComponent {
   toggleSidebar(): void {
     this.sidebar = !this.sidebar;
     console.log(this.sidebar);
-    this.collapsableTabs.forEach((tab:any)=>{
+    this.collapsableTabs.forEach((tab: any) => {
       tab.expanded = false
     })
   }
 
-  setActiveTab(tab:SubTab){
+  setActiveTab(tab: SubTab) {
     this.activeTab = tab
+  }
+
+
+  getPeopleById(personId: any) {
+    this.service.getPeopleById(personId).subscribe(data => {
+      this.data = data[0]
+    })
   }
 }

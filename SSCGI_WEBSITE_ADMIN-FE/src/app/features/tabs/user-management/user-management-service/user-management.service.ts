@@ -19,6 +19,7 @@ export class UserManagementService {
   private getPeopleUrl = environment.apiUrl + "People/getPeopleList";
   private createPeopleUrl = environment.apiUrl + "People/createPeople";
   private updatePeopleUrl = environment.apiUrl + "People/updatePerson"
+  private getByIdPeopleUrl = environment.apiUrl + "People/getPersonById"
 
   private createUserAccUrl = environment.apiUrl + "UserAccount/createUserAcc"
   private getUserAccUrl = environment.apiUrl + "UserAccount/getUserAccList"
@@ -51,6 +52,23 @@ export class UserManagementService {
       catchError(this.handleError.bind(this))
     );
   }
+
+
+  getPeopleById(personId: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    const params = new HttpParams().set('personId', personId);
+
+    return this.http.get<any>(this.getByIdPeopleUrl, { headers: headers, params: params })
+      .pipe(
+        map(data => data),
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
+
 
   updatePeople(form: any) {
     const headers = new HttpHeaders({
@@ -113,7 +131,6 @@ export class UserManagementService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.authService.getToken()}`
     });
-    console.log(headers)
     return this.http.get(this.getRoleUrl, { headers: headers }).pipe(
       map(data => data),
       retry(3),

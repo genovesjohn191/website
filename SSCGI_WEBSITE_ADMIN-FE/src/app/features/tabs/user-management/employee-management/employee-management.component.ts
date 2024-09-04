@@ -24,6 +24,7 @@ export class EmployeeManagementComponent {
   icon = '/assets/Images/Badge.png'
   data: Employee[] = [];
   loading: boolean = false;
+  personId:any;
 
   myColumns = [
     { key: 'employeeNumber', header: 'Employee Number' },
@@ -49,6 +50,7 @@ export class EmployeeManagementComponent {
   constructor(private service: UserManagementService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+
     this.getPeople();
   }
 
@@ -99,6 +101,8 @@ export class EmployeeManagementComponent {
           if (response && response.message) {
             this.showSnackBar(response.message);
             this.getPeople();
+            this.personId = localStorage.getItem("personId")
+            this.getPeopleById(this.personId)
           } else if (response == null) {
             this.showSnackBar('Error updating Person. Please try again.');
           }
@@ -114,6 +118,12 @@ export class EmployeeManagementComponent {
 
     }
     this.loading = false;
+  }
+
+  getPeopleById(personId:any){
+    this.service.getPeopleById(personId).subscribe(data=>{
+      console.log(data)
+    })
   }
 
 

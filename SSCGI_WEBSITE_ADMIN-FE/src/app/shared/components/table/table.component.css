@@ -1,39 +1,39 @@
-.content{
+.content {
     display: flex;
     flex-direction: column;
     gap: 32px;
     padding: 32px 0px;
 }
 
-.cont1{
+.cont1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.cont2{
+.cont2 {
     margin-bottom: 32px;
     box-shadow: none;
 
 }
 
-.cont2 table{
+.cont2 table {
     box-shadow: none;
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.buttons{
+.buttons {
     display: flex;
     gap: 10px;
 }
 
-.basic-button{
+.basic-button {
     padding: 12px 24px;
     border-radius: 5px;
     min-width: 116px;
 }
 
-.search-container{
+.search-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,9 +42,9 @@
     border-radius: 5px;
 }
 
-.searchinput{
+.searchinput {
     width: 25dvw;
-    border:none;
+    border: none;
     background-color: transparent;
     font-size: .875rem;
     font-weight: 500;
@@ -58,61 +58,68 @@ table {
     width: 100%;
 }
 
-.actions-header, .actions-cell {
+.actions-header,
+.actions-cell {
     white-space: nowrap;
     padding: 0 8px;
     width: 10%;
 }
 
 .actions-cell button {
-margin: 0 4px;
+    margin: 0 4px;
 }
 
 .actions-column {
     max-width: 200px;
-  }
+}
 
-.editbtn, .viewbtn, .deletebtn{
+.editbtn,
+.viewbtn,
+.deletebtn {
     color: #ffffff;
     box-shadow: none;
     border-radius: 50px;
 }
 
-.editbtn{
+.editbtn {
     background-color: #28965A;
 }
 
-.deletebtn{
+.deletebtn {
     background-color: #962828;
 }
 
-.viewbtn{
+.viewbtn {
     background-color: #283396;
 }
+
 .no-data-message {
     text-align: center;
     color: #666;
     padding: 20px;
     font-size: 16px;
-  }
-  .loading-spinner {
+}
+
+.loading-spinner {
     position: absolute;
     top: 45%;
     left: 45%;
     transform: translate(-50%, -50%);
-    z-index: 1000; /* Ensure it appears above other content */
-    width: 100%; /* Ensure it covers the width of the table */
-    height: 100%; /* Ensure it covers the height of the table */
+    z-index: 1000;
+    /* Ensure it appears above other content */
+    width: 100%;
+    /* Ensure it covers the width of the table */
+    height: 100%;
+    /* Ensure it covers the height of the table */
     display: flex;
     justify-content: center;
     align-items: center;
-    
-  }
-  
-  .mat-spinner {
-    width: 50px; /* Set spinner size */
-    height: 50px; /* Set spinner size */
-  }
 
+}
 
-  
+.mat-spinner {
+    width: 50px;
+    /* Set spinner size */
+    height: 50px;
+    /* Set spinner size */
+}
