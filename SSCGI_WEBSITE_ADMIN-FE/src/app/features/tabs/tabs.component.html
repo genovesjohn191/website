@@ -56,7 +56,7 @@
         <div>
           <img src="../assets/Images/User Shield.png">
           <p mat-line>{{data?.firstName}} {{data?.middleName}} {{data?.lastName}}</p>
-          <span class="role-type">Admin</span>
+          <span class="role-type">{{roleData?.roleName}}</span>
         </div>
       </div>
       <router-outlet></router-outlet>

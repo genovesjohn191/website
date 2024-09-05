@@ -36,8 +36,13 @@ export class SetPasswordPageComponent implements OnInit {
   hidePassword = true;
   hideRePassword = true;
   loading: boolean = false;
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, 
-    private authService: AuthService,private snackBar: MatSnackBar,private router:Router) {
+  userAccountDetails: any;
+  message: string = '';
+  showExp: boolean = false;
+  showForm: boolean = true;
+
+  constructor(private fb: FormBuilder, private route: ActivatedRoute,
+    private authService: AuthService, private snackBar: MatSnackBar, private router: Router) {
     // Initialize the form with validation rules
     this.passwordForm = this.fb.group(
       {
@@ -72,6 +77,35 @@ export class SetPasswordPageComponent implements OnInit {
         // this.router.navigate(['/some-other-page']);
       }
     });
+
+    this.authService.getEmailExpiry(this.userId).subscribe(
+      (data) => {
+        console.log(data[0])
+        this.userAccountDetails = data[0];
+        this.checkTokenStatus();
+      },
+      (error) => {
+        console.error('Error fetching user account details', error);
+        this.message = 'Failed to load user account details.';
+      }
+    );
+  }
+
+  checkTokenStatus(): void {
+    if (this.userAccountDetails) {
+      const currentTime = new Date();
+      const tokenExpiry = new Date(this.userAccountDetails.tokenExpiry);
+
+      if (this.userAccountDetails.tokenUsed) {
+        this.showExp = true;
+        this.showForm = false;
+      } else if (currentTime > tokenExpiry) {
+        this.showExp = true
+        this.showForm = false;
+      } else {
+        this.showExp = false
+      }
+    }
   }
 
 
@@ -101,12 +135,13 @@ export class SetPasswordPageComponent implements OnInit {
       }
       this.authService.setPassword(form).subscribe({
         next: (data) => {
+          console.log(data)
           if (data && data.message) {
             this.showSnackBar(data.message);
             this.loading = false;
             this.router.navigate(['/login'])
           } else if (data == null) {
-            this.showSnackBar('Error on creating password. Please try again.');
+            this.showSnackBar(data.message);
           }
         },
         error: (error) => {
@@ -122,7 +157,7 @@ export class SetPasswordPageComponent implements OnInit {
     }
   }
 
-  
+
   get passwordsMismatch() {
     return (
       this.passwordForm.hasError('passwordsMismatch') &&
@@ -139,4 +174,5 @@ export class SetPasswordPageComponent implements OnInit {
     });
 
   }
+
 }

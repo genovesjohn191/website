@@ -23,10 +23,11 @@ export class TabsComponent implements OnInit {
   showSidebar: boolean = true;
   sidebar: boolean = window.innerWidth <= 1350;
   personId: any;
+  roleId:any;
   data: any = {};
+  roleData:any = {};
 
   ngOnInit(): void {
-
     this.personId = localStorage.getItem('personId')
     this.getPeopleById(this.personId)
   }
@@ -114,6 +115,15 @@ export class TabsComponent implements OnInit {
   getPeopleById(personId: any) {
     this.service.getPeopleById(personId).subscribe(data => {
       this.data = data[0]
+      localStorage.setItem("roleId",this.data.roleId)
+      const roleId = localStorage.getItem("roleId")
+      this.getRoleById(roleId);
+    })
+  }
+
+  getRoleById(roleId: any) {
+    this.service.getRoleById(roleId).subscribe(data => {
+      this.roleData = data[0]
     })
   }
 }

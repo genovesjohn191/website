@@ -13,19 +13,25 @@ export class UserManagementService {
 
   public personId: any;
 
+  // role
   private createRoleUrl = environment.apiUrl + "Role/createRole";
   private getRoleUrl = environment.apiUrl + "Role/getRoleList"
+  private getRoleByIdUrl = environment.apiUrl + "Role/getRoleListById"
 
+  // people
   private getPeopleUrl = environment.apiUrl + "People/getPeopleList";
   private createPeopleUrl = environment.apiUrl + "People/createPeople";
   private updatePeopleUrl = environment.apiUrl + "People/updatePerson"
   private getByIdPeopleUrl = environment.apiUrl + "People/getPersonById"
 
+  // useracc
   private createUserAccUrl = environment.apiUrl + "UserAccount/createUserAcc"
   private getUserAccUrl = environment.apiUrl + "UserAccount/getUserAccList"
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, private authService: AuthService) { }
 
+
+  // useracc
   getUserAccount(): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -38,7 +44,6 @@ export class UserManagementService {
       catchError(this.handleError.bind(this))
     );
   }
-
 
   createUserAccount(form: any): Observable<any> {
     const headers = new HttpHeaders({
@@ -54,6 +59,7 @@ export class UserManagementService {
   }
 
 
+  // people
   getPeopleById(personId: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -68,7 +74,6 @@ export class UserManagementService {
         catchError(this.handleError)
       );
   }
-
 
   updatePeople(form: any) {
     const headers = new HttpHeaders({
@@ -112,6 +117,7 @@ export class UserManagementService {
     );
   }
 
+  // role
   createRole(form: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -137,6 +143,22 @@ export class UserManagementService {
       catchError(this.handleError.bind(this))
     );
   }
+
+  getRoleById(roleId: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    const params = new HttpParams().set('roleId', roleId);
+
+    return this.http.get<any>(this.getRoleByIdUrl, { headers: headers, params: params })
+      .pipe(
+        map(data => data),
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
+
 
   //function for handling errors
   private handleError(error: HttpErrorResponse) {
