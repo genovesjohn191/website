@@ -26,6 +26,7 @@ export class TabsComponent implements OnInit {
   roleId:any;
   data: any = {};
   roleData:any = {};
+  rolePolicy:any;
 
   ngOnInit(): void {
     this.personId = localStorage.getItem('personId')
@@ -124,6 +125,8 @@ export class TabsComponent implements OnInit {
   getRoleById(roleId: any) {
     this.service.getRoleById(roleId).subscribe(data => {
       this.roleData = data[0]
+      console.log(data)
+      this.rolePolicy = data;
     })
   }
 }

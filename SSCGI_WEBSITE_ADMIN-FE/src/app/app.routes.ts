@@ -15,7 +15,7 @@ export const routes: Routes = [
 
     {
         path: 'tabs',
-        component: TabsComponent,canActivate: [AuthGuard],
+        component: TabsComponent,
         children: [
             // Section formatting routes
             { path: 'system-setup/section-formatting', component: SectionFormattingComponent },
