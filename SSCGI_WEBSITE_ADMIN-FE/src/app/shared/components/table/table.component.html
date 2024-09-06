@@ -1,15 +1,15 @@
 <div class="content">
-  <div class="cont1">
+  <div class="cont1" *ngIf="canView">
     <div class="search-container">
       <input class="searchinput" type="text" placeholder="Search..." [(ngModel)]="searchTerm"
         (keyup)="applyFilter($event)" />
       <mat-icon>search</mat-icon>
     </div>
     <div class="buttons">
-      <button mat-flat-button class="basic-button"
+      <button *ngIf="canCreate" mat-flat-button class="basic-button"
         (click)="module !== 'section-formatting' ? openCrudModal(null,'create') : redirectTo('create')">Create</button>
 
-      <button mat-stroked-button class="basic-button">Restore</button>
+      <button *ngIf="canRestore" mat-stroked-button class="basic-button">Restore</button>
     </div>
   </div>
 
@@ -20,7 +20,6 @@
     </div>
 
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
         <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="{'actions-column': column.key === 'actions'}">
           {{ column.header }} </th>
@@ -34,17 +33,17 @@
 
             <ng-container *ngSwitchCase="'actions'">
               <div class="actions-cell">
-                <button mat-mini-fab class="editbtn"
+                <button *ngIf="canEdit" mat-mini-fab class="editbtn"
                   (click)="module !== 'section-formatting' ? openCrudModal(element,'edit') : redirectTo('edit')"
                   matTooltip="Edit" matTooltipPosition="above">
                   <img src="../../../../assets/Images/Edit Property.png">
                 </button>
-                <button mat-mini-fab class="viewbtn"
+                <button *ngIf="canView" mat-mini-fab class="viewbtn"
                   (click)="module !== 'section-formatting' ? openCrudModal(element, 'view') : redirectTo('view')"
                   matTooltip="view" matTooltipPosition="above">
                   <img src="../../../../assets/Images/View.png">
                 </button>
-                <button mat-mini-fab class="deletebtn" (click)="openCrudModal(element, 'delete')" matTooltip="delete"
+                <button *ngIf="canDelete" mat-mini-fab class="deletebtn" (click)="openCrudModal(element, 'delete')" matTooltip="delete"
                   matTooltipPosition="above">
                   <img src="../../../../assets/Images/Trash.png">
                 </button>
@@ -57,7 +56,6 @@
           </ng-container>
         </td>
       </ng-container>
-
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -23,52 +23,13 @@ export class TabsComponent implements OnInit {
   showSidebar: boolean = true;
   sidebar: boolean = window.innerWidth <= 1350;
   personId: any;
-  roleId:any;
+  roleId: any;
   data: any = {};
-  roleData:any = {};
-  rolePolicy:any;
+  roleData: any = {};
+  rolePolicy: any[] = [];
 
-  ngOnInit(): void {
-    this.personId = localStorage.getItem('personId')
-    this.getPeopleById(this.personId)
-  }
-
-  collapsableTabs: Tab[] = [
-    {
-      name: 'User Management',
-      icon: 'assets/Images/Admin Settings Male.png',
-      subtabs: [
-        { name: 'Role Management', link: '/tabs/user-management/role-management', icon: 'assets/Images/Hierarchy.png', active: false },
-        { name: 'Employee Management', link: '/tabs/user-management/employee-management', icon: 'assets/Images/Badge.png', active: false },
-        { name: 'User Account Management', link: '/tabs/user-management/user-account', icon: 'assets/Images/Male User.png', active: false },
-      ],
-      expanded: false
-    },
-    {
-      name: 'System Setup',
-      icon: 'assets/Images/Support.png',
-      subtabs: [
-        { name: 'Section Formatting', link: '/tabs/system-setup/section-formatting', icon: 'assets/Images/Web Design.png', active: false },
-        { name: 'Email Template', link: '/tabs/system-setup/email-template', icon: 'assets/Images/Document Header.png', active: false },
-      ],
-      expanded: false
-    },
-    {
-      name: 'Transactions',
-      icon: 'assets/Images/Gears.png',
-      subtabs: [
-        { name: 'Career Vacancies', link: '/tabs/transactions/career-vacancies', icon: 'assets/Images/New Job.png', active: false },
-        { name: 'Applicants', link: '/tabs/transactions/applicants', icon: 'assets/Images/Applicant.png', active: false },
-      ],
-      expanded: false
-    },
-  ];
-
-  bottomTabs: SubTab[] = [
-    { name: 'My Profile', link: '/my-profile', icon: 'assets/Images/User.png', active: false },
-    { name: 'Setup Security', link: '/setup-security', icon: 'assets/Images/Protect.png', active: false },
-    { name: 'Logout', link: '/login', icon: 'assets/Images/Logout.png', active: false }
-  ]
+  collapsableTabs: Tab[] = [];
+  bottomTabs: SubTab[] = [];
 
   constructor(private router: Router, private service: UserManagementService) {
     this.router.events.subscribe(event => {
@@ -79,10 +40,14 @@ export class TabsComponent implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+    this.personId = localStorage.getItem('personId');
+    this.getPeopleById(this.personId);
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.sidebar = window.innerWidth <= 1350;
-    console.log(this.sidebar)
   }
 
   setActiveTabByUrl(url: string): void {
@@ -91,42 +56,117 @@ export class TabsComponent implements OnInit {
     if (foundTab) {
       this.activeTab = foundTab;
     } else {
-      this.activeTab = { name: '', link: '', icon: '', active: false }; // Default empty tab
+      this.activeTab = { name: '', link: '', icon: '', active: false };
     }
   }
 
   toggleTab(tab: Tab): void {
     tab.expanded = !tab.expanded;
-    this.sidebar = false
+    this.sidebar = false;
   }
 
   toggleSidebar(): void {
     this.sidebar = !this.sidebar;
-    console.log(this.sidebar);
     this.collapsableTabs.forEach((tab: any) => {
-      tab.expanded = false
-    })
+      tab.expanded = false;
+    });
   }
 
-  setActiveTab(tab: SubTab) {
-    this.activeTab = tab
+  setActiveTab(subtab: SubTab) {
+    console.log(`Setting active tab: ${subtab.name}`);
+    this.activeTab = subtab;
+    this.storeRolePolicyId(subtab.name); 
   }
 
+  storeRolePolicyId(subTabName: string) {
+    console.log(`Looking for policy with name: ${subTabName}`);
+    const policy = this.rolePolicy.find(policy => policy.rolePolicyName === subTabName && policy.isChecked);
+
+    if (policy) {
+      localStorage.setItem('selectedRolePolicyId', policy.rolePolicyId);
+      console.log(`Stored rolePolicyId: ${policy.rolePolicyId} in localStorage`);
+    } else {
+      console.log('No policy found or not checked');
+    }
+  }
+  
 
   getPeopleById(personId: any) {
     this.service.getPeopleById(personId).subscribe(data => {
-      this.data = data[0]
-      localStorage.setItem("roleId",this.data.roleId)
-      const roleId = localStorage.getItem("roleId")
+      this.data = data[0];
+      localStorage.setItem("roleId", this.data.roleId);
+      const roleId = localStorage.getItem("roleId");
       this.getRoleById(roleId);
-    })
+      this.getRolePolicyId(roleId);
+    });
   }
 
   getRoleById(roleId: any) {
     this.service.getRoleById(roleId).subscribe(data => {
-      this.roleData = data[0]
-      console.log(data)
-      this.rolePolicy = data;
-    })
+      this.roleData = data[0];
+    });
+  }
+
+  getRolePolicyId(roleId: any) {
+    this.service.getRolePolicyById(roleId).subscribe(policies => {
+      this.rolePolicy = policies;
+      console.log(policies)
+      this.setupTabsBasedOnRolePolicies();
+    });
+  }
+
+  setupTabsBasedOnRolePolicies(): void {
+    // Define a mapping of rolePolicyNames to subtabs
+    const policyToTabMapping: { [key: string]: SubTab } = {
+      'Role': { name: 'Role', link: '/tabs/user-management/role-management', icon: 'assets/Images/Hierarchy.png', active: false },
+      'Employee': { name: 'Employee', link: '/tabs/user-management/employee-management', icon: 'assets/Images/Badge.png', active: false },
+      'User Account': { name: 'User Account', link: '/tabs/user-management/user-account', icon: 'assets/Images/Male User.png', active: false },
+      'Section Formatting': { name: 'Section Formatting', link: '/tabs/system-setup/section-formatting', icon: 'assets/Images/Web Design.png', active: false },
+      'Email Template': { name: 'Email Template', link: '/tabs/system-setup/email-template', icon: 'assets/Images/Document Header.png', active: false },
+      'Career Vacancies': { name: 'Career Vacancies', link: '/tabs/transactions/career-vacancies', icon: 'assets/Images/New Job.png', active: false },
+      'Applicants': { name: 'Applicants', link: '/tabs/transactions/applicants', icon: 'assets/Images/Applicant.png', active: false }
+    };
+
+    // Create the main tabs with subtabs based on role policies
+    const userManagementTabs = this.rolePolicy
+      .filter(policy => ['Role', 'Employee', 'User Account'].includes(policy.rolePolicyName) && policy.isChecked)
+      .map(policy => policyToTabMapping[policy.rolePolicyName]);
+
+    const systemSetupTabs = this.rolePolicy
+      .filter(policy => ['Section Formatting', 'Email Template'].includes(policy.rolePolicyName) && policy.isChecked)
+      .map(policy => policyToTabMapping[policy.rolePolicyName]);
+
+    const transactionsTabs = this.rolePolicy
+      .filter(policy => ['Career Vacancies', 'Applicants'].includes(policy.rolePolicyName) && policy.isChecked)
+      .map(policy => policyToTabMapping[policy.rolePolicyName]);
+
+    // Assign the tabs to collapsableTabs, only if they have subtabs
+    this.collapsableTabs = [
+      {
+        name: 'User Management',
+        icon: 'assets/Images/Admin Settings Male.png',
+        subtabs: userManagementTabs,
+        expanded: false
+      },
+      {
+        name: 'System Setup',
+        icon: 'assets/Images/Support.png',
+        subtabs: systemSetupTabs,
+        expanded: false
+      },
+      {
+        name: 'Transactions',
+        icon: 'assets/Images/Gears.png',
+        subtabs: transactionsTabs,
+        expanded: false
+      }
+    ].filter(tab => tab.subtabs.length > 0); // Filter out tabs without subtabs
+
+    // Define bottom navigation tabs
+    this.bottomTabs = [
+      { name: 'My Profile', link: '/my-profile', icon: 'assets/Images/User.png', active: false },
+      { name: 'Setup Security', link: '/setup-security', icon: 'assets/Images/Protect.png', active: false },
+      { name: 'Logout', link: '/login', icon: 'assets/Images/Logout.png', active: false }
+    ];
   }
 }

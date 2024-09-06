@@ -17,6 +17,8 @@ export class UserManagementService {
   private createRoleUrl = environment.apiUrl + "Role/createRole";
   private getRoleUrl = environment.apiUrl + "Role/getRoleList"
   private getRoleByIdUrl = environment.apiUrl + "Role/getRoleListById"
+  private getRolePolicyByIdUrl = environment.apiUrl + "Role/getRolePolicyById"
+  private getRolePolicyControlByIdUrl = environment.apiUrl + "Role/getRolePolicyControlById"
 
   // people
   private getPeopleUrl = environment.apiUrl + "People/getPeopleList";
@@ -158,6 +160,39 @@ export class UserManagementService {
         catchError(this.handleError)
       );
   }
+
+
+  getRolePolicyById(roleId: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    const params = new HttpParams().set('roleId', roleId);
+
+    return this.http.get<any>(this.getRolePolicyByIdUrl, { headers: headers, params: params })
+      .pipe(
+        map(data => data),
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
+
+  getRolePolicyControlById(rolePolicyId: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    const params = new HttpParams().set('roleId', rolePolicyId);
+
+    return this.http.get<any>(this.getRolePolicyControlByIdUrl, { headers: headers, params: params })
+      .pipe(
+        map(data => data),
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
+
+
 
 
   //function for handling errors
