@@ -84,9 +84,7 @@ export class TabsComponent implements OnInit {
 
     if (policy) {
       localStorage.setItem('selectedRolePolicyId', policy.rolePolicyId);
-      console.log(`Stored rolePolicyId: ${policy.rolePolicyId} in localStorage`);
     } else {
-      console.log('No policy found or not checked');
     }
   }
   
@@ -110,7 +108,6 @@ export class TabsComponent implements OnInit {
   getRolePolicyId(roleId: any) {
     this.service.getRolePolicyById(roleId).subscribe(policies => {
       this.rolePolicy = policies;
-      console.log(policies)
       this.setupTabsBasedOnRolePolicies();
     });
   }

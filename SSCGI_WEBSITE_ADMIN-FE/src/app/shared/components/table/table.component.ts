@@ -135,12 +135,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   getRoleControl(rolePolicyId: any) {
     this.service.getRolePolicyControlById(rolePolicyId).subscribe(data => {
-      console.log(data[0])
-
           // Set permissions based on the response
           this.canView = data[0].canView;
-
-          console.log(this.canView,'view')
           this.canCreate = data[0].canCreate;
           this.canEdit = data[0].canEdit;
           this.canDelete = data[0].canDelete;

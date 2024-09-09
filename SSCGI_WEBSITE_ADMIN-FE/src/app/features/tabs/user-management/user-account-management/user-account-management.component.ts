@@ -49,12 +49,12 @@ export class UserAccountManagementComponent {
   }
   onSubmit(result: any): void {
     this.loading = true;
-    console.log(result)
+    const createdByUserId = localStorage.getItem("userId")
     const form = {
       personId: result[0].person.value,
       roleId: result[0].roleId.value,
       expireDate: result[0].expiryDate,
-      createdByUserId: 1433,
+      createdByUserId: createdByUserId,
     };
 
     this.service.createUserAccount(form).subscribe({
