@@ -54,6 +54,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.login(form).subscribe({
       next: (data) => {
+
         if (data[0].token == null) {
           this.showSnackBar(data[0].message);
         } else {
@@ -62,6 +63,8 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', data[0].token)
           localStorage.setItem('personId',data[0].personId)
           localStorage.setItem('userId',data[0].userId)
+          localStorage.setItem('roleId',data[0].roleId)
+          console.log(localStorage.getItem("roleId"))
           this.showSnackBar(data[0].message);
         }
       },

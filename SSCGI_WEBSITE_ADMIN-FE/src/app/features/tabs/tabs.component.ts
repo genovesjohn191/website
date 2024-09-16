@@ -42,7 +42,11 @@ export class TabsComponent implements OnInit {
 
   ngOnInit(): void {
     this.personId = localStorage.getItem('personId');
+    const roleId = localStorage.getItem('roleId');
+    console.log(roleId)
     this.getPeopleById(this.personId);
+    this.getRoleById(roleId);
+    this.getRolePolicyId(roleId);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -73,18 +77,16 @@ export class TabsComponent implements OnInit {
   }
 
   setActiveTab(subtab: SubTab) {
-    console.log(`Setting active tab: ${subtab.name}`);
     this.activeTab = subtab;
     this.storeRolePolicyId(subtab.name); 
   }
 
   storeRolePolicyId(subTabName: string) {
-    console.log(`Looking for policy with name: ${subTabName}`);
     const policy = this.rolePolicy.find(policy => policy.rolePolicyName === subTabName && policy.isChecked);
-
+    console.log(policy.rolePolicyId)
     if (policy) {
       localStorage.setItem('selectedRolePolicyId', policy.rolePolicyId);
-    } else {
+    }else {
     }
   }
   
@@ -92,10 +94,6 @@ export class TabsComponent implements OnInit {
   getPeopleById(personId: any) {
     this.service.getPeopleById(personId).subscribe(data => {
       this.data = data[0];
-      localStorage.setItem("roleId", this.data.roleId);
-      const roleId = localStorage.getItem("roleId");
-      this.getRoleById(roleId);
-      this.getRolePolicyId(roleId);
     });
   }
 

@@ -105,7 +105,9 @@ export class RoleManagementComponent implements AfterViewInit {
   getRoleList() {
     this.service.getRole().subscribe(data => {
       this.data = data
+      console.log(this.data)
     })
+    
   }
 
 

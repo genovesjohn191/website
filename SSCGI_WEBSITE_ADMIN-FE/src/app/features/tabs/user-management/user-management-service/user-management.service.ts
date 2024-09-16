@@ -14,33 +14,26 @@ export class UserManagementService {
   public personId: any;
 
   // role
-  private createRoleUrl = environment.apiUrl + "Role/createRole";
-  private getRoleUrl = environment.apiUrl + "Role/getRoleList"
-  private getRoleByIdUrl = environment.apiUrl + "Role/getRoleListById"
-  private getRolePolicyByIdUrl = environment.apiUrl + "Role/getRolePolicyById"
-  private getRolePolicyControlByIdUrl = environment.apiUrl + "Role/getRolePolicyControlById"
+  private baseRoleUrl = environment.apiUrl + "Role/"
 
   // people
-  private getPeopleUrl = environment.apiUrl + "People/getPeopleList";
-  private createPeopleUrl = environment.apiUrl + "People/createPeople";
-  private updatePeopleUrl = environment.apiUrl + "People/updatePerson"
-  private getByIdPeopleUrl = environment.apiUrl + "People/getPersonById"
-
+  private basePeopleUrl = environment.apiUrl + "People/"
   // useracc
-  private createUserAccUrl = environment.apiUrl + "UserAccount/createUserAcc"
-  private getUserAccUrl = environment.apiUrl + "UserAccount/getUserAccList"
+  private baseUserAccUrl = environment.apiUrl + "UserAccount/"
+
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.authService.getToken()}`
+  });
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, private authService: AuthService) { }
 
 
+
   // useracc
   getUserAccount(): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-
-    return this.http.get(this.getUserAccUrl, { headers: headers }).pipe(
+    const url = this.baseUserAccUrl + "getUserAccList"
+    return this.http.get(url, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -48,12 +41,8 @@ export class UserManagementService {
   }
 
   createUserAccount(form: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-
-    return this.http.post(this.createUserAccUrl, form, { headers: headers }).pipe(
+    const url = this.baseUserAccUrl + "createUserAcc"
+    return this.http.post(url, form, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -63,13 +52,9 @@ export class UserManagementService {
 
   // people
   getPeopleById(personId: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
+    const url = this.basePeopleUrl + "getPersonById";
     const params = new HttpParams().set('personId', personId);
-
-    return this.http.get<any>(this.getByIdPeopleUrl, { headers: headers, params: params })
+    return this.http.get<any>(url, { headers: this.headers, params: params })
       .pipe(
         map(data => data),
         retry(3),
@@ -78,12 +63,8 @@ export class UserManagementService {
   }
 
   updatePeople(form: any) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-    // this.personId = localStorage.getItem("personId")
-    return this.http.put<any>(`${this.updatePeopleUrl}/${this.personId}`, form, { headers: headers }).
+    const url = this.basePeopleUrl + "updatePerson"
+    return this.http.put<any>(`${url}/${this.personId}`, form, { headers: this.headers }).
       pipe(
         map(data => data),
         retry(3),
@@ -93,12 +74,8 @@ export class UserManagementService {
   }
 
   createPeople(form: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-
-    return this.http.post(this.createPeopleUrl, form, { headers: headers }).pipe(
+    const url = this.basePeopleUrl + "createPeople"
+    return this.http.post(url, form, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -107,12 +84,8 @@ export class UserManagementService {
 
 
   getPeople(): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-
-    return this.http.get(this.getPeopleUrl, { headers: headers }).pipe(
+    const url = this.basePeopleUrl + "getPeopleList"
+    return this.http.get(url, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -121,12 +94,8 @@ export class UserManagementService {
 
   // role
   createRole(form: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-
-    return this.http.post(this.createRoleUrl, form, { headers: headers }).pipe(
+    const url = this.baseRoleUrl + "createRole"
+    return this.http.post(url, form, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -135,11 +104,8 @@ export class UserManagementService {
 
 
   getRole(): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
-    return this.http.get(this.getRoleUrl, { headers: headers }).pipe(
+    const url = this.baseRoleUrl +"getRoleList"
+    return this.http.get(url, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
@@ -147,44 +113,33 @@ export class UserManagementService {
   }
 
   getRoleById(roleId: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
+    const url = this.baseRoleUrl + "getRoleListById"
     const params = new HttpParams().set('roleId', roleId);
 
-    return this.http.get<any>(this.getRoleByIdUrl, { headers: headers, params: params })
+    return this.http.get<any>(url, { headers: this.headers, params: params })
       .pipe(
         map(data => data),
         retry(3),
         catchError(this.handleError)
       );
   }
-
 
   getRolePolicyById(roleId: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
+    const url = this.baseRoleUrl + "getRolePolicyById";
     const params = new HttpParams().set('roleId', roleId);
 
-    return this.http.get<any>(this.getRolePolicyByIdUrl, { headers: headers, params: params })
+    return this.http.get<any>(url, { headers: this.headers, params: params })
       .pipe(
         map(data => data),
         retry(3),
         catchError(this.handleError)
       );
   }
-
   getRolePolicyControlById(rolePolicyId: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.getToken()}`
-    });
+    const url = this.baseRoleUrl +"getRolePolicyControlById"
     const params = new HttpParams().set('roleId', rolePolicyId);
 
-    return this.http.get<any>(this.getRolePolicyControlByIdUrl, { headers: headers, params: params })
+    return this.http.get<any>(url, { headers: this.headers, params: params })
       .pipe(
         map(data => data),
         retry(3),
