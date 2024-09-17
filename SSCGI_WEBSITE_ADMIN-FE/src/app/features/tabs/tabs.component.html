@@ -1,11 +1,11 @@
 <mat-sidenav-container class="sidenav-container">
     <!-- Main Sidebar -->
     <mat-sidenav #sidenav mode="side" opened [ngClass]="{'open': !sidebar, 'close': sidebar}">
-      <div class="sidenav-cont">
+      <div class="sidenav-cont" >
         <div class="topnav">
-          <div class="nav-header">
-            <img class="sscgiLogo" src="../../../assets/Images/Logo.png" alt="" (click)="toggleSidebar()">
-            <p *ngIf="!sidebar" class="sscgiTitle">Systems and software Consulting group inc.</p>
+          <div class="nav-header" (click)="toggleSidebar()">
+            <img class="sscgiLogo" src="../../../assets/Images/Logo.png" alt="" >
+            <p *ngIf="!showLabels"  class="sscgiTitle">Systems and software Consulting group inc.</p>
             <!-- Toggle button with ngIf to hide when sidebar is closed -->
             <!-- <button mat-icon-button *ngIf="!sidebar" (click)="toggleSidebar()">
               <mat-icon>{{ sidebar ? 'chevron_left' : 'chevron_right' }}</mat-icon>
@@ -13,14 +13,14 @@
           </div>
           <div class="collapsable-nav-cont">
             <div class="tabs-cont" *ngFor="let tab of collapsableTabs">
-              <div class="collapsable-item" (click)="toggleTab(tab)">
+              <div class="collapsable-item" [ngClass]="{'small': sidebar}" (click)="toggleTab(tab)">
                 <div>
                   <img [src]="tab.icon" alt="">
-                  <a *ngIf="!sidebar" mat-line>{{tab.name}}</a>
+                  <a *ngIf="!showLabels" mat-line>{{tab.name}}</a>
                 </div>
-                <mat-icon *ngIf="!sidebar" mat-list-icon [ngClass]="{'expanded': tab.expanded}" class="arrow-icon">keyboard_arrow_down</mat-icon>
+                <mat-icon *ngIf="!showLabels" mat-list-icon [ngClass]="{'expanded': tab.expanded}" class="arrow-icon">keyboard_arrow_down</mat-icon>
               </div>
-              <div class="subtab-cont" [ngClass]="{'expanded': tab.expanded}" *ngIf="tab.expanded">
+              <div class="subtab-cont" [ngClass]="{'expanded': tab.expanded}" *ngIf="tab.expanded && !sidebar " >
                 <div class="subtab-item" *ngFor="let subtab of tab.subtabs" [routerLink]="subtab.link" routerLinkActive="active" (click)="setActiveTab(subtab)">
                   <div>
                     <img [src]="subtab.icon" alt="">
@@ -34,10 +34,10 @@
   
         <div class="collapsable-nav-cont">
           <div class="tabs-cont" *ngFor="let tab of bottomTabs">
-            <div class="bottomTabs-item" [routerLink]="tab.link" routerLinkActive="active" (click)="setActiveTab(tab)">
+            <div class="bottomTabs-item" [ngClass]="{'small': sidebar}" [routerLink]="tab.link" routerLinkActive="active" (click)="setActiveTab(tab)">
               <div>
                 <img [src]="tab.icon" alt="">
-                <a *ngIf="!sidebar" mat-line>{{tab.name}}</a>
+                <a *ngIf="!showLabels" mat-line>{{tab.name}}</a>
               </div>
             </div>
           </div>

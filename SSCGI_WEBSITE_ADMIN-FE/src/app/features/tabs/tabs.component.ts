@@ -22,6 +22,7 @@ export class TabsComponent implements OnInit {
   activeTab: SubTab = { name: '', link: '', icon: '', active: false };
   showSidebar: boolean = true;
   sidebar: boolean = window.innerWidth <= 1350;
+  showLabels: boolean = window.innerWidth <= 1350;
   personId: any;
   roleId: any;
   data: any = {};
@@ -49,6 +50,7 @@ export class TabsComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.sidebar = window.innerWidth <= 1350;
+    this.showLabels = window.innerWidth <= 1350;
   }
 
   setActiveTabByUrl(url: string): void {
@@ -66,13 +68,19 @@ export class TabsComponent implements OnInit {
   toggleTab(tab: Tab): void {
     tab.expanded = !tab.expanded;
     this.sidebar = false;
+    this.showLabels = false;
   }
 
   toggleSidebar(): void {
     this.sidebar = !this.sidebar;
-    this.collapsableTabs.forEach((tab: any) => {
-      tab.expanded = false;
-    });
+    if(!this.showLabels){
+      this.showLabels = !this.showLabels;
+    }else{
+      setTimeout(() => {
+        this.showLabels = !this.showLabels;
+      }, 200); // 300ms delay
+    }
+
   }
 
   setActiveTab(subtab: SubTab) {
