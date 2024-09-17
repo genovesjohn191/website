@@ -30,7 +30,7 @@ import { TableComponent } from '../../../../shared/components/table/table.compon
   styleUrls: ['./section-formatting.component.css'] // Corrected from styleUrl
 })
 export class SectionFormattingComponent implements OnInit { 
- module = 'section-formatting'
+  module = 'section formatting'
   link = "system-setup/section-formatting/"
   myData = [
     { page: 'Home', sectionName: "Home Grown Solution", sequenceNumber: "1" },

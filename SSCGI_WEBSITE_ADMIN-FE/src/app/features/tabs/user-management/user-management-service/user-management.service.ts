@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environments';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, map, Observable, retry, throwError } from 'rxjs';
+import { catchError, from, map, Observable, retry, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoleData } from '../../../../shared/interfaces/role-model';
 import { AuthService } from '../../../auth/auth.service';
@@ -102,6 +102,15 @@ export class UserManagementService {
     );
   }
 
+  updateRole(form: any): Observable<any> {
+    const url = this.baseRoleUrl + "editRole"
+    console.log(form)
+    return this.http.put(url, form, { headers: this.headers }).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError.bind(this))
+    );
+  }
 
   getRole(): Observable<any> {
     const url = this.baseRoleUrl +"getRoleList"
@@ -113,7 +122,7 @@ export class UserManagementService {
   }
 
   getRoleById(roleId: string) {
-    const url = this.baseRoleUrl + "getRoleListById"
+    const url = this.baseRoleUrl + "getRoleById"
     const params = new HttpParams().set('roleId', roleId);
 
     return this.http.get<any>(url, { headers: this.headers, params: params })

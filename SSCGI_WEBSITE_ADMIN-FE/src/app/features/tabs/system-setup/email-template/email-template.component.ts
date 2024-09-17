@@ -11,7 +11,7 @@ import { FormConfig } from '../../../../shared/interfaces/form-model';
 })
 export class EmailTemplateComponent {
   link = "system-setup/email-template/"
-  module = 'email-template'
+  module = 'email template'
   myData = [
     { 
       category: 'Acknowledgement or Sales', 

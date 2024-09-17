@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 })
 export class EmployeeManagementComponent {
   link = "user-management/employee-management/"
-  module = 'employee-management'
+  module = 'employee'
   icon = '/assets/Images/Badge.png'
   data: Employee[] = [];
   loading: boolean = false;
@@ -61,6 +61,7 @@ export class EmployeeManagementComponent {
   }
 
   onSubmit(data: any, mode: string): void {
+    console.log(mode, data)
     let createdByUserId = "143";
     let form = {
       firstName: data.firstName,

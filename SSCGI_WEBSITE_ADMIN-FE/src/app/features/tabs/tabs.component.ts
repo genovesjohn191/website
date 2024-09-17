@@ -35,7 +35,6 @@ export class TabsComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showSidebar = !this.router.url.includes('login');
-        this.setActiveTabByUrl(event.url);
       }
     });
   }
@@ -43,10 +42,8 @@ export class TabsComponent implements OnInit {
   ngOnInit(): void {
     this.personId = localStorage.getItem('personId');
     const roleId = localStorage.getItem('roleId');
-    console.log(roleId)
     this.getPeopleById(this.personId);
     this.getRoleById(roleId);
-    this.getRolePolicyId(roleId);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -55,7 +52,9 @@ export class TabsComponent implements OnInit {
   }
 
   setActiveTabByUrl(url: string): void {
+    console.log(url)
     const allTabs = [...this.collapsableTabs.flatMap(tab => tab.subtabs), ...this.bottomTabs];
+    console.log(allTabs)
     const foundTab = allTabs.find(tab => url.includes(tab.link));
     if (foundTab) {
       this.activeTab = foundTab;
@@ -99,14 +98,17 @@ export class TabsComponent implements OnInit {
 
   getRoleById(roleId: any) {
     this.service.getRoleById(roleId).subscribe(data => {
-      this.roleData = data[0];
-    });
-  }
-
-  getRolePolicyId(roleId: any) {
-    this.service.getRolePolicyById(roleId).subscribe(policies => {
-      this.rolePolicy = policies;
+      this.roleData = data;
+      const roleString = JSON.stringify(this.roleData)
+      localStorage.setItem("RoleData", roleString)
+      this.rolePolicy = this.roleData.policies;
+  
+      // Setup tabs first
       this.setupTabsBasedOnRolePolicies();
+  
+      // Now call setActiveTabByUrl to make sure it's executed after setup
+      const currentUrl = this.router.url;
+      this.setActiveTabByUrl(currentUrl);
     });
   }
 

@@ -55,6 +55,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     canDelete: boolean = false;
     canRestore: boolean = false;
 
+  roleData:any 
   searchTerm: string = '';
   loading: boolean = true;
   callBack: boolean = false;
@@ -64,13 +65,20 @@ export class TableComponent implements OnInit, AfterViewInit {
     if (changes['data'] && !changes['data'].firstChange) {
       this.dataSource.data = this.data;
     }
+    
   }
 
   ngOnInit(): void {
     this.loadData();
     this.displayedColumns = this.columns.map(col => col.key);
-    const rolePolicyId = localStorage.getItem("selectedRolePolicyId")
-    this.getRoleControl(rolePolicyId);
+    const roleString = localStorage.getItem("RoleData")
+    if(roleString != null){
+      this.roleData = JSON.parse(roleString);
+      console.log(this.roleData)
+      this.getRoleControl();
+    }
+
+    
   }
 
   ngAfterViewInit() {
@@ -133,14 +141,19 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.router.navigate([this.link + path]);
   }
 
-  getRoleControl(rolePolicyId: any) {
-    this.service.getRolePolicyControlById(rolePolicyId).subscribe(data => {
-          // Set permissions based on the response
-          this.canView = data[0].canView;
-          this.canCreate = data[0].canCreate;
-          this.canEdit = data[0].canEdit;
-          this.canDelete = data[0].canDelete;
-          this.canRestore = data[0].canRestore;
-    })
+  getRoleControl() {
+    // Check if roleData and rolePolicies are defined
+    if (this.roleData && Array.isArray(this.roleData.policies)) {
+      const rolePolicy = this.roleData.policies.find((policy: any) => policy.rolePolicyName.toLowerCase() === this.module.toLowerCase());
+
+      const options = rolePolicy.options
+      console.log(options)
+      this.canView = options.canView
+      this.canCreate = options.canCreate
+      this.canDelete = options.canDelete
+      this.canEdit = options.canEdit
+      this.canRestore = options.canRestore
+    } 
   }
+  
 }

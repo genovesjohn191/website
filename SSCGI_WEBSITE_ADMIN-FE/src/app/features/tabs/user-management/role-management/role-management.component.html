@@ -2,5 +2,5 @@
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div >
-    <app-table [data]="data" [columns]="myColumns" [link]="link" [module]="module" [createModalData]="createModalData"  (submitTriggered)="onSubmit($event)"></app-table>
+    <app-table [data]="data" [columns]="myColumns" [link]="link" [module]="module" [createModalData]="createModalData"  (submitTriggered)="onSubmit($event[0], $event[1])"></app-table>
 </div>

@@ -21,7 +21,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class RoleManagementComponent implements AfterViewInit {
   link = "usermanagement/role-management";
-  module = 'role-management';
+  module = 'role';
   icon = '/assets/Images/Hierarchy.png';
   loading: boolean = false;
 
@@ -71,27 +71,46 @@ export class RoleManagementComponent implements AfterViewInit {
   }
 
 
-  onSubmit(result: any): void {
-    console.log(result[0])
+  onSubmit(data: any, mode: string): void {
     this.loading = true;
-    console.log('Submit event triggered:', result);
-
-    this.service.createRole(result[0]).subscribe({
-      next: (data) => {
-        if (data && data.message) {
-          this.showSnackBar(data.message);
-          this.getRoleList();
-        } else if (data == null) {
-          this.showSnackBar('Error creating role. Please try again.');
+    if(mode == "create"){
+      this.service.createRole(data).subscribe({
+        next: (data) => {
+          if (data && data.message) {
+            this.showSnackBar(data.message);
+            this.getRoleList();
+          } else if (data == null) {
+            this.showSnackBar('Error creating role. Please try again.');
+          }
+        },
+        error: (error) => {
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
         }
-      },
-      error: (error) => {
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
+      });
+    }else if(mode =="edit"){
+
+      console.log(data)
+      this.service.updateRole(data).subscribe({
+        next: (data) => {
+          if (data && data.message) {
+            this.showSnackBar(data.message);
+            this.getRoleList();
+          } else if (data == null) {
+            this.showSnackBar('Error updating role. Please try again.');
+          }
+        },
+        error: (error) => {
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      });
+    }
+
   }
 
   showSnackBar(message: string): void {

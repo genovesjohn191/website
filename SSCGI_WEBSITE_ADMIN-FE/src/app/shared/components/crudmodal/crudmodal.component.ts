@@ -91,7 +91,7 @@ export class CRUDmodalComponent implements OnInit {
         ));
 
         const rolePoliciesArray = this.dynamicForm.get('Policies') as FormArray;
-        console.log(rolePoliciesArray, 're')
+        //console.log(rolePoliciesArray, 're')
         rolePoliciesArray.controls.forEach((policyControl: AbstractControl, index: number) => {
           const policyGroup = policyControl as FormGroup;
           const existingPolicy = (details.policies || [])[index];
@@ -111,7 +111,7 @@ export class CRUDmodalComponent implements OnInit {
         });
 
         if (this.mode === 'view') {
-          console.log(rolePoliciesArray)
+          //console.log(rolePoliciesArray)
           rolePoliciesArray.disable();
         }
       }
@@ -187,35 +187,49 @@ export class CRUDmodalComponent implements OnInit {
     return null;
   }
 
-    onSubmit() {
-      if (this.dynamicForm.invalid) {
-        console.log('Invalid');
-        return;
-      }
-
-      const formValue = this.dynamicForm.value;
-      const transformedRolePolicies = this.formConfig.policies ? formValue.Policies
-        .filter((policy: any) => policy.isChecked) // Only include checked policies
-        .map((policy: any, index: number) => ({
-          rolePolicyName: policy.name,
-          isChecked: policy.isChecked,
-          options: [this.formConfig.policies![index].options.reduce((acc: any, option: string, i: number) => {
-            acc[option] = policy.options[i];
-            return acc;
-          }, {})
-        ]
-        })) : [];
-
-      const transformedFormValue = {
-        ...formValue,
-        Policies: transformedRolePolicies
-      };
-
-      this.formSubmitted.emit({ mode: this.mode, ...transformedFormValue });
-      this.dialogRef.close({ mode: this.mode, ...transformedFormValue });
-      this.dialogRef.close(transformedFormValue);
-
+  onSubmit() {
+    if (this.dynamicForm.invalid) {
+      return;
     }
+  
+    const formValue = this.dynamicForm.value;
+    const transformedRolePolicies = this.formConfig.policies ? formValue.Policies.map((policy: any, index: number) => {
+      const existingPolicy = this.data.details?.policies?.[index] || {};
+      return {
+        rolePolicyName: policy.name,
+        isChecked: policy.isChecked,
+        ... (existingPolicy.rolePolicyId ? { rolePolicyControlId: existingPolicy.rolePolicyId } : {}),
+        options: policy.isChecked ? [{
+          CanCreate: policy.options[0],
+          CanDelete: policy.options[1],
+          CanEdit: policy.options[2],
+          CanRestore: policy.options[3],
+          CanView: policy.options[4],
+          ...(existingPolicy.rolePolicyId ? { rolePolicyControlId: existingPolicy.rolePolicyId } : {})
+        }] : [{
+          CanCreate: false,
+          CanDelete: false,
+          CanEdit: false,
+          CanRestore: false,
+          CanView: false,
+          ...(existingPolicy.rolePolicyId ? { rolePolicyControlId: existingPolicy.rolePolicyId } : {})
+        }]
+      };
+    }) : [];
+    
+    const roleId = this.data.details?.roleId || null;
+    const transformedFormValue = {
+      ...formValue,
+      Policies: transformedRolePolicies,
+      ...(roleId ? { roleId } : {})
+    };
+  
+    console.log(transformedFormValue);
+    this.formSubmitted.emit({ mode: this.mode, ...transformedFormValue });
+    this.dialogRef.close({ mode: this.mode, ...transformedFormValue });
+  }
+  
+  
 
   toggleOptions(policyIndex: number) {
     const policy = this.rolePoliciesArray.at(policyIndex);
