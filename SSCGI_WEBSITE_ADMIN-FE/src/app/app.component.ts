@@ -12,6 +12,7 @@ import { UserManagementService } from './features/tabs/user-management/user-mana
 @Component({
   selector: 'app-root',
   standalone: true,
+  
   imports: [RouterOutlet,MatSidenavModule, MatListModule, MatIconModule, CommonModule, MatExpansionModule, RouterModule,ReactiveFormsModule,FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

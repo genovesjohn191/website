@@ -10,12 +10,14 @@ import { SetPasswordPageComponent } from './features/auth/set-password-page/set-
 import { TabsComponent } from './features/tabs/tabs.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { AuthGuard } from './features/auth/auth.guard';
+import { PageBuilderComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-builder.component';
+import { PageViewComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-view/page-view.component';
 
 export const routes: Routes = [
 
-    {
+    {      
         path: 'tabs',
-        component: TabsComponent,canActivate: [AuthGuard],
+        component: TabsComponent,
         children: [
             // Section formatting routes
             { path: 'system-setup/section-formatting', component: SectionFormattingComponent },
@@ -32,13 +34,21 @@ export const routes: Routes = [
 
             // User account management routes
             { path: 'user-management/user-account', component: UserAccountManagementComponent },
+
+            { path: 'system-setup/section-formatting/page-builder',  component: PageBuilderComponent},
+
+            // { path: 'system-setup/section-formatting/view-page',  component: PageViewComponent},
         ]
     },
 
     { path: 'set-password', component: SetPasswordPageComponent },
     { path: 'login', component: LoginComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full'},
+    { path: ':id', component: PageViewComponent },
     // { path: '**', redirectTo: 'system-setup/section-formatting' },
+
+    
+    
 
 
 ];

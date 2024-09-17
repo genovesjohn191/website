@@ -1,1 +1,33 @@
-<app-table [data]="myData" [columns]="myColumns" [link]="link" [module]="module"></app-table>
+<!-- <app-table [data]="myData" [columns]="myColumns" [link]="link" [module]="module"></app-table> -->
+
+<div class="page-container">
+    <mat-card class="card-section">
+        <mat-card-content>
+            <ul class="item-list">
+                <mat-card-title> </mat-card-title>
+                <li class="list-item">
+                    <span>Page Builder</span>
+                    <div class="action-buttons">
+                        <button mat-button class="button"  (click)="navigateToPageBuilder()">Edit</button>
+                        <button mat-button class="button" (click)="navigateToPageView()">View</button>
+                    </div>
+                </li>
+
+                <li class="list-item">
+                    <span>Contact Us</span>
+                    <div class="action-buttons">
+                        <button mat-button class="button">Edit</button>
+                        <button mat-button class="button">View</button>
+                    </div>
+                </li>
+                <li class="list-item">
+                    <span>Careers</span>
+                    <div class="action-buttons">
+                        <button mat-button  class="button">Edit</button>
+                        <button mat-button class="button">View</button>
+                    </div>
+                </li>
+            </ul>
+        </mat-card-content>
+    </mat-card>
+</div>
