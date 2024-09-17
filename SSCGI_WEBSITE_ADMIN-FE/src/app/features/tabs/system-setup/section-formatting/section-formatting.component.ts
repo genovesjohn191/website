@@ -35,12 +35,10 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./section-formatting.component.css'] // Corrected from styleUrl
 })
 export class SectionFormattingComponent implements OnInit { 
-<<<<<<< Updated upstream
-  module = 'section formatting'
-=======
+
   private editor: any;
  module = 'section-formatting'
->>>>>>> Stashed changes
+
   link = "system-setup/section-formatting/"
   myData = [
     { page: '1', sectionName: "Page Builder"},
