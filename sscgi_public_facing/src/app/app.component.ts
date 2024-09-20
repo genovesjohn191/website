@@ -6,6 +6,7 @@ import { NavBarMobileViewComponent } from './core/header/nav-bar/nav-bar-mobile-
 import { MatIconModule } from '@angular/material/icon';
 import { FooterComponent } from './core/footer/footer.component';
 import { WidgetComponent } from './core/widget/widget.component';
+import { DynamicPageComponent } from './features/dynamic-page/dynamic-page.component';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { WidgetComponent } from './core/widget/widget.component';
     RouterOutlet,
     HeaderNavComponent,
     FooterComponent,
-    WidgetComponent
+    WidgetComponent,
+    DynamicPageComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

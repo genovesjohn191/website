@@ -9,7 +9,20 @@ import { catchError, map, Observable, retry, throwError } from 'rxjs';
 export class SscgiService {
 
   private getLandingPageStylesUrl = environment.apiUrl + "LandingPageStyles/getLandingPageStyles";
+  private pageBaseUrl =  environment.apiUrl + "Page/"
   constructor(private http: HttpClient) { }
+
+
+
+  getPages(): Observable<any> {
+    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+
+    return this.http.get(this.pageBaseUrl + "getPages", options).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError)
+    );
+  }
 
   getData(): Observable<any> {
     let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
