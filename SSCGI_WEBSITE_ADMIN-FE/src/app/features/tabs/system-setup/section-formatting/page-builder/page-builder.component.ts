@@ -18,7 +18,7 @@ export class PageBuilderComponent implements OnInit {
     url: string; id: string; name: string; component: string; styles: string
   }[] = [];
   private currentPageIndex: number = 0;
-  api = "https://localhost:7258/Page/"
+  api = "http://172.16.5.50:88/Page/"
 
   constructor(private http: HttpClient, private router: Router) { }
 
