@@ -4,7 +4,7 @@
 </div>
 
 <mat-dialog-content class="mat-typography">
-  <form [formGroup]="dynamicForm" class="form" *ngIf="mode !== 'delete'">
+  <form [formGroup]="dynamicForm" class="form" *ngIf="mode !== 'delete' && mode !== 'restore'">
     <h1 class="form-header margin-bot" *ngIf="module === 'role'">Role Information</h1>
     <div class="fields-cont">
       <mat-form-field *ngFor="let field of formConfig.fields"
@@ -73,12 +73,17 @@
   <div *ngIf="mode === 'delete'" class="delete-cont">
     <h1 class="delete-message">Are you sure you want to delete this {{module}}?</h1>
   </div>
+
+  <div *ngIf="mode === 'restore'" class="delete-cont">
+    <h1 class="delete-message">Are you sure you want to restore this {{module}}?</h1>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions class="buttons">
   <button mat-stroked-button (click)="onCancel()" class="modal-button cancel"
     [ngClass]="{'single-line-textarea': mode ==='view'}">Cancel</button>
-  <button *ngIf="mode ==='delete'" mat-flat-button class="modal-button">Delete</button>
-  <button *ngIf="mode !== 'view' && mode !== 'delete'" mat-flat-button class="modal-button"
-    (click)="onSubmit()">Submit</button>
+  <button *ngIf="mode ==='delete'" mat-flat-button class="modal-button" (click)="onDelete()">Delete</button>
+  <button *ngIf="mode ==='restore'" mat-flat-button class="modal-button" (click)="onRestore()">Restore</button>
+  <button *ngIf="mode !== 'view' && mode !== 'delete' && mode !== 'restore'" mat-flat-button class="modal-button" (click)="onSubmit()">Submit</button>
+
 </mat-dialog-actions>

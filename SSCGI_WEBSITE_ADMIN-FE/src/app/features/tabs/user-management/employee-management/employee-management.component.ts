@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FormConfig } from '../../../../shared/interfaces/form-model';
-import { UserManagementService } from '../user-management-service/user-management.service';
 import { Employee } from '../../../../shared/interfaces/employee-model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { EmployeeService } from '../user-management-service/Employee/employee.service';
 
 @Component({
   selector: 'app-employee-management',
@@ -47,7 +47,7 @@ export class EmployeeManagementComponent {
     ]
   };
 
-  constructor(private service: UserManagementService, private snackBar: MatSnackBar) { }
+  constructor(private _personService: EmployeeService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
 
@@ -55,7 +55,7 @@ export class EmployeeManagementComponent {
   }
 
   getPeople() {
-    this.service.getPeople().subscribe(data => {
+    this._personService.getPeople().subscribe(data => {
       this.data = data;
     })
   }
@@ -78,7 +78,7 @@ export class EmployeeManagementComponent {
     this.loading = true;
     if (mode === 'create') {
       // Call the service method with the updated form
-      this.service.createPeople(form).subscribe({
+      this._personService.createPeople(form).subscribe({
         next: (response) => {
           if (response && response.message) {
             this.showSnackBar(response.message);
@@ -97,7 +97,7 @@ export class EmployeeManagementComponent {
       });
     } else if (mode === 'edit') {
       console.log(localStorage.getItem("personId"))
-      this.service.updatePeople(form).subscribe({
+      this._personService.updatePeople(form).subscribe({
         next: (response) => {
           if (response && response.message) {
             this.showSnackBar(response.message);
@@ -122,7 +122,7 @@ export class EmployeeManagementComponent {
   }
 
   getPeopleById(personId:any){
-    this.service.getPeopleById(personId).subscribe(data=>{
+    this._personService.getPeopleById(personId).subscribe(data=>{
       console.log(data)
     })
   }

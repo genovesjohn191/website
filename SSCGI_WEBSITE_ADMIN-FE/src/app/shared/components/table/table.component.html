@@ -1,15 +1,15 @@
 <div class="content">
   <div class="cont1">
+    <div class="buttons">
+      <button *ngIf="canCreate" mat-flat-button class="basic-button green"
+        (click)="module !== 'section-formatting' ? openCrudModal(null,'create') : redirectTo('create')">Create</button>
+
+      <button *ngIf="canRestore" (click)="onRestore()" mat-stroked-button class="basic-button yellow">Restore</button>
+    </div>
     <div class="search-container">
       <input class="searchinput" type="text" placeholder="Search..." [(ngModel)]="searchTerm"
         (keyup)="applyFilter($event)" />
       <mat-icon>search</mat-icon>
-    </div>
-    <div class="buttons">
-      <button *ngIf="canCreate" mat-flat-button class="basic-button"
-        (click)="module !== 'section-formatting' ? openCrudModal(null,'create') : redirectTo('create')">Create</button>
-
-      <button *ngIf="canRestore" mat-stroked-button class="basic-button">Restore</button>
     </div>
   </div>
 

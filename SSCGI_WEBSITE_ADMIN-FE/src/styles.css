@@ -19,16 +19,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: white !important;
 }
 
-.mat-mdc-unelevated-button:not(:disabled) {
+.green.mat-mdc-unelevated-button:not(:disabled) {
     background-color: #166534 !important;
 }
 
-.mat-mdc-outlined-button:not(:disabled) {
+.yellow.mat-mdc-outlined-button:not(:disabled) {
     color: #FFCD29 !important;
     border-color: #FFCD29 !important;
 }
 
-.mat-mdc-outlined-button.cancel:not(:disabled) {
+.blue.mat-mdc-outlined-button.cancel:not(:disabled) {
     color: #283396 !important;
     border-color: #283396 !important;
 }

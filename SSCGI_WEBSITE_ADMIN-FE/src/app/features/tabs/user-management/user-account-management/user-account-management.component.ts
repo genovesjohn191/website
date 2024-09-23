@@ -3,11 +3,13 @@ import { RoleData } from '../../../../shared/interfaces/role-model';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FormConfig } from '../../../../shared/interfaces/form-model';
 import { UserAccount } from '../../../../shared/interfaces/user-model';
-import { UserManagementService } from '../user-management-service/user-management.service';
 import { Employee } from '../../../../shared/interfaces/employee-model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { UserAccountService } from '../user-management-service/User-Account/user-account.service';
+import { RoleService } from '../user-management-service/Role/role.service';
+import { EmployeeService } from '../user-management-service/Employee/employee.service';
 
 @Component({
   selector: 'app-user-account-management',
@@ -41,7 +43,7 @@ export class UserAccountManagementComponent {
   ];
 
 
-  constructor(private service: UserManagementService, private changeDetectorRef: ChangeDetectorRef, private snackBar: MatSnackBar) { }
+  constructor(private _roleService: RoleService, private _employeeService: EmployeeService,private _userAccService: UserAccountService, private changeDetectorRef: ChangeDetectorRef, private snackBar: MatSnackBar) { }
 
   ngAfterViewInit(): void {
     this.getOptionList();
@@ -57,7 +59,7 @@ export class UserAccountManagementComponent {
       createdByUserId: createdByUserId,
     };
 
-    this.service.createUserAccount(form).subscribe({
+    this._userAccService.createUserAccount(form).subscribe({
       next: (data) => {
 
         console.log(this.loading)
@@ -80,7 +82,7 @@ export class UserAccountManagementComponent {
   }
 
   getUserAccountList() {
-    this.service.getUserAccount().subscribe(data => {
+    this._userAccService.getUserAccount().subscribe(data => {
       this.data = data;
     })
   }
@@ -91,7 +93,7 @@ export class UserAccountManagementComponent {
     let selectPersonOptions: { value: string; label: string }[] = []; // Changed to string
 
     // Fetch roles
-    this.service.getRole().subscribe((data) => {
+    this._roleService.getRole().subscribe((data) => {
       this.roleSelect = data;
       selectRoleOptions = this.roleSelect.map(role => ({
         value: role.roleId,      // Assuming roleId is a number
@@ -99,7 +101,7 @@ export class UserAccountManagementComponent {
       }));
 
       // Fetch people only after roles are fetched
-      this.service.getPeople().subscribe((person) => {
+      this._employeeService.getPeople().subscribe((person) => {
         this.personSelect = person;
         selectPersonOptions = this.personSelect.map(person => ({
           value: person.personId,

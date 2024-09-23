@@ -8,7 +8,8 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Tab, SubTab } from "../../shared/interfaces/tabs-model"
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserManagementService } from './user-management/user-management-service/user-management.service';
+import { EmployeeService } from './user-management/user-management-service/Employee/employee.service';
+import { RoleService } from './user-management/user-management-service/Role/role.service';
 
 @Component({
   selector: 'app-tabs',
@@ -32,7 +33,7 @@ export class TabsComponent implements OnInit {
   collapsableTabs: Tab[] = [];
   bottomTabs: SubTab[] = [];
 
-  constructor(private router: Router, private service: UserManagementService) {
+  constructor(private router: Router, private _employeeService: EmployeeService, private _roleService: RoleService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showSidebar = !this.router.url.includes('login');
@@ -99,13 +100,13 @@ export class TabsComponent implements OnInit {
   
 
   getPeopleById(personId: any) {
-    this.service.getPeopleById(personId).subscribe(data => {
+    this._employeeService.getPeopleById(personId).subscribe(data => {
       this.data = data[0];
     });
   }
 
   getRoleById(roleId: any) {
-    this.service.getRoleById(roleId).subscribe(data => {
+    this._roleService.getRoleById(roleId).subscribe(data => {
       this.roleData = data;
       const roleString = JSON.stringify(this.roleData)
       localStorage.setItem("RoleData", roleString)

@@ -7,7 +7,6 @@ import { MatSidenavModule} from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserManagementService } from './features/tabs/user-management/user-management-service/user-management.service';
 
 @Component({
   selector: 'app-root',

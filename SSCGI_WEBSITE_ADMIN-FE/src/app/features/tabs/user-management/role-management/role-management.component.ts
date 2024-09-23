@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
+import { RestoreTableComponent } from '../../../../shared/components/restore-table/restore-table.component';
 import { RoleData } from '../../../../shared/interfaces/role-model';
 import { FormConfig } from '../../../../shared/interfaces/form-model';
-import { UserManagementService } from '../user-management-service/user-management.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import { MatTableDataSource } from '@angular/material/table';
+import { RoleService } from '../user-management-service/Role/role.service';
 
 @Component({
   selector: 'app-role-management',
@@ -14,7 +14,8 @@ import { MatTableDataSource } from '@angular/material/table';
   imports: [TableComponent,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    CommonModule
+    CommonModule,
+    RestoreTableComponent
   ],
   templateUrl: './role-management.component.html',
   styleUrls: ['./role-management.component.css']
@@ -24,8 +25,8 @@ export class RoleManagementComponent implements AfterViewInit {
   module = 'role';
   icon = '/assets/Images/Hierarchy.png';
   loading: boolean = false;
-
-
+  isRestore: boolean =false;
+  deletedData : RoleData[] = [];
   data: RoleData[] = [];
   
   myColumns = [
@@ -64,53 +65,123 @@ export class RoleManagementComponent implements AfterViewInit {
   };
 
 
-  constructor(private service: UserManagementService, private snackBar: MatSnackBar) { }
+  constructor(private _roleService: RoleService, private snackBar: MatSnackBar) { }
 
   ngAfterViewInit(): void {
     this.getRoleList();
+    this.getDeletedRole();
   }
 
 
   onSubmit(data: any, mode: string): void {
     this.loading = true;
-    if(mode == "create"){
-      this.service.createRole(data).subscribe({
-        next: (data) => {
-          if (data && data.message) {
-            this.showSnackBar(data.message);
-            this.getRoleList();
-          } else if (data == null) {
-            this.showSnackBar('Error creating role. Please try again.');
-          }
-        },
-        error: (error) => {
-          this.loading = false;
-        },
-        complete: () => {
-          this.loading = false;
-        }
-      });
-    }else if(mode =="edit"){
+    console.log(data,mode)
 
-      console.log(data)
-      this.service.updateRole(data).subscribe({
-        next: (data) => {
-          if (data && data.message) {
-            this.showSnackBar(data.message);
-            this.getRoleList();
-          } else if (data == null) {
-            this.showSnackBar('Error updating role. Please try again.');
-          }
-        },
-        error: (error) => {
-          this.loading = false;
-        },
-        complete: () => {
-          this.loading = false;
-        }
-      });
+    switch (mode) {
+      case "create":
+        this.createRole(data);
+        this.loading = false;
+        break;
+      case "edit":
+        this.updateRole(data);
+        this.loading = false;
+        break;
+      case "delete":
+        this.deleteRole(data.roleId);
+        this.loading = false;
+        break;
+      case "restore":
+        this.restoreRole(data.roleId);
+        this.loading = false;
+        break;
+      default:
+        console.warn("Invalid mode:", mode);
+        this.loading = false;
     }
 
+  }
+
+  updateRole(data:any){
+    this._roleService.updateRole(data).subscribe({
+      next: (data) => {
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getRoleList();
+        } else if (data == null) {
+          this.showSnackBar('Error updating role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  restoreRole(data:any){
+    this._roleService.restoreRole(data).subscribe({
+      next: (data) => {
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getRoleList();
+          this.getDeletedRole();
+        } else if (data == null) {
+          this.showSnackBar('Error updating role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  deleteRole(roleId){
+    this._roleService.deleteRole(roleId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getRoleList();
+          this.getDeletedRole();
+        } else if (data == null) {
+          this.showSnackBar('Error creating role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  createRole(data:any){
+    this._roleService.createRole(data).subscribe({
+      next: (data) => {
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getRoleList();
+        } else if (data == null) {
+          this.showSnackBar('Error creating role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  onIsRestoreChange(newIsRestoreValue: boolean) {
+    this.isRestore = newIsRestoreValue;
+    // console.log(this.isRestore)
   }
 
   showSnackBar(message: string): void {
@@ -122,12 +193,17 @@ export class RoleManagementComponent implements AfterViewInit {
   }
 
   getRoleList() {
-    this.service.getRole().subscribe(data => {
+    this._roleService.getRole().subscribe(data => {
       this.data = data
-      console.log(this.data)
     })
-    
   }
+
+  getDeletedRole() {
+    this._roleService.getDeletedRole().subscribe(data => {
+      this.deletedData = data
+    })
+  }
+
 
 
 }

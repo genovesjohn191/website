@@ -1,22 +1,22 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewChild, AfterViewInit, input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { CRUDmodalComponent } from '../crudmodal/crudmodal.component';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EmployeeService } from '../../../features/tabs/user-management/user-management-service/Employee/employee.service';
 
 @Component({
-  selector: 'app-table',
+  selector: 'app-restore-table',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,13 +33,13 @@ import { EmployeeService } from '../../../features/tabs/user-management/user-man
     MatTooltipModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  templateUrl: './restore-table.component.html',
+  styleUrl: './restore-table.component.css'
 })
-export class TableComponent implements OnInit, AfterViewInit {
+export class RestoreTableComponent {
   @Input() data: any[] = [];
-  @Input() isRestore: boolean
   @Input() columns: { key: string, header: string }[] = [];
+  @Input() isRestore: boolean
   @Input() link: string = '';
   @Input() module: string = ''
   @Input() createModalData: any = {};
@@ -49,12 +49,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
 
-    // Permission properties
-    canView: boolean = false;
-    canCreate: boolean = false;
-    canEdit: boolean = false;
-    canDelete: boolean = false;
-    canRestore: boolean = false;
 
   roleData:any 
   searchTerm: string = '';
@@ -76,11 +70,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const roleString = localStorage.getItem("RoleData")
     if(roleString != null){
       this.roleData = JSON.parse(roleString);
-      // console.log(this.roleData)
-      this.getRoleControl();
     }
-
-    
   }
 
   ngAfterViewInit() {
@@ -100,12 +90,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onRestore() {
-    this.isRestore = true;
-    // console.log(this.isRestore)
-    this.isRestoreChange.emit(this.isRestore);
-  }
-
   loadData(): void {
     this.loading = true;
     this.callBack = false; // Hide callback message initially
@@ -118,9 +102,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
   }
 
+  onRestore() {
+    this.isRestore = false;
+    // console.log(this.isRestore)
+    this.isRestoreChange.emit(this.isRestore);
+  }
 
   openCrudModal(data: any, mode: string): void {
-    const dialogWidth = mode === 'delete' ? '30vw' : '70vw';
+    const dialogWidth = mode === 'restore' ? '30vw' : '70vw';
     const dialogRef = this.matDialog.open(CRUDmodalComponent, {
       width: dialogWidth,
       data: {
@@ -141,7 +130,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       } else {
         this.submitTriggered.emit([result, mode]); // Emit the result when the modal is closed 
       }
-
     });
   }
 
@@ -149,19 +137,4 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.router.navigate([this.link + path]);
   }
 
-  getRoleControl() {
-    // Check if roleData and rolePolicies are defined
-    if (this.roleData && Array.isArray(this.roleData.policies)) {
-      const rolePolicy = this.roleData.policies.find((policy: any) => policy.rolePolicyName.toLowerCase() === this.module.toLowerCase());
-
-      const options = rolePolicy.options
-      // console.log(options)
-      this.canView = options.canView
-      this.canCreate = options.canCreate
-      this.canDelete = options.canDelete
-      this.canEdit = options.canEdit
-      this.canRestore = options.canRestore
-    } 
-  }
-  
 }

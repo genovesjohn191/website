@@ -37,7 +37,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    padding: 6px 12px;
     border: 1px solid #000000;
     border-radius: 5px;
 }
@@ -75,7 +75,8 @@ table {
 
 .editbtn,
 .viewbtn,
-.deletebtn {
+.deletebtn,
+.restorebtn {
     color: #ffffff;
     box-shadow: none;
     border-radius: 50px;
@@ -83,6 +84,10 @@ table {
 
 .editbtn {
     background-color: #28965A;
+}
+
+.restorebtn {
+    background-color: #FFCD29;
 }
 
 .deletebtn {

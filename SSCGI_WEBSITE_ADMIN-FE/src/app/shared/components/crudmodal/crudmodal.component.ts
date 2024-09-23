@@ -198,7 +198,7 @@ export class CRUDmodalComponent implements OnInit {
       return {
         rolePolicyName: policy.name,
         isChecked: policy.isChecked,
-        ... (existingPolicy.rolePolicyId ? { rolePolicyControlId: existingPolicy.rolePolicyId } : {}),
+        ... (existingPolicy.rolePolicyId ? { rolePolicyId: existingPolicy.rolePolicyId } : {}),
         options: policy.isChecked ? [{
           CanCreate: policy.options[0],
           CanDelete: policy.options[1],
@@ -223,13 +223,29 @@ export class CRUDmodalComponent implements OnInit {
       Policies: transformedRolePolicies,
       ...(roleId ? { roleId } : {})
     };
+    console.log(transformedFormValue)
   
-    console.log(transformedFormValue);
-    this.formSubmitted.emit({ mode: this.mode, ...transformedFormValue });
-    this.dialogRef.close({ mode: this.mode, ...transformedFormValue });
+    this.formSubmitted.emit({ ...transformedFormValue });
+    this.dialogRef.close({ ...transformedFormValue });
   }
   
-  
+  onDelete(){
+    const roleId = this.data.details?.roleId
+    const transformedFormValue ={
+      roleId: roleId 
+    }
+    this.formSubmitted.emit({ ...transformedFormValue });
+    this.dialogRef.close({...transformedFormValue });
+  }
+
+  onRestore(){
+    const roleId = this.data.details?.roleId
+    const transformedFormValue ={
+      roleId: roleId 
+    }
+    this.formSubmitted.emit({ ...transformedFormValue });
+    this.dialogRef.close({...transformedFormValue });
+  }
 
   toggleOptions(policyIndex: number) {
     const policy = this.rolePoliciesArray.at(policyIndex);
