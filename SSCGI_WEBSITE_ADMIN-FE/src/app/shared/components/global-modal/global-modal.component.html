@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>{{ action }}</h1>
+<div mat-dialog-content>
+  <mat-form-field *ngIf="action === 'Add New Page' || action === 'Edit Page Name'">
+    <mat-label>Page Name</mat-label>
+    <input matInput [(ngModel)]="pageName" placeholder="Enter page name">
+  </mat-form-field>
+  <mat-checkbox *ngIf="action === 'Add New Page'" [(ngModel)]="isDisplay">Display Page?</mat-checkbox>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button color="primary" (click)="onConfirm()">Confirm</button>
+</div>

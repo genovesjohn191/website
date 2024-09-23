@@ -4,7 +4,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SscgiService } from '../../sscgi.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'sscgi-dynamic-page',
@@ -24,7 +25,6 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
   private pagesLoaded: boolean = false; // Flag to track loading status
 
   constructor(
-
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
     private service: SscgiService,
@@ -32,7 +32,14 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.loadPages();
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (this.urlContainsHome(event.urlAfterRedirects)) {
+          this.resetPageState();
+          this.loadPages();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -41,11 +48,24 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  private resetPageState() {
+    this.pages = [];
+    this.safeBodies = [];
+    this.pagesLoaded = false; // Mark pages as not loaded
+  }
+
+  // Check if the URL contains 'home'
+  private urlContainsHome(url: string): boolean {
+    return url.includes('home');
+  }
+
   private loadPages() {
-    // Check if pages are already loaded
+    this.pages = [];
+    this.safeBodies = [];
+
+    if (this.pagesLoaded) return;
     this.service.getPages().subscribe(
       data => {
-        console.log(data)
         const displayedPages = data
           .filter(page => page.isDisplay === true)
           .sort((a, b) => a.pageOrder - b.pageOrder);
@@ -59,12 +79,8 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
 
           this.injectStyles();
           this.addButtonEventListeners();
-          this.pagesLoaded = true
+          this.pagesLoaded = true;
         }
-
-        // Mark pages as loaded
-        ;
-
       });
   }
 
@@ -88,7 +104,6 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
       if (target.tagName === 'BUTTON') {
         const redirectUrl = target.getAttribute('redirect_url');
         const openInNewWindow = target.hasAttribute('open_in_new_window');
-
         if (redirectUrl) {
           if (openInNewWindow) {
             window.open(redirectUrl, '_blank');

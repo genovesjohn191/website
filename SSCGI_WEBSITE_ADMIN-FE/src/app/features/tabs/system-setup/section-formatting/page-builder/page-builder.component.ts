@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import grapesjs from 'grapesjs';
 import plugin from 'grapesjs-blocks-basic';
 import gjsForms from 'grapesjs-plugin-forms';
+import { CRUDmodalComponent } from '../../../../../shared/components/crudmodal/crudmodal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-page-builder',
@@ -20,7 +23,7 @@ export class PageBuilderComponent implements OnInit {
   private currentPageIndex: number = 0;
   api = "http://172.16.5.50:88/Page/"
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.editor = grapesjs.init({
@@ -252,10 +255,9 @@ export class PageBuilderComponent implements OnInit {
     return [...existingTraits, ...newTraits];
   }
 
-
   private handleRedirect(redirectUrl: string, openInNewWindow: boolean) {
     if (openInNewWindow) {
-      window.open(`/page/${redirectUrl}`, '_blank');
+      window.open(this.router.serializeUrl(this.router.createUrlTree([redirectUrl])), '_blank');
     } else {
       this.router.navigate(['/page', redirectUrl]);
     }
@@ -283,35 +285,62 @@ export class PageBuilderComponent implements OnInit {
   private editPageOrder() {
     const currentPage = this.pages[this.currentPageIndex];
 
-    // Create a list of pages displaying their names and pageOrder
-    const pageList = this.pages.map(page => `${page.pageOrder}: ${page.name}`).join('\n');
+    // Create a list of pages displaying their names and pageOrder as an array of objects for the select dropdown
+    const pageList = this.pages.map(page => ({
+      label: `${page.pageOrder}: ${page.name}`,  // Display order and name in the dropdown
+      value: page.pageOrder                     // Use pageOrder as the value
+    }));
 
-    // Prompt for new order with the list displayed above
-    const newOrderInput = prompt(
-      `Current page order is ${currentPage.pageOrder}. Enter new order for "${currentPage.name}":\n\n${pageList}`,
-      `${currentPage.pageOrder}`
-    );
-
-    const newOrder = newOrderInput ? parseInt(newOrderInput, 10) : currentPage.pageOrder;
-
-    if (!isNaN(newOrder) && newOrder !== currentPage.pageOrder) {
-      // Update current page order
-      currentPage.pageOrder = newOrder;
-
-      // Update the order in the backend
-      this.http.put(this.api + "updatePageOrder/" + currentPage.id, { pageOrder: newOrder }).subscribe(
-        () => {
-          alert("Page order has been changed")
-          this.loadPages(); // Reload pages to reflect changes
-        },
-        (error) => {
-          console.error('Error updating page order:', error);
-          alert('An error occurred while updating the page order.');
+    const dialogRef = this.dialog.open(CRUDmodalComponent, {
+      width: '500px',
+      data: {
+        mode: 'edit',
+        module: 'Page Order',
+        form: {
+          fields: [
+            {
+              label: 'List of Page Order',
+              key: 'selectedPageOrder',
+              type: 'select',
+              selectOptions: pageList,  // Pass the pageList to the select field
+              required: false
+            },
+            {
+              label: `Current page order: ${currentPage.pageOrder}`,
+              key: 'newOrder',
+              type: 'number',
+              required: true,
+              value: currentPage.pageOrder,  // Set the current page order as the initial value
+              placeholder: `Current: ${currentPage.pageOrder}` // Show the current page order as a placeholder
+            }
+          ]
         }
-      );
-    }
-  }
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const newOrder = result.newOrder;
+
+        if (newOrder !== currentPage.pageOrder) {
+          // Update current page order
+          currentPage.pageOrder = newOrder;
+
+          // Update the order in the backend
+          this.http.put(this.api + "updatePageOrder/" + currentPage.id, { pageOrder: newOrder }).subscribe(
+            () => {
+              this.loadPages(); // Reload pages to reflect changes
+              this.showSnackBar("Page order has been changed")
+            },
+            (error) => {
+              console.error('Error updating page order:', error);
+              this.showSnackBar("An error occurred while updating the page order.")
+            }
+          );
+        }
+      }
+    });
+  }
 
 
   private savePage() {
@@ -319,120 +348,221 @@ export class PageBuilderComponent implements OnInit {
     const pageCss = this.editor.getCss();
     const currentPage = this.pages[this.currentPageIndex];
 
-    const updatedPage = {
-      component: pageHtml,
-      styles: pageCss
-    };
+    const dialogRef = this.dialog.open(CRUDmodalComponent, {
+      width: '400px',
+      data: {
+        mode: '',
+        module: 'Are you sure to save the page?',
+        form: {
+          fields: [
 
-    this.http.put(this.api + "updatePage/" + currentPage.id, updatedPage).subscribe(
-      (response) => {
-        console.log(updatedPage)
-        alert('Page saved successfully!');
-      },
-      (error) => {
-        console.error('Error saving page:', error);
-        alert('An error occurred while saving the page.');
+          ]
+        }
       }
-    );
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const updatedPage = {
+          component: pageHtml,
+          styles: pageCss,
+          isDisplay: currentPage.isDisplay
+        };
+
+        this.http.put(this.api + "updatePage/" + currentPage.id, updatedPage).subscribe(
+          (response) => {
+            this.showSnackBar("Page saved successfully");
+
+          },
+          (error) => {
+            this.showSnackBar('Error saving page:');
+
+          }
+        );
+      } else {
+        this.showSnackBar("Save action canceled");
+      }
+    });
   }
 
 
+
   private addPage() {
-    const pageName = prompt('Enter a name for the new page:', `Page ${this.pages.length + 1}`);
-
-    if (!pageName) return; // Exit if no name is provided
-    const isDisplayInput = confirm('Should this page be displayed? Click OK for Yes or Cancel for No.');
-    const isDisplay = isDisplayInput ? true : false;
-
-    const newPage = {
-      name: pageName,
-      component: '',
-      styles: '',
-      isDisplay: isDisplay
-    };
-
-    this.http.post(this.api + "createPages", newPage).subscribe(
-      (response: any) => {
-        this.pages.push(response);
-        this.currentPageIndex = this.pages.length - 1;
-        this.loadPage(this.currentPageIndex);
-        this.loadPages();
-      },
-      (error) => {
-        console.error('Error adding page:', error);
+    const dialogRef = this.dialog.open(CRUDmodalComponent, {
+      width: '400px',
+      data: {
+        mode: 'create',
+        module: 'Page',
+        form: {
+          fields: [
+            { label: 'Page Name', key: 'name', type: 'text', required: true },
+            { label: 'Display Page', key: 'isDisplay', type: 'select', selectOptions: [{ label: 'Yes', value: true }, { label: 'No', value: false }] }
+          ]
+        }
       }
-    );
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const newPage = {
+          name: result.name,
+          component: '',
+          styles: '',
+          isDisplay: result.isDisplay.value
+        };
+
+        this.http.post(this.api + "createPages", newPage).subscribe(
+          (response: any) => {
+            this.pages.push(response);
+            this.currentPageIndex = this.pages.length - 1;
+            this.loadPage(this.currentPageIndex);
+            this.loadPages();
+            this.showSnackBar("Page Added Successfully");
+          },
+          (error) => {
+            console.error('Error adding page:', error);
+          }
+        );
+      }
+    });
   }
 
   private updatePageStatus() {
     const currentPage = this.pages[this.currentPageIndex];
-    const currentStatus = currentPage.isDisplay ? 'Visible (1)' : 'Hidden (0)';
+    const currentStatus = currentPage.isDisplay ? 'Visible' : 'Hidden';
 
-    // Display current status and options
-    const newStatusInput = prompt(`Current display status is ${currentStatus}.\nEnter new status (1 for Visible, 0 for Hidden):`, currentPage.isDisplay ? '1' : '0');
-
-    if (newStatusInput !== null) {
-      const newStatus = newStatusInput === '1'; // Convert input to boolean
-
-      if (newStatus !== currentPage.isDisplay) {
-        currentPage.isDisplay = newStatus;
-
-        // Update the status in the backend
-        this.http.put(this.api + "updateStatus/" + currentPage.id, { isDisplay: newStatus }).subscribe(
-          () => {
-            alert('Page display status updated successfully!');
-            this.loadPages(); // Reload pages to reflect changes
-          },
-          (error) => {
-            console.error('Error updating page status:', error);
-            alert('An error occurred while updating the page status.');
-          }
-        );
-      } else {
-        alert('No change in status.');
+    // Open the modal dialog for updating page status
+    const dialogRef = this.dialog.open(CRUDmodalComponent, {
+      width: '400px',
+      data: {
+        mode: 'edit',
+        module: 'Page Status',
+        form: {
+          fields: [
+            {
+              label: `Current status: ${currentStatus}.`,
+              key: 'newStatus',
+              type: 'select',
+              selectOptions: [
+                { label: 'Visible', value: true },
+                { label: 'Hidden', value: false }
+              ],
+              required: true,
+              value: currentPage.isDisplay // Set the current status as the initial value
+            }
+          ]
+        }
       }
-    }
+    });
+
+    // After modal dialog is closed
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const newStatus = result.newStatus.value;
+
+        // Check if the new status is different from the current status
+        if (newStatus !== currentPage.isDisplay) {
+          currentPage.isDisplay = newStatus;
+
+          // Update the status in the backend
+          this.http.put(this.api + "updateStatus/" + currentPage.id, { isDisplay: newStatus }).subscribe(
+            () => {
+              this.showSnackBar("Page display status updated successfully!");
+              this.loadPages(); // Reload pages to reflect changes
+            },
+            (error) => {
+              console.error('Error updating page status:', error);
+              this.showSnackBar("An error occurred while updating the page status.");
+            }
+          );
+        } else {
+          this.showSnackBar("No change in status.");
+        }
+      }
+    });
   }
+
 
   private deletePage() {
     if (this.pages.length <= 1) {
-      alert('Cannot delete the last page.');
+      this.showSnackBar("Cannot delete the last page.");
       return;
     }
 
-    const confirmDelete = confirm(`Are you sure you want to delete "${this.pages[this.currentPageIndex].name}"?`);
-    if (!confirmDelete) return;
+    const dialogRef = this.dialog.open(CRUDmodalComponent, {
+      width: '400px',
+      data: {
+        mode: '',
+        module: 'Are you sure to delete this page?',
+        form: {
+          fields: [
 
-    this.http.delete(`${this.api + "deletePage"}/${this.pages[this.currentPageIndex].id}`).subscribe(
-      () => {
-        this.pages.splice(this.currentPageIndex, 1);
-        this.currentPageIndex = Math.max(0, this.currentPageIndex - 1);
-        this.loadPage(this.currentPageIndex);
-      },
-      (error) => {
-        console.error('Error deleting page:', error);
+          ]
+        }
       }
-    );
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.http.delete(`${this.api + "deletePage"}/${this.pages[this.currentPageIndex].id}`).subscribe(
+          () => {
+            this.pages.splice(this.currentPageIndex, 1);
+            this.currentPageIndex = Math.max(0, this.currentPageIndex - 1);
+            this.loadPage(this.currentPageIndex);
+            this.showSnackBar("Page Deleted");
+          },
+          (error) => {
+            this.showSnackBar("Error occured");
+          }
+        );
+      }
+    });
   }
+
 
   private switchPagePrompt() {
     // Create a list of pages displaying their names and pageOrder
-    const pageList = this.pages.map(page => `${page.pageOrder}: ${page.name}`).join('\n');
-    const pageOrderInput = prompt(`Select a page by its order:\n${pageList}`);
+    const pageList = this.pages.map(page => ({
+      label: `${page.pageOrder}: ${page.name}`,
+      value: page.pageOrder
+    }));
 
-    if (pageOrderInput) {
-      const selectedPageOrder = parseInt(pageOrderInput, 10);
-
-      // Find the page index by its pageOrder
-      const selectedPageIndex = this.pages.findIndex(page => page.pageOrder === selectedPageOrder);
-
-      if (selectedPageIndex !== -1) {
-        this.switchPage(selectedPageIndex);
-      } else {
-        alert('Invalid page order selected. Please try again.');
+    const dialogRef = this.dialog.open(CRUDmodalComponent, {
+      width: '400px',
+      data: {
+        mode: 'select',
+        module: 'Page',
+        form: {
+          fields: [
+            {
+              label: 'Select a page by its order',
+              key: 'selectedPageOrder',
+              type: 'select',
+              selectOptions: pageList,
+              required: true
+            }
+          ]
+        }
       }
-    }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const selectedPageOrder = result.selectedPageOrder;
+
+        // Find the page index by its pageOrder
+        const selectedPageIndex = this.pages.findIndex(page => page.pageOrder === selectedPageOrder.value);
+
+        if (selectedPageIndex !== -1) {
+          this.switchPage(selectedPageIndex);
+          this.showSnackBar("Page Switched");
+        } else {
+
+        }
+      }
+    });
   }
+
 
 
   private switchPage(index: number) {
@@ -467,6 +597,15 @@ export class PageBuilderComponent implements OnInit {
           ]
         }
       ]
+    });
+  }
+
+
+  showSnackBar(message: string): void {
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
     });
   }
 }

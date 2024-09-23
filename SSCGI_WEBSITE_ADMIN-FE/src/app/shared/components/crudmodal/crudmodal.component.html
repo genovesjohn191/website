@@ -3,6 +3,7 @@
   <h1 class="form-header">{{ mode }} {{ module }}</h1>
 </div>
 
+
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="dynamicForm" class="form" *ngIf="mode !== 'delete' && mode !== 'restore'">
     <h1 class="form-header margin-bot" *ngIf="module === 'role'">Role Information</h1>
