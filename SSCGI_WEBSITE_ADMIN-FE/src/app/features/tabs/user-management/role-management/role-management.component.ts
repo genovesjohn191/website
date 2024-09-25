@@ -148,7 +148,7 @@ export class RoleManagementComponent implements AfterViewInit {
           this.getRoleList();
           this.getDeletedRole();
         } else if (data == null) {
-          this.showSnackBar('Error creating role. Please try again.');
+          this.showSnackBar('Error deleting role. Please try again.');
         }
       },
       error: (error) => {

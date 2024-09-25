@@ -1,4 +1,23 @@
 <div *ngIf="loading" class="spinner-container">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
-<app-table [data]="data" [columns]="myColumns" [link]="link" [module]="module" [createModalData]="createModalData" (submitTriggered)="onSubmit($event[0], $event[1])"></app-table>
+<app-table *ngIf="!isRestore"  
+[isRestore]="isRestore" 
+[data]="data" 
+[columns]="myColumns" 
+[link]="link" 
+[module]="module" 
+[createModalData]="createModalData"  
+(submitTriggered)="onSubmit($event[0], $event[1])" 
+(isRestoreChange)="onIsRestoreChange($event)">
+</app-table>
+<app-restore-table  *ngIf="isRestore"  
+        [isRestore]="isRestore"
+        [data]="deletedData" 
+        [columns]="myColumns" 
+        [link]="link" 
+        [module]="module" 
+        [createModalData]="createModalData"  
+        (submitTriggered)="onSubmit($event[0], $event[1])"
+        (isRestoreChange)="onIsRestoreChange($event)">
+</app-restore-table>

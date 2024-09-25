@@ -229,20 +229,49 @@ export class CRUDmodalComponent implements OnInit {
     this.dialogRef.close({ ...transformedFormValue });
   }
   
-  onDelete(){
-    const roleId = this.data.details?.roleId
-    const transformedFormValue ={
-      roleId: roleId 
+  onDelete() {
+    let transformedFormValue: any;
+  
+    if (this.module === "role") {
+      const roleId = this.data.details?.roleId;
+      transformedFormValue = {
+        roleId: roleId
+      };
+    } else if (this.module === "employee") { // Changed to "person" to check for a different module
+      const personId = this.data.details?.personId;
+      transformedFormValue = {
+        personId: personId
+      };
+    } else {
+      // Handle other modules or throw an error if necessary
+      console.error('Unknown module type:', this.module);
+      return; // Exit the method if the module is unknown
     }
+  
     this.formSubmitted.emit({ ...transformedFormValue });
-    this.dialogRef.close({...transformedFormValue });
+    this.dialogRef.close({ ...transformedFormValue });
   }
+  
 
   onRestore(){
-    const roleId = this.data.details?.roleId
-    const transformedFormValue ={
-      roleId: roleId 
+    let transformedFormValue: any;
+  
+    if (this.module === "role") {
+      const roleId = this.data.details?.roleId;
+      transformedFormValue = {
+        roleId: roleId
+      };
+    } else if (this.module === "employee") { // Changed to "person" to check for a different module
+      const personId = this.data.details?.personId;
+      transformedFormValue = {
+        personId: personId
+      };
+    } else {
+      // Handle other modules or throw an error if necessary
+      console.error('Unknown module type:', this.module);
+      return; // Exit the method if the module is unknown
     }
+  
     this.formSubmitted.emit({ ...transformedFormValue });
     this.dialogRef.close({...transformedFormValue });
   }

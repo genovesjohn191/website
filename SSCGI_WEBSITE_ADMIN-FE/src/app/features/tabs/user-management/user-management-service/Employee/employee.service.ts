@@ -61,6 +61,36 @@ export class EmployeeService {
     );
   }
 
+  getDeletedPeople(): Observable<any> {
+    const url = this.basePeopleUrl + "getDeletedPeople"
+    return this.http.get(url, { headers: this.headers }).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  deletePerson(personId: string, userId: string) {
+    const url = `${this.basePeopleUrl}deletePerson/${personId}`; // URL for deleting a person
+    const params = new HttpParams()
+      .set('userId', userId)
+  
+    return this.http.delete(url, { headers: this.headers, params: params }).pipe(
+      retry(3), // Retry the request up to 3 times in case of failure
+      catchError(this.handleError.bind(this)) // Handle errors
+    );
+  }
+  restorePerson(personId: string, userId: string) {
+    const url = `${this.basePeopleUrl}restorePerson/${personId}`; // URL for restoring a person
+    const params = new HttpParams()
+      .set('userId', userId);
+  
+    return this.http.put(url, {}, { headers: this.headers, params: params }).pipe(
+      retry(3), // Retry the request up to 3 times in case of failure
+      catchError(this.handleError.bind(this)) // Handle errors
+    );
+  }
+
     //function for handling errors
     private handleError(error: HttpErrorResponse) {
       if (error.error instanceof ErrorEvent) {

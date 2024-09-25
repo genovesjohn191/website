@@ -6,11 +6,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../user-management-service/Employee/employee.service';
+import { RestoreTableComponent } from '../../../../shared/components/restore-table/restore-table.component';
 
 @Component({
   selector: 'app-employee-management',
   standalone: true,
   imports: [TableComponent,
+    RestoreTableComponent,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     CommonModule
@@ -23,9 +25,11 @@ export class EmployeeManagementComponent {
   module = 'employee'
   icon = '/assets/Images/Badge.png'
   data: Employee[] = [];
+  deletedData: Employee[];
   loading: boolean = false;
   personId:any;
-
+  isRestore: boolean = false;
+  UserId = localStorage.getItem('userId');
   myColumns = [
     { key: 'employeeNumber', header: 'Employee Number' },
     { key: 'name', header: 'Employee Name' },
@@ -52,6 +56,7 @@ export class EmployeeManagementComponent {
   ngOnInit(): void {
 
     this.getPeople();
+    this.getDeletedPeople();
   }
 
   getPeople() {
@@ -60,9 +65,68 @@ export class EmployeeManagementComponent {
     })
   }
 
+  getDeletedPeople(){
+    this._personService.getDeletedPeople().subscribe(data => {
+      this.deletedData = data;
+    })
+  }
+
   onSubmit(data: any, mode: string): void {
     console.log(mode, data)
-    let createdByUserId = "143";
+    this.loading = true;
+    if (mode === 'create') {
+      this.createPerson(data)
+    } else if (mode === 'edit') {
+      this.updatePerson(data)
+    } else if (mode === 'delete'){
+      this.deletePerson(data.personId)
+    } else if (mode ==='restore'){
+      this.restorePerson(data.personId)
+    }
+    this.loading = false;
+  }
+
+  deletePerson(personId:any){
+    this._personService.deletePerson(personId, this.UserId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getPeople();
+          this.getDeletedPeople();
+        } else if (data == null) {
+          this.showSnackBar('Error deleting person. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  restorePerson(personId:any){
+    this._personService.restorePerson(personId, this.UserId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getPeople();
+          this.getDeletedPeople();
+        } else if (data == null) {
+          this.showSnackBar('Error restore person. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  createPerson(data: any){
     let form = {
       firstName: data.firstName,
       middleName: data.middleName,
@@ -72,53 +136,62 @@ export class EmployeeManagementComponent {
       email: data.email,
       address: data.address,
       Policies: data.Policies || [], // Ensure Policies is an array
-      createdByUserId: createdByUserId
+      createdByUserIdUserId: this.UserId
     };
 
-    this.loading = true;
-    if (mode === 'create') {
-      // Call the service method with the updated form
-      this._personService.createPeople(form).subscribe({
-        next: (response) => {
-          if (response && response.message) {
-            this.showSnackBar(response.message);
-            this.getPeople();
-          } else if (response == null) {
-            this.showSnackBar('Error creating Person. Please try again.');
-          }
-        },
-        error: (error) => {
-          this.showSnackBar("The email address is already in use. Please use a different email.");
-          this.loading = false;
-        },
-        complete: () => {
-          this.loading = false;
+    // Call the service method with the updated form
+    this._personService.createPeople(form).subscribe({
+      next: (response) => {
+        if (response && response.message) {
+          this.showSnackBar(response.message);
+          this.getPeople();
+        } else if (response == null) {
+          this.showSnackBar('Error creating Person. Please try again.');
         }
-      });
-    } else if (mode === 'edit') {
-      console.log(localStorage.getItem("personId"))
-      this._personService.updatePeople(form).subscribe({
-        next: (response) => {
-          if (response && response.message) {
-            this.showSnackBar(response.message);
-            this.getPeople();
-            this.personId = localStorage.getItem("personId")
-            this.getPeopleById(this.personId)
-          } else if (response == null) {
-            this.showSnackBar('Error updating Person. Please try again.');
-          }
-        },
-        error: (error) => {
-          console.error('Error:', error);
-          this.loading = false;
-        },
-        complete: () => {
-          this.loading = false;
-        }
-      });
+      },
+      error: (error) => {
+        this.showSnackBar("The email address is already in use. Please use a different email.");
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
 
-    }
-    this.loading = false;
+  updatePerson(data:any){
+    let form = {
+      firstName: data.firstName,
+      middleName: data.middleName,
+      lastName: data.lastName,
+      employeeNumber: data.employeeNumber,
+      contactNumber: data.contactNumber,
+      email: data.email,
+      address: data.address,
+      Policies: data.Policies || [], // Ensure Policies is an array
+      updatedByUserId: this.UserId
+    };
+    console.log(localStorage.getItem("personId"))
+    this._personService.updatePeople(form).subscribe({
+      next: (response) => {
+        if (response && response.message) {
+          this.showSnackBar(response.message);
+          this.getPeople();
+          this.personId = localStorage.getItem("personId")
+          this.getPeopleById(this.personId)
+        } else if (response == null) {
+          this.showSnackBar('Error updating Person. Please try again.');
+        }
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+
   }
 
   getPeopleById(personId:any){
@@ -127,6 +200,10 @@ export class EmployeeManagementComponent {
     })
   }
 
+  onIsRestoreChange(newIsRestoreValue: boolean) {
+    this.isRestore = newIsRestoreValue;
+    // console.log(this.isRestore)
+  }
 
   showSnackBar(message: string): void {
     this.snackBar.open(message, '', {
