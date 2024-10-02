@@ -1,4 +1,4 @@
-import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../../../../environments/environments';
@@ -26,14 +26,48 @@ export class UserAccountService {
     );
   }
 
-  createUserAccount(form: any): Observable<any> {
-    const url = this.baseUserAccUrl + "createUserAcc"
-    return this.http.post(url, form, { headers: this.headers }).pipe(
+  getDeletedUserAccount(): Observable<any> {
+    const url = this.baseUserAccUrl + "getDeletedUserAccList"
+    return this.http.get(url, { headers: this.headers }).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))
     );
   }
+
+
+  createUserAccount(form: any): Observable<any> {
+    const url = this.baseUserAccUrl + "createUserAcc"
+    return this.http.post(url, form, { headers: this.headers }).pipe(
+      map(data => data),
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  deleteUserAccount(userId:any, deletedBy:any){
+    const url = this.baseUserAccUrl + "deleteUserAccount/"+ userId
+    const params = new HttpParams()
+      .set('deletedBy', deletedBy)
+    return this.http.delete(url, { headers: this.headers,params: params }).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError.bind(this))
+    );
+  }
+  
+  restoreUserAccount(userId:any, restoredBy:any){
+    console.log(restoredBy)
+    const params = new HttpParams()
+    .set('restoredBy', restoredBy)
+
+    const url = this.baseUserAccUrl + "restoreUserAccount/"+ userId
+    return this.http.put(url, { headers: this.headers, params: params }).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError.bind(this))
+    );
+  }
+  
 
   //function for handling errors
 private handleError(error: HttpErrorResponse) {

@@ -74,6 +74,8 @@ export class CRUDmodalComponent implements OnInit {
     this.initializeFilteredOptions();
     const details = this.data?.details || {};
 
+    console.log(details)
+
     if (this.mode !== 'delete') {
       this.dynamicForm = this.fb.group(
         this.formConfig.fields.reduce((controls, field) => {
@@ -115,7 +117,10 @@ export class CRUDmodalComponent implements OnInit {
           rolePoliciesArray.disable();
         }
       }
+      console.log(this.dynamicForm.value)
     }
+
+
   }
 
 
@@ -231,7 +236,7 @@ export class CRUDmodalComponent implements OnInit {
   
   onDelete() {
     let transformedFormValue: any;
-  
+    console.log(this.module)
     if (this.module === "role") {
       const roleId = this.data.details?.roleId;
       transformedFormValue = {
@@ -242,7 +247,13 @@ export class CRUDmodalComponent implements OnInit {
       transformedFormValue = {
         personId: personId
       };
-    } else {
+    } else if(this.module === "User Account"){
+      const userId = this.data.details?.userId;
+      transformedFormValue = {
+        userId: userId
+      };
+    }
+    else {
       // Handle other modules or throw an error if necessary
       console.error('Unknown module type:', this.module);
       return; // Exit the method if the module is unknown
@@ -266,7 +277,12 @@ export class CRUDmodalComponent implements OnInit {
       transformedFormValue = {
         personId: personId
       };
-    } else {
+    } else if(this.module === "User Account"){
+      const userId = this.data.details?.userId;
+      transformedFormValue = {
+        userId: userId
+      };
+    }else {
       // Handle other modules or throw an error if necessary
       console.error('Unknown module type:', this.module);
       return; // Exit the method if the module is unknown

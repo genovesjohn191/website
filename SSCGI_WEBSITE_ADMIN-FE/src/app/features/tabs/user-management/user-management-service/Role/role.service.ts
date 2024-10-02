@@ -17,9 +17,11 @@ export class RoleService {
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, private authService: AuthService) { }
 // role
-createRole(form: any): Observable<any> {
+createRole(form: any, userId: number): Observable<any> {
   const url = this.baseRoleUrl + "createRole"
-  return this.http.post(url, form, { headers: this.headers }).pipe(
+  const params = new HttpParams()
+  .set('userId', userId)
+  return this.http.post(url, form, { headers: this.headers, params: params }).pipe(
     map(data => data),
     retry(3),
     catchError(this.handleError.bind(this))
@@ -29,25 +31,29 @@ createRole(form: any): Observable<any> {
 updateRole(form: any): Observable<any> {
   const url = this.baseRoleUrl + "editRole"
   console.log(form)
-  return this.http.put(url, form, { headers: this.headers }).pipe(
+  return this.http.put(url, form, { headers: this.headers,  }).pipe(
     map(data => data),
     retry(3),
     catchError(this.handleError.bind(this))
   );
 }
 
-deleteRole(roleId:any){
+deleteRole(roleId:any, userId: number){
   const url = this.baseRoleUrl + "deleteRole/"+ roleId
-  return this.http.delete(url, { headers: this.headers }).pipe(
+  const params = new HttpParams()
+  .set('userId', userId)
+  return this.http.delete(url, { headers: this.headers, params: params }).pipe(
     map(data => data),
     retry(3),
     catchError(this.handleError.bind(this))
   );
 }
 
-restoreRole(roleId:any){
+restoreRole(roleId:any, userId: number){
   const url = this.baseRoleUrl + "restoreRole/"+ roleId
-  return this.http.put(url, { headers: this.headers }).pipe(
+  const params = new HttpParams()
+  .set('userId', userId)
+  return this.http.put(url,{},{ headers: this.headers , params: params}).pipe(
     map(data => data),
     retry(3),
     catchError(this.handleError.bind(this))

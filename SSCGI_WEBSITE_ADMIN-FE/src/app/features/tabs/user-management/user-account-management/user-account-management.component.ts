@@ -10,12 +10,14 @@ import { CommonModule } from '@angular/common';
 import { UserAccountService } from '../user-management-service/User-Account/user-account.service';
 import { RoleService } from '../user-management-service/Role/role.service';
 import { EmployeeService } from '../user-management-service/Employee/employee.service';
+import { RestoreTableComponent } from '../../../../shared/components/restore-table/restore-table.component';
 
 @Component({
   selector: 'app-user-account-management',
   standalone: true,
   imports: [
     TableComponent,
+    RestoreTableComponent,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     CommonModule
@@ -32,7 +34,9 @@ export class UserAccountManagementComponent {
   roleSelect: RoleData[] = [];
   personSelect: Employee[] = [];
   createModalData!: FormConfig;
-
+  isRestore: boolean = false;
+  deletedData: UserAccount[] = [];
+  UserId = localStorage.getItem("userId")
   myColumns = [
     { key: 'userId', header: 'UserId' },
     { key: 'name', header: 'Name' }, // changed from code to roleCode
@@ -48,15 +52,70 @@ export class UserAccountManagementComponent {
   ngAfterViewInit(): void {
     this.getOptionList();
     this.getUserAccountList();
+    this.getUserDeletedAccountList();
   }
-  onSubmit(result: any): void {
+
+  onSubmit(data: any, mode: string): void {
+    console.log(mode, data)
     this.loading = true;
-    const createdByUserId = localStorage.getItem("userId")
+    if (mode === 'create') {
+      this.createUserAccount(data)
+    } else if (mode === 'edit') {
+      console.log('Edit')
+    } else if (mode === 'delete'){
+      this.deleteUserAccount(data.userId)
+    } else if (mode ==='restore'){
+      this.restoreUserAccount(data.userId)
+    }
+    this.loading = false;
+  }
+
+  deleteUserAccount(userId){
+    this._userAccService.deleteUserAccount(userId, this.UserId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getUserAccountList();
+          this.getUserDeletedAccountList();
+        } else if (data == null) {
+          this.showSnackBar('Error deleting role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  restoreUserAccount(userId){
+    this._userAccService.restoreUserAccount(userId, this.UserId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getUserAccountList();
+          this.getUserDeletedAccountList();
+        } else if (data == null) {
+          this.showSnackBar('Error deleting role. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  createUserAccount(data:any){
     const form = {
-      personId: result[0].person.value,
-      roleId: result[0].roleId.value,
-      expireDate: result[0].expiryDate,
-      createdByUserId: createdByUserId,
+      personId: data[0].person.value,
+      roleId: data[0].roleId.value,
+      expireDate: data[0].expiryDate,
+      createdByUserId: this.UserId,
     };
 
     this._userAccService.createUserAccount(form).subscribe({
@@ -87,6 +146,12 @@ export class UserAccountManagementComponent {
     })
   }
 
+  getUserDeletedAccountList() {
+    this._userAccService.getDeletedUserAccount().subscribe(data => {
+      this.deletedData =data;
+    })
+  }
+
   getOptionList() {
     // Define the types for the select options
     let selectRoleOptions: { value: number; label: string }[] = [];
@@ -112,9 +177,9 @@ export class UserAccountManagementComponent {
         this.createModalData = {
           title: 'User Account Create',
           fields: [
-            { key: 'person', label: 'Select Employee', type: 'select', selectOptions: selectPersonOptions, required: true, fullWidth: true },
+            { key: 'personId', label: 'Select Employee', type: 'select', selectOptions: selectPersonOptions, required: true, fullWidth: true },
             { key: 'roleId', label: 'Select Role', type: 'select', selectOptions: selectRoleOptions, required: true },
-            { key: 'expiryDate', label: 'Expiry Date', type: 'date', required: true },
+            { key: 'expireDate', label: 'Expiry Date', type: 'date', required: true },
           ],
         };
         this.changeDetectorRef.detectChanges();
@@ -128,6 +193,10 @@ export class UserAccountManagementComponent {
       horizontalPosition: 'center',
       verticalPosition: 'top'
     });
+  }
 
+  onIsRestoreChange(newIsRestoreValue: boolean) {
+    this.isRestore = newIsRestoreValue;
+    // console.log(this.isRestore)
   }
 }

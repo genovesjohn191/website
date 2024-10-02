@@ -136,9 +136,8 @@ export class EmployeeManagementComponent {
       email: data.email,
       address: data.address,
       Policies: data.Policies || [], // Ensure Policies is an array
-      createdByUserIdUserId: this.UserId
+      createdByUserId: this.UserId
     };
-
     // Call the service method with the updated form
     this._personService.createPeople(form).subscribe({
       next: (response) => {

@@ -28,7 +28,7 @@ export class RoleManagementComponent implements AfterViewInit {
   isRestore: boolean =false;
   deletedData : RoleData[] = [];
   data: RoleData[] = [];
-  
+  UserId = localStorage.getItem("userId")
   myColumns = [
     { key: 'description', header: 'Description' },
     { key: 'roleCode', header: 'Code' }, // changed from code to roleCode
@@ -121,7 +121,8 @@ export class RoleManagementComponent implements AfterViewInit {
   }
 
   restoreRole(data:any){
-    this._roleService.restoreRole(data).subscribe({
+    console.log(this.UserId) 
+    this._roleService.restoreRole(data, Number(this.UserId)).subscribe({
       next: (data) => {
         if (data && data.message) {
           this.showSnackBar(data.message);
@@ -141,7 +142,7 @@ export class RoleManagementComponent implements AfterViewInit {
   }
 
   deleteRole(roleId){
-    this._roleService.deleteRole(roleId).subscribe({
+    this._roleService.deleteRole(roleId, Number(this.UserId)).subscribe({
       next:(data)=>{
         if (data && data.message) {
           this.showSnackBar(data.message);
@@ -161,7 +162,7 @@ export class RoleManagementComponent implements AfterViewInit {
   }
 
   createRole(data:any){
-    this._roleService.createRole(data).subscribe({
+    this._roleService.createRole(data, Number(this.UserId)).subscribe({
       next: (data) => {
         if (data && data.message) {
           this.showSnackBar(data.message);
