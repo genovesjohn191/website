@@ -22,6 +22,7 @@
     "@angular/router": "^18.0.0",
     "@ngneat/tailwind": "^7.0.3",
     "@silexlabs/grapesjs-fonts": "^1.0.20",
+    "ag-charts-angular": "^10.2.0",
     "grapesjs": "^0.21.13",
     "grapesjs-blocks-basic": "^1.0.2",
     "grapesjs-plugin-ckeditor": "^1.0.1",
