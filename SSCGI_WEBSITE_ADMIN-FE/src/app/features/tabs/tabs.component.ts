@@ -91,7 +91,6 @@ export class TabsComponent implements OnInit {
 
   storeRolePolicyId(subTabName: string) {
     const policy = this.rolePolicy.find(policy => policy.rolePolicyName === subTabName && policy.isChecked);
-    console.log(policy.rolePolicyId)
     if (policy) {
       localStorage.setItem('selectedRolePolicyId', policy.rolePolicyId);
     }else {
@@ -170,8 +169,9 @@ export class TabsComponent implements OnInit {
 
     // Define bottom navigation tabs
     this.bottomTabs = [
-      { name: 'My Profile', link: '/my-profile', icon: 'assets/Images/User.png', active: false },
-      { name: 'Setup Security', link: '/setup-security', icon: 'assets/Images/Protect.png', active: false },
+      { name: 'Dashboard', link: '/tabs/dashboard', icon: 'assets/Images/dashboard.png', active: false },
+      { name: 'My Profile', link: '/tabs/my-profile', icon: 'assets/Images/User.png', active: false },
+      { name: 'Setup Security', link: '/tabs/setup-security', icon: 'assets/Images/Protect.png', active: false },
       { name: 'Logout', link: '/login', icon: 'assets/Images/Logout.png', active: false }
     ];
   }

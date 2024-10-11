@@ -1,0 +1,132 @@
+<section class="content">
+    <div class="section">
+        <h1 class="title-section">Section Formatting</h1>
+        <div class="pages-grid-container">
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Total Pages</p>
+                    <p class="item-count">30</p>
+                </div>
+                <ag-charts [options]="options"></ag-charts>
+            </div>
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Active Pages</p>
+                    <div class="item-count">{{activePages.length}}</div>
+                </div>
+                <div class="item-data pages">
+                    <div class="item-pages" *ngFor="let page of activePages">
+                        <p>Page Name: <b>{{ page.title }}</b></p>
+                        <p>Description: <b>{{page.description}}</b></p>
+                        <p>URL: <b>{{page.url}}</b></p>
+                    </div>
+                    <div class="item-pages more">
+                        <p><b>View More...</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h1 class="title-section">User Account</h1>
+        <div class="user-grid-container">
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">User Account Roles</p>
+                    <p class="item-count">{{ roleData.length }}</p>
+                </div>
+                <ag-charts
+                [options]="rolesOptions"
+            ></ag-charts>
+            </div>
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Active User Accounts</p>
+                    <p class="item-count">22</p>
+                </div>
+                <div class="item-data accounts">
+                    <div class="item-pages" *ngFor="let ua of userAccounts | slice:0:3"> <!-- Show only the first 3 pages -->
+                        <p>UserId: <b>{{ ua.UserId }}</b></p>
+                        <p>Name: <b>{{ ua.Name }}</b></p>
+                        <p>Role: <b>{{ua.Role}}</b></p>
+                    </div>
+                    <div class="item-pages more">
+                        <p><b>View More...</b></p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Total User Accounts</p>
+                    <p class="item-count">90</p>
+                </div>
+                <ag-charts [options]="userOptions"></ag-charts> 
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h1 class="title-section">Applications</h1>
+        <div class="application-grid-container">
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">List of Applications</p>
+                    <p class="item-count">22</p>
+                </div>
+                <div class="item-data list-application" >
+                    <div class="item-application" *ngFor="let app of applications | slice:0:5"   [ngClass]="{
+                        'pending': app.Status === 'Pending', 
+                        'rejected': app.Status === 'Rejected', 
+                        'approved': app.Status === 'Approved'
+                      }"> <!-- Show only the first 3 pages -->
+                        <p>Applicant Name: <b>{{ app.ApplicantName }}</b></p>
+                        <p class="position">Position: <b>{{ app.Position }}</b></p>
+                        <p>Date of Application: <b>{{ app.Date }}</b></p>
+                        <p>Status: <b>{{ app.Status }}</b></p>
+                    </div>
+                    <div class="item-application more">
+                        <p><b>View More...</b></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Total Appications</p>
+                    <p class="item-count">90</p>
+                </div>
+                <ag-charts [options]="applicationStatusOptions"></ag-charts> 
+            </div>
+
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Job Vacancies</p>
+                    <p class="item-count">22</p>
+                </div>
+                <div class="item-data list-application" >
+                    <div class="item-application" *ngFor="let job of jobVacancies | slice:0:5"   [ngClass]="{ 
+                        'rejected': job.status === 'Closed', 
+                        'approved': job.status === 'Open'
+                      }">
+                        <p>Job Title: <b>{{ job.title }}</b></p>
+                    </div>
+                    <div class="item-application more">
+                        <p><b>View More...</b></p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="item-header">
+                    <p class="item-title">Applicants per Job Vacancies<p>
+                    <p class="item-count">{{ roleData.length }}</p>
+                </div>
+                <ag-charts
+                [options]="jobVacancyApplicationsOptions"
+            ></ag-charts>
+            </div>
+        </div>
+    </div>
+
+    
+</section>

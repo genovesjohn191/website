@@ -15,7 +15,7 @@
             <div class="tabs-cont" *ngFor="let tab of collapsableTabs">
               <div class="collapsable-item" [ngClass]="{'small': sidebar}" (click)="toggleTab(tab)">
                 <div>
-                  <img [src]="tab.icon" alt="">
+                  <img class="icon" [src]="tab.icon" alt="">
                   <a *ngIf="!showLabels" mat-line>{{tab.name}}</a>
                 </div>
                 <mat-icon *ngIf="!showLabels" mat-list-icon [ngClass]="{'expanded': tab.expanded}" class="arrow-icon">keyboard_arrow_down</mat-icon>
@@ -36,7 +36,7 @@
           <div class="tabs-cont" *ngFor="let tab of bottomTabs">
             <div class="bottomTabs-item" [ngClass]="{'small': sidebar}" [routerLink]="tab.link" routerLinkActive="active" (click)="setActiveTab(tab)">
               <div>
-                <img [src]="tab.icon" alt="">
+                <img class="icon" [src]="tab.icon" alt="">
                 <a *ngIf="!showLabels" mat-line>{{tab.name}}</a>
               </div>
             </div>
@@ -50,11 +50,11 @@
       <!-- Header Content -->
       <div class="page-header">
         <div>
-          <img [src]="activeTab.icon">
+          <img class="icon" [src]="activeTab.icon">
           <p mat-line>{{activeTab.name}}</p>
         </div>
         <div>
-          <img src="../assets/Images/User Shield.png">
+          <img class="icon" src="../assets/Images/User Shield.png">
           <p mat-line>{{data?.firstName}} {{data?.middleName}} {{data?.lastName}}</p>
           <span class="role-type">{{roleData?.roleName}}</span>
         </div>

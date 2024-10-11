@@ -12,6 +12,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { AuthGuard } from './features/auth/auth.guard';
 import { PageBuilderComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-builder.component';
 import { PageViewComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-view/page-view.component';
+import { DashboardComponent } from './features/tabs/dashboard/dashboard.component';
 
 export const routes: Routes = [
 
@@ -20,6 +21,7 @@ export const routes: Routes = [
         component: TabsComponent,
         children: [
             // Section formatting routes
+            {path: 'dashboard', component:DashboardComponent},
             { path: 'system-setup/section-formatting', component: SectionFormattingComponent },
             { path: 'system-setup/section-formatting/create', component: SectionCreateComponent },
 

@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
           this.showSnackBar(data[0].message);
         } else {
           this.loading = false;
-          this.router.navigate(['/tabs/system-setup/section-formatting'])
+          this.router.navigate(['/tabs/dashboard'])
           localStorage.setItem('token', data[0].token)
           localStorage.setItem('personId',data[0].personId)
           localStorage.setItem('userId',data[0].userId)
