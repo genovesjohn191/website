@@ -24,6 +24,16 @@ export class SscgiService {
     );
   }
 
+  getDataPrivacyPage(): Observable<any> {
+    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+
+    return this.http.get(this.pageBaseUrl + "getDataPrivacyPage", options).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError)
+    );
+  }
+
   getData(): Observable<any> {
     let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
 

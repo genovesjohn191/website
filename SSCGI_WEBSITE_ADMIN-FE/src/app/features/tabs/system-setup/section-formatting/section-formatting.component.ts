@@ -62,6 +62,10 @@ export class SectionFormattingComponent implements OnInit {
     this.router.navigate(['/tabs/system-setup/section-formatting/page-builder'])
   }
 
+  navigateToDataPrivacyEditor(){
+    this.router.navigate(['/tabs/system-setup/section-formatting/data-privacy-editor'])
+  }
+
   navigateToPageView(){
     this.router.navigate(['/tabs/system-setup/section-formatting/view-page'])
   }

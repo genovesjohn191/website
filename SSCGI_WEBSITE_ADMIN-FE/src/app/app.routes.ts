@@ -12,8 +12,8 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { AuthGuard } from './features/auth/auth.guard';
 import { PageBuilderComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-builder.component';
 import { PageViewComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-view/page-view.component';
+import { DataPrivacyEditorComponent } from './features/tabs/system-setup/data-privacy-editor/data-privacy-editor.component';
 import { DashboardComponent } from './features/tabs/dashboard/dashboard.component';
-
 export const routes: Routes = [
 
     {      
@@ -38,6 +38,7 @@ export const routes: Routes = [
             { path: 'user-management/user-account', component: UserAccountManagementComponent },
 
             { path: 'system-setup/section-formatting/page-builder',  component: PageBuilderComponent},
+            { path: 'system-setup/section-formatting/data-privacy-editor',  component: DataPrivacyEditorComponent},
 
             // { path: 'system-setup/section-formatting/view-page',  component: PageViewComponent},
         ]

@@ -1,53 +1,51 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SscgiService } from '../../../sscgi.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-nav-page',
+  selector: 'app-data-privacy-modal',
   standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
-  templateUrl: './nav-page.component.html',
-  styleUrl: './nav-page.component.css'
+  imports: [CommonModule],
+  templateUrl: './data-privacy-modal.component.html',
+  styleUrl: './data-privacy-modal.component.css'
 })
-export class NavPageComponent implements OnInit, OnDestroy {
-  pageName: string;
-  pageContent: Array<{ name: string, component: string, styles: string, navigateTo?: string }>; // Include navigateTo if available
+export class DataPrivacyModalComponent implements OnInit, OnDestroy {
+
+  pageContent: Array<{ name: string, component: string, styles: string, navigateTo?: string }>; 
   safeBody: SafeHtml;
   private buttonClickHandler: (event: Event) => void;
+  private pagesLoaded: boolean = false; // Flag to track loading status
 
   constructor(
-    private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
+    private service: SscgiService,
     private router: Router,
-    private service: SscgiService
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private dialogref: MatDialogRef<DataPrivacyModalComponent>
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.pageName = params.get('name');
-      this.loadPageContent(this.pageName);
-    });
+    this.loadPages();
   }
 
+  
   ngOnDestroy(): void {
-    // Clean up any event listeners or handlers
     if (this.buttonClickHandler) {
       document.removeEventListener('click', this.buttonClickHandler);
     }
   }
 
-  private loadPageContent(pageName: string) {
-    this.service.getPages().subscribe(
+
+
+  private loadPages() {
+    this.service.getDataPrivacyPage().subscribe(
       (response) => {
-        const page = response.find(p => p.name === pageName);
+        const page = response[0];
 
         if (page) {
           this.pageContent = page;
@@ -56,7 +54,7 @@ export class NavPageComponent implements OnInit, OnDestroy {
           // Remove old style element if exists
           const oldStyle = document.getElementById('dynamic-page-styles');
           if (oldStyle) {
-          
+            oldStyle.remove();
           }
 
           // Inject styles dynamically
@@ -72,11 +70,11 @@ export class NavPageComponent implements OnInit, OnDestroy {
       }
     );
   }
-
   private addButtonEventListeners() {
     this.buttonClickHandler = (event: Event) => {
       const target = event.target as HTMLElement;
       if (target.tagName === 'BUTTON') {
+        this.dialogref.close();
         const redirectUrl = target.getAttribute('redirect_url');
         const openInNewWindow = target.hasAttribute('open_in_new_window');
 

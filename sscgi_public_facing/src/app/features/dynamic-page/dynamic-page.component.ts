@@ -4,8 +4,10 @@ import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SscgiService } from '../../sscgi.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { DataPrivacyModalComponent } from './data-privacy-modal/data-privacy-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'sscgi-dynamic-page',
@@ -28,16 +30,27 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
     private service: SscgiService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(
+        filter(event => event instanceof NavigationEnd)
+      )
       .subscribe((event: NavigationEnd) => {
+        // Existing logic for URL matching
         if (this.urlContainsHome(event.urlAfterRedirects)) {
           this.resetPageState();
           this.loadPages();
+        }
+
+        // Modal opening logic - only for /career URL
+        const currentUrl = event.urlAfterRedirects.toLowerCase(); // Make case-insensitive match
+        if (currentUrl === '/career' || currentUrl === '/contactus') {
+          this.openCareerModal(); // Open modal only if the URL is '/career'
         }
       });
   }
@@ -46,6 +59,17 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
     if (this.buttonClickHandler) {
       document.removeEventListener('click', this.buttonClickHandler);
     }
+  }
+
+
+  openCareerModal(): void {
+    const dialogRef = this.dialog.open(DataPrivacyModalComponent, {
+      disableClose: true,   
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Modal closed', result);
+    });
   }
 
   private resetPageState() {
@@ -68,7 +92,6 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
       data => {
         const displayedPages = data
           .filter(page => page.isDisplay === true)
-          .sort((a, b) => a.pageOrder - b.pageOrder);
 
         // Only set pages if they were changed
         if (JSON.stringify(this.pages) !== JSON.stringify(displayedPages)) {

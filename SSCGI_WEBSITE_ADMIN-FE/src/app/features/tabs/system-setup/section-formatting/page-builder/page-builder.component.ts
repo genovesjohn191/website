@@ -7,6 +7,7 @@ import gjsForms from 'grapesjs-plugin-forms';
 import { CRUDmodalComponent } from '../../../../../shared/components/crudmodal/crudmodal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageBuilderService } from '../../page-builder.service';
 
 @Component({
   selector: 'app-page-builder',
@@ -21,9 +22,7 @@ export class PageBuilderComponent implements OnInit {
     url: string; id: string; name: string; component: string; styles: string
   }[] = [];
   private currentPageIndex: number = 0;
-  api = "http://172.16.5.50:88/Page/"
-
-  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
+  constructor(private service: PageBuilderService, private http: HttpClient, private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.editor = grapesjs.init({
@@ -170,30 +169,23 @@ export class PageBuilderComponent implements OnInit {
     };
   }
   private loadPagesFromDB() {
-    this.http.get<any[]>(this.api + "getPages").subscribe(
-      (pages) => {
-        this.pages = pages;
-        this.addCustomTraits(); // Ensure traits are updated with new pages
-        if (this.pages.length > 0) {
-          this.loadPage(0); // Load the first page by default
-        }
-      },
-      (error) => {
-        console.error('Error loading pages:', error);
+    this.service.getPages().subscribe(data => {
+      this.pages = data;
+      this.addCustomTraits(); // Ensure traits are updated with new pages
+      if (this.pages.length > 0) {
+        this.loadPage(0); // Load the first page by default
       }
-    );
+
+    })
   }
 
   private loadPages() {
-    this.http.get<any[]>(this.api + "getPages").subscribe(
-      (pages) => {
-        this.pages = pages;
-        this.addCustomTraits(); // Ensure traits are updated with new pages
-      },
-      (error) => {
-        console.error('Error loading pages:', error);
-      }
-    );
+    this.service.getPages().subscribe(data => {
+      this.pages = data;
+      this.addCustomTraits(); // Ensure traits are updated with new pages
+
+
+    })
   }
 
   private addCustomTraits() {
@@ -326,17 +318,26 @@ export class PageBuilderComponent implements OnInit {
           // Update current page order
           currentPage.pageOrder = newOrder;
 
-          // Update the order in the backend
-          this.http.put(this.api + "updatePageOrder/" + currentPage.id, { pageOrder: newOrder }).subscribe(
-            () => {
-              this.loadPages(); // Reload pages to reflect changes
-              this.showSnackBar("Page order has been changed")
-            },
+          this.service.updatePageOrder(currentPage.id, newOrder).subscribe(data => {
+            this.loadPages(); // Reload pages to reflect changes
+            this.showSnackBar("Page order has been changed")
+          },
             (error) => {
               console.error('Error updating page order:', error);
               this.showSnackBar("An error occurred while updating the page order.")
             }
-          );
+          )
+          // Update the order in the backend
+          // this.http.put(this.api + "updatePageOrder/" + currentPage.id, { pageOrder: newOrder }).subscribe(
+          //   () => {
+          //     this.loadPages(); // Reload pages to reflect changes
+          //     this.showSnackBar("Page order has been changed")
+          //   },
+          //   (error) => {
+          //     console.error('Error updating page order:', error);
+          //     this.showSnackBar("An error occurred while updating the page order.")
+          //   }
+          // );
         }
       }
     });
@@ -369,16 +370,26 @@ export class PageBuilderComponent implements OnInit {
           isDisplay: currentPage.isDisplay
         };
 
-        this.http.put(this.api + "updatePage/" + currentPage.id, updatedPage).subscribe(
-          (response) => {
-            this.showSnackBar("Page saved successfully");
 
-          },
+        this.service.updatePage(currentPage.id, updatedPage).subscribe(data => {
+
+          this.showSnackBar("Page saved successfully");
+        },
           (error) => {
             this.showSnackBar('Error saving page:');
 
-          }
-        );
+          })
+
+        // this.http.put(this.api + "updatePage/" + currentPage.id, updatedPage).subscribe(
+        //   (response) => {
+        //     this.showSnackBar("Page saved successfully");
+
+        //   },
+        //   (error) => {
+        //     this.showSnackBar('Error saving page:');
+
+        //   }
+        // );
       } else {
         this.showSnackBar("Save action canceled");
       }
@@ -411,18 +422,29 @@ export class PageBuilderComponent implements OnInit {
           isDisplay: result.isDisplay.value
         };
 
-        this.http.post(this.api + "createPages", newPage).subscribe(
-          (response: any) => {
-            this.pages.push(response);
-            this.currentPageIndex = this.pages.length - 1;
-            this.loadPage(this.currentPageIndex);
-            this.loadPages();
-            this.showSnackBar("Page Added Successfully");
-          },
+        this.service.createPage(newPage).subscribe(data => {
+          this.pages.push(data);
+          this.currentPageIndex = this.pages.length - 1;
+          this.loadPage(this.currentPageIndex);
+          this.loadPages();
+          this.showSnackBar("Page Added Successfully");
+        },
           (error) => {
             console.error('Error adding page:', error);
-          }
-        );
+          })
+
+        // this.http.post(this.api + "createPages", newPage).subscribe(
+        //   (response: any) => {
+        //     this.pages.push(response);
+        //     this.currentPageIndex = this.pages.length - 1;
+        //     this.loadPage(this.currentPageIndex);
+        //     this.loadPages();
+        //     this.showSnackBar("Page Added Successfully");
+        //   },
+        //   (error) => {
+        //     console.error('Error adding page:', error);
+        //   }
+        // );
       }
     });
   }
@@ -464,17 +486,27 @@ export class PageBuilderComponent implements OnInit {
         if (newStatus !== currentPage.isDisplay) {
           currentPage.isDisplay = newStatus;
 
-          // Update the status in the backend
-          this.http.put(this.api + "updateStatus/" + currentPage.id, { isDisplay: newStatus }).subscribe(
-            () => {
-              this.showSnackBar("Page display status updated successfully!");
-              this.loadPages(); // Reload pages to reflect changes
-            },
+
+          this.service.updateStatus(currentPage.id, newStatus).subscribe(data => {
+            this.showSnackBar("Page display status updated successfully!");
+            this.loadPages(); // Reload pages to reflect changes
+          },
             (error) => {
               console.error('Error updating page status:', error);
               this.showSnackBar("An error occurred while updating the page status.");
-            }
-          );
+            })
+
+          // Update the status in the backend
+          // this.http.put(this.api + "updateStatus/" + currentPage.id, { isDisplay: newStatus }).subscribe(
+          //   () => {
+          //     this.showSnackBar("Page display status updated successfully!");
+          //     this.loadPages(); // Reload pages to reflect changes
+          //   },
+          //   (error) => {
+          //     console.error('Error updating page status:', error);
+          //     this.showSnackBar("An error occurred while updating the page status.");
+          //   }
+          // );
         } else {
           this.showSnackBar("No change in status.");
         }
@@ -504,21 +536,30 @@ export class PageBuilderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.http.delete(`${this.api + "deletePage"}/${this.pages[this.currentPageIndex].id}`).subscribe(
-          () => {
-            this.pages.splice(this.currentPageIndex, 1);
-            this.currentPageIndex = Math.max(0, this.currentPageIndex - 1);
-            this.loadPage(this.currentPageIndex);
-            this.showSnackBar("Page Deleted");
-          },
+        this.service.deletePage(this.pages[this.currentPageIndex].id).subscribe(data => {
+          this.pages.splice(this.currentPageIndex, 1);
+          this.currentPageIndex = Math.max(0, this.currentPageIndex - 1);
+          this.loadPage(this.currentPageIndex);
+          this.showSnackBar("Page Deleted");
+
+        },
           (error) => {
             this.showSnackBar("Error occured");
-          }
-        );
+          })
+        // this.http.delete(`${this.api + "deletePage"}/${this.pages[this.currentPageIndex].id}`).subscribe(
+        //   () => {
+        //     this.pages.splice(this.currentPageIndex, 1);
+        //     this.currentPageIndex = Math.max(0, this.currentPageIndex - 1);
+        //     this.loadPage(this.currentPageIndex);
+        //     this.showSnackBar("Page Deleted");
+        //   },
+        //   (error) => {
+        //     this.showSnackBar("Error occured");
+        //   }
+        // );
       }
     });
   }
-
 
   private switchPagePrompt() {
     // Create a list of pages displaying their names and pageOrder
