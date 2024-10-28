@@ -1,111 +1,222 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TableComponent } from '../../../../shared/components/table/table.component';
 import { FormConfig } from '../../../../shared/interfaces/form-model';
+import { Emailtemplate } from '../../../../shared/interfaces/emailtemplate-model';
+import { EmailTemplateService } from '../../user-management/user-management-service/Email-Template/email-template.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RestoreTableComponent } from '../../../../shared/components/restore-table/restore-table.component';
+import { CommonModule } from '@angular/common';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 @Component({
   selector: 'app-email-template',
   standalone: true,
-  imports: [TableComponent],
+  imports: [TableComponent,RestoreTableComponent,CommonModule],
   templateUrl: './email-template.component.html',
   styleUrl: './email-template.component.css'
 })
 export class EmailTemplateComponent {
   link = "system-setup/email-template/"
   module = 'email template'
-  myData = [
-    { 
-      category: 'Acknowledgement or Sales', 
-      senderEmailProject: 'SSCGI Sales', 
-      receiver: 'njbmission@sscgi.com', 
-      receiverEmailSubject: '@SenderSubject', 
-      createdDate: '2022-01-28 10:30:50.000' 
-    },
-    { 
-      category: 'Reminder or Internal', 
-      senderEmailProject: 'Reminder System', 
-      receiver: 'internal@sscgi.com', 
-      receiverEmailSubject: '@ReminderSubject', 
-      createdDate: '2022-02-28 12:45:30.000' 
-    },
-    { 
-      category: 'Notification or Marketing', 
-      senderEmailProject: 'Marketing Department', 
-      receiver: 'marketing@sscgi.com', 
-      receiverEmailSubject: '@MarketingSubject', 
-      createdDate: '2022-03-15 08:20:00.000' 
-    },
-    { 
-      category: 'Feedback or Support', 
-      senderEmailProject: 'Customer Support', 
-      receiver: 'support@sscgi.com', 
-      receiverEmailSubject: '@SupportSubject', 
-      createdDate: '2022-04-10 14:00:15.000' 
-    },
-    { 
-      category: 'Invoice or Billing', 
-      senderEmailProject: 'Billing Department', 
-      receiver: 'billing@sscgi.com', 
-      receiverEmailSubject: '@BillingSubject', 
-      createdDate: '2022-05-20 09:45:20.000' 
-    },
-    { 
-      category: 'Reminder or Internal', 
-      senderEmailProject: 'Reminder System', 
-      receiver: 'internal@sscgi.com', 
-      receiverEmailSubject: '@ReminderSubject', 
-      createdDate: '2022-06-05 17:30:00.000' 
-    },
-    { 
-      category: 'Acknowledgement or Sales', 
-      senderEmailProject: 'SSCGI Sales', 
-      receiver: 'njbmission@sscgi.com', 
-      receiverEmailSubject: '@SenderSubject', 
-      createdDate: '2022-07-12 11:10:45.000' 
-    },
-    { 
-      category: 'Notification or Marketing', 
-      senderEmailProject: 'Marketing Department', 
-      receiver: 'marketing@sscgi.com', 
-      receiverEmailSubject: '@MarketingSubject', 
-      createdDate: '2022-08-18 13:20:30.000' 
-    },
-    { 
-      category: 'Feedback or Support', 
-      senderEmailProject: 'Customer Support', 
-      receiver: 'support@sscgi.com', 
-      receiverEmailSubject: '@SupportSubject', 
-      createdDate: '2022-09-25 16:55:10.000' 
-    },
-    { 
-      category: 'Invoice or Billing', 
-      senderEmailProject: 'Billing Department', 
-      receiver: 'billing@sscgi.com', 
-      receiverEmailSubject: '@BillingSubject', 
-      createdDate: '2022-10-30 10:05:00.000' 
-    }
-  ];
+  data: Emailtemplate[] = [];
+  deletedData : Emailtemplate[];
+  loading: boolean = false;
+  isRestore: boolean = false;
+  createModalData!: FormConfig;
+  UserId = localStorage.getItem('userId');
+  emailTemplateId : any;
+  categorySelect: Emailtemplate[] = [];
 
   myColumns = [
     { key: 'category', header: 'Category' },
-    { key: 'senderEmailProject', header: 'Sender Project' },
-    { key: 'receiver', header: 'Receiver' },
-    { key: 'receiverEmailSubject', header: 'Email Subject' },
+    { key: 'senderProject', header: 'Sender Project' },
+    { key: 'recipient', header: 'Receiver' },
+    { key: 'emailSubject', header: 'Email Subject' },
     { key: 'createdDate', header: 'Created Date' },
     { key: 'actions', header: 'Actions' }
   ];
 
-  createModalData: FormConfig = {
-    title: 'Employee Create',
-    fields: [
-      { key: 'firstName', label: 'First Name', type: 'text', required: true },
-      { key: 'middleName', label: 'Middle Name', type: 'text' },
-      { key: 'lastName', label: 'Last Name', type: 'text', required: true },
-      { key: 'employeeNumber', label: 'Employee Number', type: 'text', required: true },
-      { key: 'contactNumber', label: 'Contact Number', type: 'text' },
-      { key: 'email', label: 'Email', type: 'email', required: true },
-      { key: 'address', label: 'Address', type: 'text' },
-    ]
-  };
+   
 
-  constructor() {}
+  constructor(private _emailTemplate:EmailTemplateService, private changeDetectorRef: ChangeDetectorRef ,
+    private snackBar: MatSnackBar
+  ) {}
+
+  ngOnInit(): void{    
+    this.getEmailTemplate();
+    this.getOptionList();
+    this.getDeletedEmailTemp();                                         
+  }
+
+  onSubmit(data: any, mode: string): void {
+    console.log(mode, data)
+    this.loading = true;
+    if (mode === 'create') {
+      this.createEmailTemplate(data)
+    } else if (mode ==='restore'){
+      console.log(data,'restore')
+      this.restoreEmailTemp(data.emailTemplateId)
+    } else if (mode === 'delete'){
+      this.deleteEmailTemp(data.emailTemplateId)
+    }
+    else if (mode === 'edit'){
+      console.log(data,'editB')
+      this.UpdateEmaiLTemp(data);
+    }
+    this.loading = false;
+  }
+
+  getOptionList(){
+    let selectCategoryOptions: { value: string; label: string }[] = [];
+
+    this._emailTemplate.getCategory().subscribe((category) => {      
+        this.categorySelect = category;
+        console.log("Category",category);
+        selectCategoryOptions = this.categorySelect.map(category => ({
+          value: category.category,
+          label: category.category,
+        }));
+      this.createModalData = {
+        title: 'Email Template Create',
+        fields: [
+          { key: 'category', label: 'Category', type: 'select', selectOptions: selectCategoryOptions, required: true },
+          { key: 'senderProject', label: 'Sender Project', type: 'text', required: true },
+          { key: 'recipient', label: 'Recipient', type: 'text', required: true },
+          { key: 'emailSubject', label: 'Email Subject', type: 'text', required: true },
+        ]
+      };
+      this.changeDetectorRef.detectChanges();
+    });
+  }
+
+  createEmailTemplate(data: any){
+    console.log("DataCreate",data);
+    const form = {
+      category: data.category,
+      senderProject: data.senderProject,
+      recipient: data.recipient,
+      emailSubject : data.emailSubject,
+      createdByUserId : this.UserId,
+      isActive : true
+    };
+    console.log("CreateForm1",form);
+    this._emailTemplate.createEmailTemplate(form).subscribe({
+      next: (data) => {
+        console.log(data.message,"Data Message");
+        if (data && data.message){
+            this.getEmailTemplate();
+            this.showSnackBar(data.message);
+            this.loading = false;
+        }
+        else if(data == null){
+          this.showSnackBar('Error creating user. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {     
+        this.loading = false
+      }      
+    })
+  }
+  
+  showSnackBar(message: string): void {
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
+  }
+
+  getEmailTemplate() {
+    this._emailTemplate.getEmailTemplate().subscribe(data => {
+      this.data = data;
+    })
+  } 
+
+  restoreEmailTemp(emailTemplateId:any){
+    this._emailTemplate.restoreEmailTemplate(emailTemplateId, this.UserId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getEmailTemplate();
+          this.getDeletedEmailTemp();
+        } else if (data == null) {
+          this.showSnackBar('Error restore email template. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  UpdateEmaiLTemp(data: any){
+    const form = {
+      category : data.category,
+      senderProject: data.senderProject,
+      recipient: data.recipient,
+      emailSubject : data.emailSubject,
+      createdByUserId : this.UserId,
+    };
+    console.log("Form Update",form);
+    this._emailTemplate.updateEmailTemplate(form).subscribe({     
+      next: (data) => {
+
+        console.log(data.message,"Data Message");
+        if (data && data.message){
+            this.getEmailTemplate();
+            this.showSnackBar(data.message);
+            this.loading = false;
+        }
+        else if(data == null){
+          this.showSnackBar('Error updating user. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {     
+        this.loading = false
+      }      
+    })
+  }
+
+  deleteEmailTemp(emailTemplateId:any){
+    console.log(emailTemplateId,"emailTemplateId");
+    this._emailTemplate.deleteEmailTemp(emailTemplateId, this.UserId).subscribe({
+      next:(data)=>{
+        if (data && data.message) {
+          this.showSnackBar(data.message);
+          this.getEmailTemplate();
+          this.getDeletedEmailTemp();
+        } else if (data == null) {
+          this.showSnackBar('Error deleting email template. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  getDeletedEmailTemp(){   
+    this._emailTemplate.getDeletedETemplate().subscribe(data => {
+      console.log("data",data);
+      this.deletedData = data;
+    })
+  }
+
+  onIsRestoreChange(newIsRestoreValue: boolean) {
+    console.log("newIsRestoreValue",newIsRestoreValue);
+    this.isRestore = newIsRestoreValue;
+    // console.log(this.isRestore)
+  }
 }

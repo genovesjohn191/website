@@ -49,10 +49,13 @@
                 </button>
               </div>
             </ng-container>
-
+            <ng-container *ngSwitchCase="'createdDate'">
+              {{element[column.key] | date:'MM/dd/yyyy'}}
+            </ng-container> 
             <ng-container *ngSwitchDefault>
               {{ element[column.key] }}
             </ng-container>
+
           </ng-container>
         </td>
       </ng-container>

@@ -285,12 +285,18 @@ export class CRUDmodalComponent implements OnInit {
       transformedFormValue = {
         userId: userId
       };
+    } else if(this.module === "email template"){
+      const emailTemplateId = this.data.details?.emailTemplateId;
+      transformedFormValue = {
+        emailTemplateId: emailTemplateId
+      };
+      console.log("transformedFormValue",transformedFormValue);
     }
     else {
       // Handle other modules or throw an error if necessary
       console.error('Unknown module type:', this.module);
       return; // Exit the method if the module is unknown
-    }
+    } 
   
     this.formSubmitted.emit({ ...transformedFormValue });
     this.dialogRef.close({ ...transformedFormValue });
@@ -315,6 +321,12 @@ export class CRUDmodalComponent implements OnInit {
       transformedFormValue = {
         userId: userId
       };
+    } else if(this.module === "email template"){
+      const emailTemplateId = this.data.details?.emailTemplateId;
+      transformedFormValue = {
+        emailTemplateId: emailTemplateId
+      };
+      console.log("transformedFormValue",transformedFormValue);
     }else {
       // Handle other modules or throw an error if necessary
       console.error('Unknown module type:', this.module);
