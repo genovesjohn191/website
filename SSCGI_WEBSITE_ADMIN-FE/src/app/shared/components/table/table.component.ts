@@ -13,6 +13,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CRUDmodalComponent } from '../crudmodal/crudmodal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { EmailTemplateService } from '../../../features/tabs/user-management/user-management-service/Email-Template/email-template.service';
 
 @Component({
   selector: 'app-table',
@@ -60,7 +61,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   loading: boolean = true;
   callBack: boolean = false;
   @Output() isRestoreChange = new EventEmitter<boolean>();
-  constructor(private matDialog: MatDialog, private router: Router) { }
+  constructor(private matDialog: MatDialog, private router: Router, private _emailTemplateService:EmailTemplateService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && !changes['data'].firstChange) {
@@ -130,6 +131,12 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
 
     });
+    
+    let emailTemplateId: any;
+    emailTemplateId = data?.emailTemplateId
+    this._emailTemplateService.emailTemplateId = emailTemplateId;
+
+
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == null) {
