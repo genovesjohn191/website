@@ -60,7 +60,7 @@ export class UserAccountManagementComponent {
     if (mode === 'create') {
       this.createUserAccount(data)
     } else if (mode === 'edit') {
-      console.log('Edit')
+      this.updateUserAccount(data)
     } else if (mode === 'delete'){
       this.deleteUserAccount(data.userId)
     } else if (mode ==='restore'){
@@ -108,6 +108,38 @@ export class UserAccountManagementComponent {
     })
   }
 
+  updateUserAccount(data:any){
+    console.log(data)
+    const form = {
+      firstName: data.firstName,
+      middleName: data.middleName,
+      lastName: data.lastName,
+      email:data.email,
+      roleId: data.roleId,
+      expireDate: data.expireDate,
+      byUserId: this.UserId,
+    };
+
+    this._userAccService.updateUserAccount(form, data.userId).subscribe({
+      next: (data) => {
+        console.log(form)
+        if (data && data.message) {
+          this.getUserAccountList();
+          this.showSnackBar(data.message);
+          this.loading = false;
+        } else if (data == null) {
+          this.showSnackBar('Error creating user. Please try again.');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
   createUserAccount(data:any){
     console.log(data)
     const form = {
@@ -115,9 +147,9 @@ export class UserAccountManagementComponent {
       middleName: data.middleName,
       lastName: data.lastName,
       email:data.email,
-      roleId: data.roleId.value,
+      roleId: data.roleId,
       expireDate: data.expireDate,
-      createdByUserId: this.UserId,
+      byUserId: this.UserId,
     };
 
     this._userAccService.createUserAccount(form).subscribe({

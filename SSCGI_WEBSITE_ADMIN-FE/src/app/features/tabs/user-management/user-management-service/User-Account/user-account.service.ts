@@ -35,10 +35,17 @@ export class UserAccountService {
     );
   }
 
-
   createUserAccount(form: any): Observable<any> {
     const url = this.baseUserAccUrl + "createUserAcc"
     return this.http.post(url, form, { headers: this.headers }).pipe(
+      map(data => data),
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  updateUserAccount(form:any, userId:any): Observable<any> {
+    const url = this.baseUserAccUrl + "updateUserAcc/"+ userId
+    return this.http.put(url, form, { headers: this.headers,  }).pipe(
       map(data => data),
       catchError(this.handleError.bind(this))
     );
@@ -56,12 +63,12 @@ export class UserAccountService {
   }
   
   restoreUserAccount(userId:any, restoredBy:any){
-    console.log(restoredBy)
+    // console.log(restoredBy)
     const params = new HttpParams()
     .set('restoredBy', restoredBy)
 
     const url = this.baseUserAccUrl + "restoreUserAccount/"+ userId
-    return this.http.put(url, { headers: this.headers, params: params }).pipe(
+    return this.http.put(url,{},{ headers: this.headers , params: params}).pipe(
       map(data => data),
       retry(3),
       catchError(this.handleError.bind(this))

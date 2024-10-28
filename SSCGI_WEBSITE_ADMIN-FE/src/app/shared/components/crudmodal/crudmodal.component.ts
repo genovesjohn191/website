@@ -82,7 +82,7 @@ export class CRUDmodalComponent implements OnInit {
   ngOnInit(): void {
     this.initializeFilteredOptions();
     const details = this.data?.details || {};
-    console.log(details);
+    // console.log(details);
   
     if (this.mode !== 'delete') {
       this.dynamicForm = this.fb.group(this.buildFormControls(details));
@@ -91,7 +91,7 @@ export class CRUDmodalComponent implements OnInit {
         this.setupPolicies(details);
       }
   
-      console.log(this.dynamicForm.value);
+      // console.log(this.dynamicForm.value);
     }
   }
   
@@ -167,7 +167,7 @@ export class CRUDmodalComponent implements OnInit {
       this.formConfig.fields.forEach(field => {
         if (field.type === 'select') {
           field.filteredOptions = this.filterOptions(value, field.selectOptions || []);
-          console.log(field.filteredOptions)
+          // console.log(field.filteredOptions)
         }
       });
     });
@@ -254,12 +254,14 @@ export class CRUDmodalComponent implements OnInit {
     }) : [];
     
     const roleId = this.data.details?.roleId || null;
+    const userId = this.data.details?.userId || null;
     const transformedFormValue = {
       ...formValue,
       Policies: transformedRolePolicies,
-      ...(roleId ? { roleId } : {})
+      ...(roleId ? { roleId } : {}),
+      ...(userId ? { userId } : {})
     };
-    console.log(transformedFormValue)
+    // console.log(transformedFormValue)
   
     this.formSubmitted.emit({ ...transformedFormValue });
     this.dialogRef.close({ ...transformedFormValue });
@@ -267,7 +269,7 @@ export class CRUDmodalComponent implements OnInit {
   
   onDelete() {
     let transformedFormValue: any;
-    console.log(this.module)
+    // console.log(this.module)
     if (this.module === "role") {
       const roleId = this.data.details?.roleId;
       transformedFormValue = {
