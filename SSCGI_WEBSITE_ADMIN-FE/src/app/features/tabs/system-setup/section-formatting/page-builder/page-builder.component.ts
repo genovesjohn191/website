@@ -8,33 +8,188 @@ import { CRUDmodalComponent } from '../../../../../shared/components/crudmodal/c
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageBuilderService } from '../../page-builder.service';
+import Swiper from 'swiper';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-page-builder',
+  standalone: true,
   templateUrl: './page-builder.component.html',
-  styleUrls: ['./page-builder.component.css']
+  styleUrls: ['./page-builder.component.css'],
+  imports: [CommonModule]
 })
 export class PageBuilderComponent implements OnInit {
   private editor: any;
+  isLoading = false;
   private pages: {
     isDisplay: any;
     pageOrder: any;
     url: string; id: string; name: string; component: string; styles: string
   }[] = [];
   private currentPageIndex: number = 0;
+
+
   constructor(private service: PageBuilderService, private http: HttpClient, private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.getImages();
     this.editor = grapesjs.init({
       container: '#gjs',
       plugins: [plugin, gjsForms],
       pluginsOpts: {},
       storageManager: { type: 'inline' },
+      assetManager: {
+        assets: [], // Initially empty, will be populated from the server
 
+        upload: 'https://localhost:7258/Page/upload', // Upload endpoint
+        uploadName: 'file', // The POST field name for file uploads
+
+        headers: {
+          'accept': '*/*',
+        },
+
+        // Custom file upload logic
+        uploadFile: (e) => {
+          const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+          const formData = new FormData();
+
+          // Append the selected file to formData
+          formData.append('file', files[0], files[0].name);
+
+          this.isLoading = true;
+          // Use fetch to send the file to the server
+          fetch('https://localhost:7258/Page/upload', {
+            method: 'POST',
+            headers: {
+              'accept': '*/*',
+            },
+            body: formData
+          })
+            .then(response => response.json())
+            .then(result => {
+              // Assuming the server responds with the file path
+              const uploadedFileUrl = result.filePath;
+
+              // Create an asset object
+              const asset = {
+                type: 'image', // Specify that this is an image
+                src: uploadedFileUrl,  // The URL to the uploaded image
+                name: files[0].name,   // Optional: name of the image
+              };
+
+              // Add the new asset to the asset manager
+              this.editor.AssetManager.add(asset);
+
+              // Optionally, add the image to the canvas (if you want it displayed immediately)
+              this.editor.addComponents(`<img src="${uploadedFileUrl}" alt="${files[0].name}"/>`);
+
+              this.isLoading = false;
+              this.getImages();
+            })
+            .catch(error => {
+              console.error('Error uploading file:', error);
+              this.isLoading = false;
+            });
+        }
+      },
+
+      // Other editor options
     });
 
 
+
+    this.editor.BlockManager.add('swiper-carousel-block', {
+      label: 'Swiper Carousel',
+      content: `
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="https://via.placeholder.com/300x150" alt="Slide 1" />
+              <h2>Slide 1 Title</h2>
+              <p>Description for Slide 1</p>
+            </div>
+            <div class="swiper-slide">
+              <img src="https://via.placeholder.com/300x150" alt="Slide 2" />
+              <h2>Slide 2 Title</h2>
+              <p>Description for Slide 2</p>
+            </div>
+            <div class="swiper-slide">
+              <img src="https://via.placeholder.com/300x150" alt="Slide 3" />
+              <h2>Slide 3 Title</h2>
+              <p>Description for Slide 3</p>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      `,
+      category: 'Components',
+      droppable: true,
+      draggable: true,
+      script: function () {
+        const swiper = new Swiper('.swiper-container', {
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      },
+    });
+
+    // Step 2: Style the Swiper Carousel
+    const styles = `
+      .swiper-container {
+        width: 100%;
+        height: 300px;
+      }
+    
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        background: #fff;
+      }
+    
+      .swiper-slide img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+    
+      .swiper-button-next, .swiper-button-prev {
+        color: #000;
+      }
+    `;
+
+    // Append styles to the document
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+
+    // Step 3: Add Swiper CSS and JS
+    const addSwiperResources = () => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/swiper/swiper-bundle.min.css';
+      document.head.appendChild(link);
+
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/swiper/swiper-bundle.min.js';
+      document.body.appendChild(script);
+    };
+
+
+
     this.editor.on('load', () => {
+      addSwiperResources();
       this.editor.Panels.addButton('options', {
         id: 'save-page',
         className: 'fa fa-save',
@@ -161,6 +316,33 @@ export class PageBuilderComponent implements OnInit {
     });
 
 
+  }
+
+  private getImages() {
+    this.service.getImages().subscribe(
+      response => {
+        // Assuming response is an array of image URLs
+        // Clear existing assets before adding new ones
+        this.editor.AssetManager.clear(); // Clear existing assets
+        response.forEach(imageUrl => {
+          // Check if the image URL is valid (optional validation)
+          if (this.isValidImageUrl(imageUrl)) {
+            this.editor.AssetManager.add({
+              type: 'image',
+              src: imageUrl,
+            });
+          }
+        });
+      },
+      error => {
+        console.error('Error loading initial assets:', error);
+      }
+    );
+  }
+
+  // Optional: Function to validate if the URL points to a valid image
+  private isValidImageUrl(url: string): boolean {
+    return /\.(jpeg|jpg|gif|png|svg)$/.test(url); // Adjust extensions as needed
   }
 
   private bindRedirectFunction() {
@@ -348,6 +530,7 @@ export class PageBuilderComponent implements OnInit {
     const pageHtml = this.editor.getHtml();
     const pageCss = this.editor.getCss();
     const currentPage = this.pages[this.currentPageIndex];
+    console.log(currentPage);
 
     const dialogRef = this.dialog.open(CRUDmodalComponent, {
       width: '400px',
@@ -369,7 +552,6 @@ export class PageBuilderComponent implements OnInit {
           styles: pageCss,
           isDisplay: currentPage.isDisplay
         };
-
 
         this.service.updatePage(currentPage.id, updatedPage).subscribe(data => {
 
