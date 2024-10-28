@@ -31,25 +31,26 @@
     <div class="section">
         <h1 class="title-section">User Account</h1>
         <div class="user-grid-container">
-            <div class="grid-item">
+            <div class="grid-item" *ngIf="roleData">
                 <div class="item-header">
                     <p class="item-title">User Account Roles</p>
                     <p class="item-count">{{ roleData.length }}</p>
                 </div>
                 <ag-charts
+                *ngIf="rolesOptions"
                 [options]="rolesOptions"
             ></ag-charts>
             </div>
-            <div class="grid-item">
+            <div class="grid-item" >
                 <div class="item-header">
                     <p class="item-title">Active User Accounts</p>
-                    <p class="item-count">22</p>
+                    <p class="item-count">{{userAccounts.length}}</p>
                 </div>
-                <div class="item-data accounts">
-                    <div class="item-pages" *ngFor="let ua of userAccounts | slice:0:3"> <!-- Show only the first 3 pages -->
-                        <p>UserId: <b>{{ ua.UserId }}</b></p>
-                        <p>Name: <b>{{ ua.Name }}</b></p>
-                        <p>Role: <b>{{ua.Role}}</b></p>
+                <div class="item-data accounts" *ngIf="userAccounts">
+                    <div class="item-pages" *ngFor="let ua of userAccounts | slice:0:3" > <!-- Show only the first 3 pages -->
+                        <p>UserId: <b>{{ ua.userId }}</b></p>
+                        <p>Name: <b>{{ ua.firstName + " " + ua.middleName + " " + ua.lastName }}</b></p>
+                        <p>Role: <b>{{ ua.roleName}}</b></p>
                     </div>
                     <div class="item-pages more">
                         <p><b>View More...</b></p>
@@ -59,9 +60,9 @@
             <div class="grid-item">
                 <div class="item-header">
                     <p class="item-title">Total User Accounts</p>
-                    <p class="item-count">90</p>
+                    <p class="item-count">{{userAccounts.length + deletedUserAccounts.length}}</p>
                 </div>
-                <ag-charts [options]="userOptions"></ag-charts> 
+                <ag-charts *ngIf="userOptions" [options]="userOptions"></ag-charts> 
             </div>
         </div>
     </div>

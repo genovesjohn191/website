@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { AgCharts } from 'ag-charts-angular';
 import { AgChartOptions } from 'ag-charts-community';
+import { UserAccountService } from '../user-management/user-management-service/User-Account/user-account.service';
+import { DashboardUserAccount } from '../../../shared/interfaces/dashboard-model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,56 +19,15 @@ export class DashboardComponent {
   public rolesOptions: AgChartOptions;
   public applicationStatusOptions: AgChartOptions;
   public jobVacancyApplicationsOptions: AgChartOptions;
+
+  deletedUserAccounts: DashboardUserAccount[] = [];
+  userAccounts: DashboardUserAccount[] = [];
+  roleData = [];
+  
   data = [
     { asset: "Active Pages", number: 22 },
     { asset: "Deleted Pages", number: 8 },
   ];
-
-  public roleData = [
-    {
-      role: "Admin",
-      count: 14,
-    },
-    {
-      role: "Editor",
-      count: 24,
-    },
-    {
-      role: "Viewer",
-      count: 35,
-    },
-  ];
-
-  public userAccounts = [
-    { UserId: 1, Name: "Alice Smith", Role: "Admin" },
-    { UserId: 2, Name: "Bob Johnson", Role: "Editor" },
-    { UserId: 3, Name: "Charlie Brown", Role: "Viewer" },
-    { UserId: 4, Name: "David Wilson", Role: "Admin" },
-    { UserId: 5, Name: "Eva Green", Role: "Editor" },
-    { UserId: 6, Name: "Frank White", Role: "Viewer" },
-  ];
-
-public applications = [
-  { ApplicantName: "John Doe", Position: "Software Engineer", Status: "Pending", Date: "2024-10-01" },
-  { ApplicantName: "Jane Smith", Position: "Product Manager", Status: "Approved", Date: "2024-09-28" },
-  { ApplicantName: "Michael Brown", Position: "UI/UX Designer", Status: "Rejected", Date: "2024-10-02" },
-  { ApplicantName: "Emily Johnson", Position: "Data Analyst", Status: "Pending", Date: "2024-09-30" },
-  { ApplicantName: "David Wilson", Position: "Marketing Specialist", Status: "Approved", Date: "2024-09-27" },
-];
-
-public jobVacancies = [
-  { title: "Software Engineer", status: "Open", numberOfApplications: 2 },
-  { title: "Product Manager", status: "Open", numberOfApplications: 1 },
-  { title: "UI/UX Designer", status: "Closed", numberOfApplications: 1 },
-  { title: "Data Analyst", status: "Open", numberOfApplications: 1 },
-  { title: "Marketing Specialist", status: "Open", numberOfApplications: 0 },
-  { title: "DevOps Engineer", status: "Open", numberOfApplications: 0 },
-  { title: "Project Manager", status: "Closed", numberOfApplications: 0 },
-  { title: "Data Scientist", status: "Open", numberOfApplications: 0 },
-  { title: "Frontend Developer", status: "Open", numberOfApplications: 0 },
-  { title: "Backend Developer", status: "Closed", numberOfApplications: 0 },
-];
-
 
   activePages = [
     { title: "Homepage", description: "The main entry point of the website.", url: "/home" },
@@ -75,53 +37,125 @@ public jobVacancies = [
     { title: "Contact", description: "How to get in touch with us.", url: "/contact" }
   ];
 
+  public applications = [
+    { ApplicantName: "John Doe", Position: "Software Engineer", Status: "Pending", Date: "2024-10-01" },
+    { ApplicantName: "Jane Smith", Position: "Product Manager", Status: "Approved", Date: "2024-09-28" },
+    { ApplicantName: "Michael Brown", Position: "UI/UX Designer", Status: "Rejected", Date: "2024-10-02" },
+    { ApplicantName: "Emily Johnson", Position: "Data Analyst", Status: "Pending", Date: "2024-09-30" },
+    { ApplicantName: "David Wilson", Position: "Marketing Specialist", Status: "Approved", Date: "2024-09-27" },
+  ];
+
+  public jobVacancies = [
+    { title: "Software Engineer", status: "Open", numberOfApplications: 2 },
+    { title: "Product Manager", status: "Open", numberOfApplications: 1 },
+    { title: "UI/UX Designer", status: "Closed", numberOfApplications: 1 },
+    { title: "Data Analyst", status: "Open", numberOfApplications: 1 },
+    { title: "Marketing Specialist", status: "Open", numberOfApplications: 0 },
+    { title: "DevOps Engineer", status: "Open", numberOfApplications: 0 },
+    { title: "Project Manager", status: "Closed", numberOfApplications: 0 },
+    { title: "Data Scientist", status: "Open", numberOfApplications: 0 },
+    { title: "Frontend Developer", status: "Open", numberOfApplications: 0 },
+    { title: "Backend Developer", status: "Closed", numberOfApplications: 0 },
+  ];
+
   public applicationStatusData = [
     { status: "Pending", number: 30 },
     { status: "Approved", number: 50 },
     { status: "Rejected", number: 20 },
   ];
 
-  userData = [
-    { id: 1, status: "Active Accounts", number: 85 },
-    { id: 2, status: "Deleted Accounts", number: 5 },
-  ];
+  userData = [];
 
-  constructor() {
+  constructor(private _userAccService: UserAccountService, private changeDetectorRef: ChangeDetectorRef) {
+    this.setupCharts();
+    this.fetchUserAccounts();
+  }
+
+  private setupCharts() {
     // Pie chart for page data
-    this.options = {
-      data: this.data,
+    this.options = this.createPieChartOptions(this.data, "asset", "number", ['#166534', '#dc3545'], ['#28a745', '#dc3545']);
+
+    // Pie chart for application status
+    this.applicationStatusOptions = this.createPieChartOptions(this.applicationStatusData, "status", "number", ['#007bff', '#28a745', '#dc3545'], ['#0056b3', '#28a745', '#dc3545']);
+
+    // Bar chart for job vacancy applications
+    this.jobVacancyApplicationsOptions = {
+      data: this.jobVacancies,
+      background: {
+        fill: 'transparent'
+      },
+      series: [
+        {
+          type: "bar",
+          xKey: "title",
+          yKey: "numberOfApplications",
+          yName: "Applicant",
+          direction: 'vertical',
+        },
+      ],
+      legend: {
+        enabled: false,
+      },
+    };
+  }
+
+  private createPieChartOptions(data: any[], labelKey: string, angleKey: string, fills: string[], strokes: string[]): AgChartOptions {
+    return {
+      data: data,
       background: {
         fill: 'transparent'
       },
       series: [
         {
           type: "pie",
-          calloutLabelKey: "asset",
-          angleKey: "number",
-          fills: ['#166534', '#dc3545'],
-          strokes: ['#28a745', '#dc3545'],
+          calloutLabelKey: labelKey,
+          angleKey: angleKey,
+          fills: fills,
+          strokes: strokes,
         },
       ],
     };
+  }
 
-    // Pie chart for user data
-    this.userOptions = {
-      data: this.userData,
-      background: {
-        fill: 'transparent'
+  private fetchUserAccounts() {
+    forkJoin({
+      userAccounts: this._userAccService.getUserAccount(),
+      deletedUserAccounts: this._userAccService.getDeletedUserAccount(),
+    }).subscribe({
+      next: ({ userAccounts, deletedUserAccounts }) => {
+        this.userAccounts = userAccounts;
+        this.deletedUserAccounts = deletedUserAccounts;
+        
+        this.updateRoleData();
+        this.updateUserData();
       },
-      series: [
-        {
-          type: "pie",
-          calloutLabelKey: "status",
-          angleKey: "number",
-          fills: ['#166534', '#dc3545'],
-          strokes: ['#0056b3', '#dc3545'],
-        },
-      ],
-    };
+      error: (err) => {
+        console.error('Error fetching user accounts or deleted accounts:', err);
+      }
+    });
+  }
 
-    // Bar chart for roles
+  private updateRoleData() {
+    const roleCountMap: { [roleName: string]: number } = {};
+
+    this.userAccounts.forEach(({ userId, roleName, firstName, middleName, lastName }) => {
+      console.log(userId);
+      console.log(roleName);
+      console.log(`${firstName} ${middleName} ${lastName}`);
+
+      // Replace with logic to fetch dynamic role if needed
+      const dynamicRoleName = roleName || "admin";
+
+      // Count occurrences of each roleName
+      roleCountMap[dynamicRoleName] = (roleCountMap[dynamicRoleName] || 0) + 1;
+    });
+
+    this.roleData = Object.keys(roleCountMap).map(role => ({
+      role: role,
+      count: roleCountMap[role]
+    }));
+
+    // Set up rolesOptions
     this.rolesOptions = {
       data: this.roleData,
       background: {
@@ -140,47 +174,15 @@ public jobVacancies = [
         enabled: false,
       },
     };
+  }
 
+  private updateUserData() {
+    this.userData = [
+      { id: 1, status: "Active Accounts", number: this.userAccounts.length },
+      { id: 2, status: "Deleted Accounts", number: this.deletedUserAccounts.length },
+    ];
 
-    
-
-        // Pie chart for application status
-    this.applicationStatusOptions = {
-      data: this.applicationStatusData,
-      background: {
-        fill: 'transparent'
-      },
-      series: [
-        {
-          type: "pie",
-          calloutLabelKey: "status",
-          angleKey: "number",
-          fills: ['#007bff', '#28a745', '#dc3545'], // Customize colors as needed
-          strokes: ['#0056b3', '#28a745', '#dc3545'],
-        },
-      ],
-    };
-
-    // Bar chart for job vacancy applications
-    this.jobVacancyApplicationsOptions =  {
-      data: this.jobVacancies,
-      background: {
-        fill: 'transparent'
-      },
-      series: [
-        {
-          type: "bar",
-          xKey: "title",
-          yKey: "numberOfApplications",
-          yName: "Applicant",
-          direction: 'vertical',
-        },
-      ],
-      legend: {
-        enabled: false,
-      },
-    };
-
-
+    // Pie chart for user data
+    this.userOptions = this.createPieChartOptions(this.userData, "status", "number", ['#166534', '#dc3545'], ['#0056b3', '#dc3545']);
   }
 }

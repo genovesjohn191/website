@@ -54,7 +54,6 @@ export class RoleManagementComponent implements AfterViewInit {
     ],
     policies: [
       { rolePolicyName: 'Role', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
-      { rolePolicyName: 'Employee', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
       { rolePolicyName: 'User Account', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
       { rolePolicyName: 'Section Formatting', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },
       { rolePolicyName: 'Email Template', options: ['CanCreate', 'CanEdit', 'CanView', 'CanDelete', 'CanRestore'] },

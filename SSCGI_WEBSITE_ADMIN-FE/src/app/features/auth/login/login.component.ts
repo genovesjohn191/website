@@ -61,9 +61,14 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           this.router.navigate(['/tabs/dashboard'])
           localStorage.setItem('token', data[0].token)
-          localStorage.setItem('personId',data[0].personId)
           localStorage.setItem('userId',data[0].userId)
           localStorage.setItem('roleId',data[0].roleId)
+          const firstName = data[0].firstName || ""; // Fallback to an empty string if undefined
+          const middleName = data[0].middleName || ""; // Fallback to an empty string if undefined
+          const lastName = data[0].lastName || ""; // Fallback to an empty string if undefined
+      
+          const fullName = `${firstName} ${middleName} ${lastName}`.trim(); // Trim to remove extra spaces
+          localStorage.setItem('UserName', fullName);
           console.log(localStorage.getItem("roleId"))
           this.showSnackBar(data[0].message);
         }

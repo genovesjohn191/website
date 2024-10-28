@@ -1,6 +1,6 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { FormConfig } from '../../interfaces/form-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -70,58 +70,88 @@ export class CRUDmodalComponent implements OnInit {
     }
   }
 
+  private emailDomainValidator(domain: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const email = control.value;
+      if (!email) return null; // Return null if there's no email
+      return email.endsWith(domain) ? null : { invalidDomain: { value: control.value } };
+    };
+  }
+
+
   ngOnInit(): void {
     this.initializeFilteredOptions();
     const details = this.data?.details || {};
-
-    console.log(details)
-
+    console.log(details);
+  
     if (this.mode !== 'delete') {
-      this.dynamicForm = this.fb.group(
-        this.formConfig.fields.reduce((controls, field) => {
-          controls[field.key] = new FormControl(
-            { value: details[field.key] || '', disabled: this.mode === 'view' },
-            field.required ? Validators.required : null
-          );
-          return controls;
-        }, {} as { [key: string]: any })
-      );
-
+      this.dynamicForm = this.fb.group(this.buildFormControls(details));
+  
       if (this.formConfig.policies) {
-        this.dynamicForm.addControl('Policies', this.fb.array(
-          this.formConfig.policies.map(policy => this.createPolicyGroup(policy))
-        ));
-
-        const rolePoliciesArray = this.dynamicForm.get('Policies') as FormArray;
-        //console.log(rolePoliciesArray, 're')
-        rolePoliciesArray.controls.forEach((policyControl: AbstractControl, index: number) => {
-          const policyGroup = policyControl as FormGroup;
-          const existingPolicy = (details.policies || [])[index];
-          const options = policyGroup.get('options') as FormArray;
-
-          if (existingPolicy) {
-            policyGroup.patchValue({
-              isChecked: existingPolicy.isChecked,
-              options: Array.isArray(existingPolicy.options) ? existingPolicy.options : []
-            });
-
-            const optionExist = Object.values(existingPolicy.options);
-            options.controls.forEach((control, i) => {
-              control.setValue(optionExist[i]);
-            });
-          }
-        });
-
-        if (this.mode === 'view') {
-          //console.log(rolePoliciesArray)
-          rolePoliciesArray.disable();
-        }
+        this.setupPolicies(details);
       }
-      console.log(this.dynamicForm.value)
+  
+      console.log(this.dynamicForm.value);
     }
-
-
   }
+  
+  private buildFormControls(details: any): { [key: string]: FormControl } {
+    return this.formConfig.fields.reduce((controls, field) => {
+      controls[field.key] = new FormControl(
+        { value: details[field.key] || '', disabled: this.mode === 'view' },
+        this.getValidators(field) // Ensure that this returns a proper validator
+      );
+      return controls;
+    }, {} as { [key: string]: FormControl });
+  }
+  
+  private getValidators(field: any): ValidatorFn[] | null {
+    const validators: ValidatorFn[] = [];
+  
+    if (field.required) {
+      validators.push(Validators.required);
+    }
+  
+    if (field.type === 'email') {
+      validators.push(this.emailDomainValidator('@sscgi.com'));
+    }
+  
+    return validators.length > 0 ? validators : null; // Return validators if any exist
+  }
+  
+  private setupPolicies(details: any): void {
+    this.dynamicForm.addControl('Policies', this.fb.array(
+      this.formConfig.policies.map(policy => this.createPolicyGroup(policy))
+    ));
+  
+    const rolePoliciesArray = this.dynamicForm.get('Policies') as FormArray;
+    rolePoliciesArray.controls.forEach((policyControl: AbstractControl, index: number) => {
+      const policyGroup = policyControl as FormGroup;
+      const existingPolicy = (details.policies || [])[index];
+      const options = policyGroup.get('options') as FormArray;
+  
+      if (existingPolicy) {
+        this.patchPolicyValues(policyGroup, existingPolicy, options);
+      }
+    });
+  
+    if (this.mode === 'view') {
+      rolePoliciesArray.disable();
+    }
+  }
+  
+  private patchPolicyValues(policyGroup: FormGroup, existingPolicy: any, options: FormArray): void {
+    policyGroup.patchValue({
+      isChecked: existingPolicy.isChecked,
+      options: Array.isArray(existingPolicy.options) ? existingPolicy.options : []
+    });
+  
+    const optionExist = Object.values(existingPolicy.options);
+    options.controls.forEach((control, i) => {
+      control.setValue(optionExist[i]);
+    });
+  }
+  
 
 
   initializeFilteredOptions() {
@@ -137,6 +167,7 @@ export class CRUDmodalComponent implements OnInit {
       this.formConfig.fields.forEach(field => {
         if (field.type === 'select') {
           field.filteredOptions = this.filterOptions(value, field.selectOptions || []);
+          console.log(field.filteredOptions)
         }
       });
     });

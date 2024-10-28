@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Tab, SubTab } from "../../shared/interfaces/tabs-model"
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EmployeeService } from './user-management/user-management-service/Employee/employee.service';
 import { RoleService } from './user-management/user-management-service/Role/role.service';
 
 @Component({
@@ -29,11 +28,11 @@ export class TabsComponent implements OnInit {
   data: any = {};
   roleData: any = {};
   rolePolicy: any[] = [];
-
+  fullName = localStorage.getItem("UserName");
   collapsableTabs: Tab[] = [];
   bottomTabs: SubTab[] = [];
 
-  constructor(private router: Router, private _employeeService: EmployeeService, private _roleService: RoleService) {
+  constructor(private router: Router, private _roleService: RoleService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showSidebar = !this.router.url.includes('login');
@@ -44,7 +43,8 @@ export class TabsComponent implements OnInit {
   ngOnInit(): void {
     this.personId = localStorage.getItem('personId');
     const roleId = localStorage.getItem('roleId');
-    this.getPeopleById(this.personId);
+    // this.getPeopleById(this.personId);
+
     this.getRoleById(roleId);
   }
 
@@ -55,9 +55,9 @@ export class TabsComponent implements OnInit {
   }
 
   setActiveTabByUrl(url: string): void {
-    console.log(url)
+    // console.log(url)
     const allTabs = [...this.collapsableTabs.flatMap(tab => tab.subtabs), ...this.bottomTabs];
-    console.log(allTabs)
+    // console.log(allTabs)
     const foundTab = allTabs.find(tab => url.includes(tab.link));
     if (foundTab) {
       this.activeTab = foundTab;
@@ -96,13 +96,6 @@ export class TabsComponent implements OnInit {
     }else {
     }
   }
-  
-
-  getPeopleById(personId: any) {
-    this._employeeService.getPeopleById(personId).subscribe(data => {
-      this.data = data[0];
-    });
-  }
 
   getRoleById(roleId: any) {
     this._roleService.getRoleById(roleId).subscribe(data => {
@@ -124,7 +117,6 @@ export class TabsComponent implements OnInit {
     // Define a mapping of rolePolicyNames to subtabs
     const policyToTabMapping: { [key: string]: SubTab } = {
       'Role': { name: 'Role', link: '/tabs/user-management/role-management', icon: 'assets/Images/Hierarchy.png', active: false },
-      'Employee': { name: 'Employee', link: '/tabs/user-management/employee-management', icon: 'assets/Images/Badge.png', active: false },
       'User Account': { name: 'User Account', link: '/tabs/user-management/user-account', icon: 'assets/Images/Male User.png', active: false },
       'Section Formatting': { name: 'Section Formatting', link: '/tabs/system-setup/section-formatting', icon: 'assets/Images/Web Design.png', active: false },
       'Email Template': { name: 'Email Template', link: '/tabs/system-setup/email-template', icon: 'assets/Images/Document Header.png', active: false },
@@ -134,7 +126,7 @@ export class TabsComponent implements OnInit {
 
     // Create the main tabs with subtabs based on role policies
     const userManagementTabs = this.rolePolicy
-      .filter(policy => ['Role', 'Employee', 'User Account'].includes(policy.rolePolicyName) && policy.isChecked)
+      .filter(policy => ['Role', 'User Account'].includes(policy.rolePolicyName) && policy.isChecked)
       .map(policy => policyToTabMapping[policy.rolePolicyName]);
 
     const systemSetupTabs = this.rolePolicy

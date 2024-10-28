@@ -9,7 +9,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { UserAccountService } from '../user-management-service/User-Account/user-account.service';
 import { RoleService } from '../user-management-service/Role/role.service';
-import { EmployeeService } from '../user-management-service/Employee/employee.service';
 import { RestoreTableComponent } from '../../../../shared/components/restore-table/restore-table.component';
 
 @Component({
@@ -47,7 +46,7 @@ export class UserAccountManagementComponent {
   ];
 
 
-  constructor(private _roleService: RoleService, private _employeeService: EmployeeService,private _userAccService: UserAccountService, private changeDetectorRef: ChangeDetectorRef, private snackBar: MatSnackBar) { }
+  constructor(private _roleService: RoleService,private _userAccService: UserAccountService, private changeDetectorRef: ChangeDetectorRef, private snackBar: MatSnackBar) { }
 
   ngAfterViewInit(): void {
     this.getOptionList();
@@ -67,7 +66,6 @@ export class UserAccountManagementComponent {
     } else if (mode ==='restore'){
       this.restoreUserAccount(data.userId)
     }
-    this.loading = false;
   }
 
   deleteUserAccount(userId){
@@ -111,22 +109,24 @@ export class UserAccountManagementComponent {
   }
 
   createUserAccount(data:any){
+    console.log(data)
     const form = {
-      personId: data[0].person.value,
-      roleId: data[0].roleId.value,
-      expireDate: data[0].expiryDate,
+      firstName: data.firstName,
+      middleName: data.middleName,
+      lastName: data.lastName,
+      email:data.email,
+      roleId: data.roleId.value,
+      expireDate: data.expireDate,
       createdByUserId: this.UserId,
     };
 
     this._userAccService.createUserAccount(form).subscribe({
       next: (data) => {
-
-        console.log(this.loading)
+        console.log(form)
         if (data && data.message) {
           this.getUserAccountList();
           this.showSnackBar(data.message);
-          this.loading = false;
-          ;
+          // this.loading = false;
         } else if (data == null) {
           this.showSnackBar('Error creating user. Please try again.');
         }
@@ -165,26 +165,23 @@ export class UserAccountManagementComponent {
         label: role.roleName     // Display name for the select option
       }));
 
-      // Fetch people only after roles are fetched
-      this._employeeService.getPeople().subscribe((person) => {
-        this.personSelect = person;
-        selectPersonOptions = this.personSelect.map(person => ({
-          value: person.personId,
-          label: person.firstName + ' ' + person.middleName + ' ' + person.lastName,
-        }));
+
 
         // Now both selectRoleOptions and selectPersonOptions are populated
         this.createModalData = {
           title: 'User Account Create',
           fields: [
-            { key: 'personId', label: 'Select Employee', type: 'select', selectOptions: selectPersonOptions, required: true, fullWidth: true },
-            { key: 'roleId', label: 'Select Role', type: 'select', selectOptions: selectRoleOptions, required: true },
+            { key: 'roleId', label: 'Select Role', type: 'select', selectOptions: selectRoleOptions, required: true, fullWidth:true },
+            { key: 'firstName', label: 'First Name', type: 'text', required:true },
+            { key: 'middleName', label: 'Middle Name (Optional)', type: 'text' },
+            { key: 'lastName', label: 'Last Name', type: 'text', required:true },
+            { key: 'email', label: 'Email', type: 'text', required:true },
             { key: 'expireDate', label: 'Expiry Date', type: 'date', required: true },
           ],
         };
         this.changeDetectorRef.detectChanges();
       });
-    });
+    ;
   }
 
   showSnackBar(message: string): void {

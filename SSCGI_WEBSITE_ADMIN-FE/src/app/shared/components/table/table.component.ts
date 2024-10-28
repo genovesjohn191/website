@@ -13,7 +13,6 @@ import { Router, RouterModule } from '@angular/router';
 import { CRUDmodalComponent } from '../crudmodal/crudmodal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EmployeeService } from '../../../features/tabs/user-management/user-management-service/Employee/employee.service';
 
 @Component({
   selector: 'app-table',
@@ -61,7 +60,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   loading: boolean = true;
   callBack: boolean = false;
   @Output() isRestoreChange = new EventEmitter<boolean>();
-  constructor(private matDialog: MatDialog, private router: Router, private _employeeService: EmployeeService) { }
+  constructor(private matDialog: MatDialog, private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && !changes['data'].firstChange) {
@@ -120,7 +119,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   openCrudModal(data: any, mode: string): void {
-    const dialogWidth = mode === 'delete' ? '30vw' : '70vw';
+    const dialogWidth = mode === 'delete' ? '30vw' : '60vw';
     const dialogRef = this.matDialog.open(CRUDmodalComponent, {
       width: dialogWidth,
       data: {
@@ -131,9 +130,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
 
     });
-    let personId: any;
-    personId = data?.personId
-    this._employeeService.personId = personId;
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == null) {

@@ -13,7 +13,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EmployeeService } from '../../../features/tabs/user-management/user-management-service/Employee/employee.service';
 
 @Component({
   selector: 'app-restore-table',
@@ -55,7 +54,7 @@ export class RestoreTableComponent {
   loading: boolean = true;
   callBack: boolean = false;
   @Output() isRestoreChange = new EventEmitter<boolean>();
-  constructor(private matDialog: MatDialog, private router: Router, private _employeeService: EmployeeService) { }
+  constructor(private matDialog: MatDialog, private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && !changes['data'].firstChange) {
@@ -120,9 +119,6 @@ export class RestoreTableComponent {
       }
 
     });
-    let personId: any;
-    personId = data?.personId
-    this._employeeService.personId = personId;
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == null) {

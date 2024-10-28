@@ -38,7 +38,7 @@
               <ngx-mat-select-search [formControl]="searchControl" placeholderLabel="Search options"
                 noEntriesFoundLabel="No results found"></ngx-mat-select-search>
             </mat-option>
-            <mat-option *ngFor="let option of field.filteredOptions" [value]="option">
+            <mat-option *ngFor="let option of field.filteredOptions" [value]="option.value" >
               {{ option.label }}
             </mat-option>
           </mat-select>

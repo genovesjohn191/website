@@ -4,7 +4,6 @@ import { SectionFormattingComponent } from './features/tabs/system-setup/section
 import { EmailTemplateComponent } from './features/tabs/system-setup/email-template/email-template.component';
 import { SectionCreateComponent } from './features/tabs/system-setup/section-formatting/section-create/section-create.component';
 import { RoleManagementComponent } from './features/tabs/user-management/role-management/role-management.component';
-import { EmployeeManagementComponent } from './features/tabs/user-management/employee-management/employee-management.component';
 import { UserAccountManagementComponent } from './features/tabs/user-management/user-account-management/user-account-management.component';
 import { SetPasswordPageComponent } from './features/auth/set-password-page/set-password-page.component';
 import { TabsComponent } from './features/tabs/tabs.component';
@@ -30,9 +29,6 @@ export const routes: Routes = [
 
             // Role management routes
             { path: 'user-management/role-management', component: RoleManagementComponent },
-
-            // Employee management routes
-            { path: 'user-management/employee-management', component: EmployeeManagementComponent },
 
             // User account management routes
             { path: 'user-management/user-account', component: UserAccountManagementComponent },
