@@ -5,26 +5,31 @@
             <div class="grid-item">
                 <div class="item-header">
                     <p class="item-title">Total Pages</p>
-                    <p class="item-count">30</p>
+                    <p class="item-count">{{pagesLength}}</p>
                 </div>
                 <ag-charts [options]="options"></ag-charts>
             </div>
             <div class="grid-item">
                 <div class="item-header">
-                    <p class="item-title">Active Pages</p>
-                    <div class="item-count">{{activePages.length}}</div>
+                  <p class="item-title">Active Pages</p>
+                  <div class="item-count">{{ activePages.length }}</div>
                 </div>
                 <div class="item-data pages">
-                    <div class="item-pages" *ngFor="let page of activePages">
-                        <p>Page Name: <b>{{ page.title }}</b></p>
-                        <p>Description: <b>{{page.description}}</b></p>
-                        <p>URL: <b>{{page.url}}</b></p>
-                    </div>
-                    <div class="item-pages more">
-                        <p><b>View More...</b></p>
-                    </div>
+                  <!-- Display up to 'displayLimit' pages, or all if 'showAllPages' is true -->
+                  <div class="item-pages" *ngFor="let page of activePages | slice:0:(showAllPages ? activePages.length : displayLimit)">
+                    <p>Page Name: <b>{{ page.name }}</b></p>
+                    <p>Page Order: <b>{{ page.pageOrder }}</b></p>
+                  </div>
+                  <!-- "View More" option when activePages length exceeds displayLimit -->
+                  <div *ngIf="activePages.length > displayLimit && !showAllPages" class="item-pages more" (click)="toggleViewMore()">
+                    <p><b>View More...</b></p>
+                  </div>
+                  <!-- "View Less" option when showing all pages -->
+                  <div *ngIf="activePages.length > displayLimit && showAllPages" class="item-pages more" (click)="toggleViewMore()">
+                    <p><b>View Less</b></p>
+                  </div>
                 </div>
-            </div>
+              </div>
         </div>
     </div>
 

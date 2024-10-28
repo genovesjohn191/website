@@ -5,6 +5,7 @@ import { AgChartOptions } from 'ag-charts-community';
 import { UserAccountService } from '../user-management/user-management-service/User-Account/user-account.service';
 import { DashboardUserAccount } from '../../../shared/interfaces/dashboard-model';
 import { forkJoin } from 'rxjs';
+import { PageBuilderService } from '../system-setup/page-builder.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,23 +20,20 @@ export class DashboardComponent {
   public rolesOptions: AgChartOptions;
   public applicationStatusOptions: AgChartOptions;
   public jobVacancyApplicationsOptions: AgChartOptions;
+  pagesLength:number;
 
   deletedUserAccounts: DashboardUserAccount[] = [];
   userAccounts: DashboardUserAccount[] = [];
   roleData = [];
   
   data = [
-    { asset: "Active Pages", number: 22 },
-    { asset: "Deleted Pages", number: 8 },
+    { asset: "Displayed Pages", number: 0 },
+    { asset: "Hidden Pages", number: 0 },
   ];
 
-  activePages = [
-    { title: "Homepage", description: "The main entry point of the website.", url: "/home" },
-    { title: "About Us", description: "Information about our company.", url: "/about" },
-    { title: "Services", description: "Details of the services we offer.", url: "/services" },
-    { title: "Contact", description: "How to get in touch with us.", url: "/contact" },
-    { title: "Contact", description: "How to get in touch with us.", url: "/contact" }
-  ];
+  activePages = [];
+  showAllPages = false;
+  displayLimit = 5;
 
   public applications = [
     { ApplicantName: "John Doe", Position: "Software Engineer", Status: "Pending", Date: "2024-10-01" },
@@ -66,9 +64,10 @@ export class DashboardComponent {
 
   userData = [];
 
-  constructor(private _userAccService: UserAccountService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private _userAccService: UserAccountService, private changeDetectorRef: ChangeDetectorRef , private service:PageBuilderService) {
     this.setupCharts();
     this.fetchUserAccounts();
+    this.getPages();
   }
 
   private setupCharts() {
@@ -135,6 +134,27 @@ export class DashboardComponent {
     });
   }
 
+  getPages() {
+    this.service.getPages().subscribe((pages: any[]) => {
+      // Calculate the totals
+      const displayedPages = pages.filter(page => page.isDisplay).length;
+      const hiddenPages = pages.filter(page => !page.isDisplay).length;
+      this.pagesLength = pages.length;
+      this.activePages = pages.filter(page => page.isDisplay);
+      // Update the chart data
+      this.data = [
+        { asset: "Displayed Pages", number: displayedPages },
+        { asset: "Hidden Pages", number: hiddenPages },
+      ];
+  
+      // Update chart options
+      this.options = this.createPieChartOptions(this.data, "asset", "number", ['#166534', '#dc3545'], ['#28a745', '#dc3545']);
+    });
+  }
+
+  toggleViewMore() {
+    this.showAllPages = !this.showAllPages;
+  }
   private updateRoleData() {
     const roleCountMap: { [roleName: string]: number } = {};
 
