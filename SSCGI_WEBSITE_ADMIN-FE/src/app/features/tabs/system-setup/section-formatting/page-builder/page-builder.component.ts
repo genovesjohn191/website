@@ -41,7 +41,7 @@ export class PageBuilderComponent implements OnInit {
       assetManager: {
         assets: [], // Initially empty, will be populated from the server
 
-        upload: 'http://172.16.5.50:88/Page/upload', // Upload endpoint
+        upload: this.service.pageBaseUrl + 'upload', // Upload endpoint
         uploadName: 'file', // The POST field name for file uploads
 
         headers: {
@@ -58,7 +58,7 @@ export class PageBuilderComponent implements OnInit {
 
           this.isLoading = true;
           // Use fetch to send the file to the server
-          fetch('http://172.16.5.50:88/upload', {
+          fetch( this.service.pageBaseUrl + 'upload', {
             method: 'POST',
             headers: {
               'accept': '*/*',

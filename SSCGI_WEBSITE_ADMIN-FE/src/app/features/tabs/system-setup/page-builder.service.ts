@@ -8,7 +8,7 @@ import { catchError, map, Observable, retry, throwError } from 'rxjs';
 })
 export class PageBuilderService {
 
-  private pageBaseUrl = environment.apiUrl + "Page/"
+  public pageBaseUrl = environment.apiUrl + "Page/"
   constructor(private http: HttpClient) { }
 
 
