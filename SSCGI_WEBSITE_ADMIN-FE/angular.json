@@ -21,12 +21,13 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-                "src/favicon.ico",
-                "src/assets"
+              "src/assets",
+              "src/favicon.ico"
+                
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.css",
+              "src/styles.scss",
               "node_modules/grapesjs/dist/css/grapes.min.css"
             ],
             "scripts": [
@@ -85,7 +86,7 @@
                 "src/assets"
             ],
             "styles": [
-              "src/styles.css",
+              "src/styles.scss",
               "node_modules/grapesjs/dist/css/grapes.min.css"
             ],
             "scripts": [

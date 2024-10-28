@@ -9,7 +9,6 @@ import { catchError, map, Observable, retry, throwError } from 'rxjs';
 export class PageBuilderService {
 
   private pageBaseUrl = environment.apiUrl + "Page/"
-
   constructor(private http: HttpClient) { }
 
 
@@ -109,12 +108,22 @@ export class PageBuilderService {
     );
   }
 
+  getImages(): Observable<any> {
+    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+
+    return this.http.get(this.pageBaseUrl + "images", options).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError)
+    );
+  }
+
   updateDataPrivacyPage(currentPageId: string, updatedPage: any): Observable<any> {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
-  
+
     return this.http.put(`${this.pageBaseUrl}updateDataPrivacyPage/${currentPageId}`, updatedPage, options).pipe(
       map(() => {
-      
+
       }),
       retry(3), // Retry the request up to 3 times on failure
       catchError(error => {
@@ -123,8 +132,8 @@ export class PageBuilderService {
       })
     );
   }
-  
-  
+
+
   //function for handling errors
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

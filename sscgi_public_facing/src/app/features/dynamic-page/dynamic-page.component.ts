@@ -64,7 +64,9 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
 
   openCareerModal(): void {
     const dialogRef = this.dialog.open(DataPrivacyModalComponent, {
-      disableClose: true,   
+      disableClose: true,
+      width: 'auto', // Set width to auto
+      maxWidth: '200vw', // Optional: Set a maximum width to ensure it doesn't get too large
     });
 
     dialogRef.afterClosed().subscribe(result => {
