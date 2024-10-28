@@ -597,11 +597,12 @@ export class PageBuilderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        console.log(result,'asdasda')
         const newPage = {
           name: result.name,
           component: '',
           styles: '',
-          isDisplay: result.isDisplay.value
+          isDisplay: result.isDisplay
         };
 
         this.service.createPage(newPage).subscribe(data => {
@@ -662,7 +663,7 @@ export class PageBuilderComponent implements OnInit {
     // After modal dialog is closed
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const newStatus = result.newStatus.value;
+        const newStatus = result.newStatus;
 
         // Check if the new status is different from the current status
         if (newStatus !== currentPage.isDisplay) {
@@ -744,6 +745,7 @@ export class PageBuilderComponent implements OnInit {
   }
 
   private switchPagePrompt() {
+    console.log("switch")
     // Create a list of pages displaying their names and pageOrder
     const pageList = this.pages.map(page => ({
       label: `${page.pageOrder}: ${page.name}`,
@@ -774,7 +776,7 @@ export class PageBuilderComponent implements OnInit {
         const selectedPageOrder = result.selectedPageOrder;
 
         // Find the page index by its pageOrder
-        const selectedPageIndex = this.pages.findIndex(page => page.pageOrder === selectedPageOrder.value);
+        const selectedPageIndex = this.pages.findIndex(page => page.pageOrder === selectedPageOrder);
 
         if (selectedPageIndex !== -1) {
           this.switchPage(selectedPageIndex);
