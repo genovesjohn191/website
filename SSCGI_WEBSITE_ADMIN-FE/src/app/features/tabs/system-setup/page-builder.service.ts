@@ -118,11 +118,14 @@ export class PageBuilderService {
     );
   }
 
+ 
   updateDataPrivacyPage(currentPageId: string, updatedPage: any): Observable<any> {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
 
+
     return this.http.put(`${this.pageBaseUrl}updateDataPrivacyPage/${currentPageId}`, updatedPage, options).pipe(
       map(() => {
+
 
       }),
       retry(3), // Retry the request up to 3 times on failure
@@ -132,6 +135,8 @@ export class PageBuilderService {
       })
     );
   }
+
+
 
 
   //function for handling errors

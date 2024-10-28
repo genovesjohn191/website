@@ -58,7 +58,7 @@ export class PageBuilderComponent implements OnInit {
 
           this.isLoading = true;
           // Use fetch to send the file to the server
-          fetch( this.service.pageBaseUrl + 'upload', {
+          fetch(this.service.pageBaseUrl + 'upload', {
             method: 'POST',
             headers: {
               'accept': '*/*',
