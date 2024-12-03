@@ -1,0 +1,248 @@
+.container {
+  width: 90%; /* Adjust this width as needed */
+  max-width: 100%; /* Maximum width for the content */
+  margin: 0 auto; /* Center the container */
+  padding-top: 20px;
+}
+
+.header {
+  position: relative;
+  height: 400px; /* Adjust height as needed */
+  overflow: hidden;
+}
+
+.hero-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-content {
+  position: absolute; /* Position content above the image */
+  top: 0;
+  left: 20px;
+  height: 60%;
+  display: flex;
+  align-items: center; /* Vertically center the content */
+  justify-content: flex-start; /* Align content to the left */
+  padding: 20px; /* Add padding for spacing */
+  color: #fff; /* Ensure text is readable */
+}
+
+.hero-text {
+  max-width: 500px; /* Limit text width */
+}
+
+.hero-text h1 {
+  color: black;
+  font-size: 76px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 66px;
+}
+
+.job-title{
+  font-size: 30px;
+  font-weight: 500;
+}
+.cta-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: black !important;
+  background-color: white;
+  border: 2px solid black; /* Black border */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+}
+
+.cta-button:hover {
+  background-color: black; /* On hover: black background */
+  color: white !important; /* On hover: white text */
+}
+.nextBttn{
+  background-color: #166534;
+  color: white !important;
+  border-radius: 5px;
+}
+
+.backBttn{
+  background-color: white;
+  border: 2px solid #166534;
+  color: #166534 !important;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-transform: none; /* Optional: to remove uppercase */
+  font-weight: 500;
+}
+
+.form-container {
+  width: 40%;
+  text-align: center;
+  /* background: #fff; */
+  background: #fdfbff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-container1 {
+  width: 500px;
+  text-align: center;
+  /* background: #fff; */
+  background: #fdfbff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.date-range-wrapper {
+  display: flex;
+  gap: 20px; /* Space between fields */
+}
+
+.date-range-wrapper mat-form-field {
+  flex: 1; /* Allow both fields to take equal space */
+}
+
+.experience-container mat-form-field,
+.education-container mat-form-field {
+  width: 100%; /* Default field width */
+}
+
+.experience-container .date-range-wrapper,
+.education-container .date-range-wrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.form-buttons {
+  gap: 5px;
+  display: flex;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+h3,
+h4 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.file-input {
+  display: none;
+}
+.file-upload{
+  text-align: center;
+}
+
+.question-container {
+  text-align: center; /* Center the question text */
+  margin-bottom: 20px;
+}
+
+.question-container h3 {
+  text-align: left; /* Align question text to the left */
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-container mat-radio-group {
+  display: flex;
+  justify-content: flex-start; /* Align radio buttons to the left */
+  gap: 20px;
+}
+
+.checkbox-container mat-radio-button {
+  font-size: 16px;
+}
+
+.additional-input-container {
+  text-align: center; 
+  margin-top: 10px;
+  width: 100%;
+}
+
+.additional-input {
+  width: 100%; /* Full width for the input */
+  max-width: 400px; /* Limit the width of the input field */
+  margin: auto;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.mat-radio-group .mat-radio-button {
+  padding: 0 10px;
+}
+.preview-container {
+  padding: 20px;
+}
+
+.preview-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.full-width-stepper {
+  background-color: white;
+  width: 100%; /* Make the stepper take up the full width of the screen */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.spinner-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+::ng-deep .mat-horizontal-stepper-content:not(.mat-horizontal-stepper-content-inactive) {
+  display: flex !important;
+  justify-content: center !important;
+  visibility: inherit !important;
+}
+::ng-deep .mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}

@@ -13,6 +13,8 @@ import { PageBuilderComponent } from './features/tabs/system-setup/section-forma
 import { PageViewComponent } from './features/tabs/system-setup/section-formatting/page-builder/page-view/page-view.component';
 import { DataPrivacyEditorComponent } from './features/tabs/system-setup/data-privacy-editor/data-privacy-editor.component';
 import { DashboardComponent } from './features/tabs/dashboard/dashboard.component';
+import { CareerVacanciesComponent } from './features/tabs/transactions/career-vacancies/career-vacancies.component';
+import { ApplicantsComponent } from './features/tabs/transactions/applicants/applicants.component';
 export const routes: Routes = [
 
     {      
@@ -23,6 +25,8 @@ export const routes: Routes = [
             {path: 'dashboard', component:DashboardComponent},
             { path: 'system-setup/section-formatting', component: SectionFormattingComponent },
             { path: 'system-setup/section-formatting/create', component: SectionCreateComponent },
+            { path: 'transactions/career-vacancies', component: CareerVacanciesComponent },
+            { path: 'transactions/applicants', component: ApplicantsComponent },
 
             // Email template routes
             { path: 'system-setup/email-template', component: EmailTemplateComponent },
@@ -37,6 +41,8 @@ export const routes: Routes = [
             { path: 'system-setup/section-formatting/data-privacy-editor',  component: DataPrivacyEditorComponent},
 
             // { path: 'system-setup/section-formatting/view-page',  component: PageViewComponent},
+
+          
         ]
     },
 

@@ -89,6 +89,8 @@ export class PageBuilderComponent implements OnInit {
             .catch(error => {
               console.error('Error uploading file:', error);
               this.isLoading = false;
+            }).finally(() => {
+              this.isLoading = false; // Ensure loading state is reset regardless of the outcome
             });
         }
       },

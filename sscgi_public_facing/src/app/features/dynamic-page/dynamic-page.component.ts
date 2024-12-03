@@ -25,7 +25,7 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
   safeBodies: SafeHtml[] = [];
   private buttonClickHandler: (event: Event) => void;
   private pagesLoaded: boolean = false; // Flag to track loading status
-
+  currentUrl:any;
   constructor(
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
@@ -48,9 +48,10 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
         }
 
         // Modal opening logic - only for /career URL
-        const currentUrl = event.urlAfterRedirects.toLowerCase(); // Make case-insensitive match
-        if (currentUrl === '/career' || currentUrl === '/contactus') {
+        this.currentUrl= event.urlAfterRedirects.toLowerCase(); // Make case-insensitive match
+        if ( this.currentUrl === '/career' ||  this.currentUrl === '/contactus') {
           this.openCareerModal(); // Open modal only if the URL is '/career'
+         
         }
       });
   }
@@ -70,7 +71,11 @@ export class DynamicPageComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Modal closed', result);
+      if ( this.currentUrl === '/career') {
+        
+        this.router.navigate(['/careers']);
+      }
+      
     });
   }
 

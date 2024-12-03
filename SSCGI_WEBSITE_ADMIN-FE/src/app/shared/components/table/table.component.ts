@@ -121,6 +121,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   openCrudModal(data: any, mode: string): void {
     const dialogWidth = mode === 'delete' ? '30vw' : '60vw';
+    console.log(this.createModalData)
     const dialogRef = this.matDialog.open(CRUDmodalComponent, {
       width: dialogWidth,
       data: {

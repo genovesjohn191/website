@@ -268,6 +268,7 @@ export class DataPrivacyEditorComponent implements OnInit {
     const pageHtml = this.editor.getHtml();
     const pageCss = this.editor.getCss();
     const currentPage = this.pages[this.currentPageIndex];
+    console.log(currentPage)
 
     const dialogRef = this.dialog.open(CRUDmodalComponent, {
       width: '400px',

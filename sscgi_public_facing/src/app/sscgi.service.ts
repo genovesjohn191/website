@@ -10,8 +10,25 @@ export class SscgiService {
 
   private getLandingPageStylesUrl = environment.apiUrl + "LandingPageStyles/getLandingPageStyles";
   private pageBaseUrl =  environment.apiUrl + "Page/"
+  private careerBaseUrl =  environment.apiUrl + "Career/"
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    // 'Authorization': `Bearer ${this.authService.getToken()}`
+  });
+
+  public personalInfo:any;
   constructor(private http: HttpClient) { }
 
+
+  apply(form: any): Observable<any> {
+    let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+
+    return this.http.post(this.careerBaseUrl + "applicant/save", form, options).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError.bind(this))
+    );
+  }
 
 
   getPages(): Observable<any> {
@@ -43,6 +60,25 @@ export class SscgiService {
       catchError(this.handleError)
     );
   }
+
+  getCareer(): Observable<any> {
+    const url = this.careerBaseUrl +"getCareerList"
+    return this.http.get(url, { headers: this.headers }).pipe(
+      map(data => data),
+      retry(3),
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+
+  getCareerById(careerId:any): Observable<any> {
+    const url = this.careerBaseUrl + "getCareerById"+ "?careerId=" + careerId
+    return this.http.get(url, { headers: this.headers,  }).pipe(
+      map(data => data),
+      catchError(this.handleError.bind(this))
+    );
+  }
+
 
 
 

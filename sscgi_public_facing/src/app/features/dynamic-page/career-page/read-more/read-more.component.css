@@ -1,0 +1,108 @@
+.job-details-container {
+    .header {
+        position: relative; /* Ensure that the header content stays above the image */
+        width: 100%;
+        height: 200px; /* You can adjust the height to suit your needs */
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Aligns the content to the left */
+        color: white;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .header-image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .background-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 150%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .angular-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, 
+            rgba(11, 87, 34, 0.9) 0%, 
+            rgba(11, 87, 34, 0.9) 60%, 
+            rgba(11, 87, 34, 0) 60.1%, 
+            rgba(11, 87, 34, 0) 100%);
+        z-index: 1;
+    }
+
+    .header-text {
+        position: absolute; /* Ensure that text is placed above the image */
+        z-index: 2; /* Ensures text appears above the overlay and image */
+        color: white;
+        padding: 20px;
+        text-align: left; /* Aligns the text to the left */
+        left: 20px; /* Add a margin from the left side */
+        top: 20px; /* Adjust top to place the text */
+        
+        h1 {
+            font-size: 40px;
+            margin: 0;
+        }
+        p {
+            max-width: 50%;
+            margin: 5px 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    }
+}
+
+.job-section {
+    padding: 20px;
+
+    h2 {
+        color: #000000;
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style: disc;
+        padding-left: 20px;
+
+        li {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.footer-actions {
+    padding: 14px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Styling for Apply Now and Share buttons */
+.custom-button {
+    background-color: #166534 !important;
+    color: white !important;
+    border-radius: 4px;
+}
+
+.share {
+    color: #166534 !important;
+}

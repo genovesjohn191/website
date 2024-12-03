@@ -1,3 +1,8 @@
+
+
+<div class="spinner-overlay" *ngIf="isLoading">
+  <div class="spinner"></div>
+</div>
 <div mat-dialog-title class="modal-header">
   <img [src]="icon" [class]="{'icon': mode !== 'create'}">
   <h1 class="form-header">{{ mode }} {{ module }}</h1>
@@ -9,44 +14,58 @@
     <h1 class="form-header margin-bot" *ngIf="module === 'role'">Role Information</h1>
     <div class="fields-cont">
       <mat-form-field *ngFor="let field of formConfig.fields"
-        [appearance]="(mode === 'create' || mode === 'edit') ? 'outline' : 'fill'" class="fields"
-        [ngClass]="{'single-line-textarea': field.fullWidth, 'date': field.type === 'date'}"
-        (click)="field.type === 'date' && picker.open()">
-        <mat-label>{{ field.label }}</mat-label>
-        <ng-container [ngSwitch]="field.type">
-
+      [appearance]="(mode === 'create' || mode === 'edit') ? 'outline' : 'fill'" 
+      class="fields"
+      [ngClass]="{'single-line-textarea': field.fullWidth, 'date': field.type === 'date'}"
+      (click)="handleFieldClick(field, picker)">
+  
+      <mat-label>{{ field.label }}</mat-label>
+      <ng-container [ngSwitch]="field.type">
           <input *ngSwitchCase="'text'" matInput [formControlName]="field.key" [required]="field.required!">
-
-          <input *ngSwitchCase="'email'" matInput [type]="field.type" [formControlName]="field.key"
-            [required]="field.required!">
-
-          <input *ngSwitchCase="'number'" matInput [type]="field.type" [formControlName]="field.key"
-            [required]="field.required!">
-
-          <textarea class="textarea" *ngSwitchCase="'textarea'" matInput [formControlName]="field.key"
-            [type]="field.type"></textarea>
-
-          <input *ngSwitchCase="'date'" matInput [matDatepicker]="picker" [formControlName]="field.key"
-            [required]="field.required!">
-
-          <mat-datepicker-toggle *ngSwitchCase="'date'" matIconSuffix [for]="picker">
-          </mat-datepicker-toggle>
+          <input *ngSwitchCase="'email'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+          <input *ngSwitchCase="'number'" matInput [type]="field.type" [formControlName]="field.key" [required]="field.required!">
+          <textarea class="textarea" *ngSwitchCase="'textarea'" matInput [formControlName]="field.key" [type]="field.type"></textarea>
+          <mat-hint *ngIf="field.type === 'textarea'">Use a period (.) to create a new bullet or line.</mat-hint>
+          <input *ngSwitchCase="'date'" matInput [matDatepicker]="picker" [formControlName]="field.key" [required]="field.required!">
+          <mat-datepicker-toggle *ngSwitchCase="'date'" matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-
+  
           <mat-select *ngSwitchCase="'select'" [formControlName]="field.key" [required]="field.required!">
-            <mat-option>
-              <ngx-mat-select-search [formControl]="searchControl" placeholderLabel="Search options"
-                noEntriesFoundLabel="No results found"></ngx-mat-select-search>
-            </mat-option>
-            <mat-option *ngFor="let option of field.filteredOptions" [value]="option.value" >
-              {{ option.label }}
-            </mat-option>
+              <mat-option>
+                  <ngx-mat-select-search [formControl]="searchControl" placeholderLabel="Search options"
+                      noEntriesFoundLabel="No results found"></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let option of field.filteredOptions" [value]="option.value">
+                  {{ option.label }}
+              </mat-option>
           </mat-select>
-
-        </ng-container>
-      </mat-form-field>
+          <div *ngSwitchCase="'file'">
+            <div class="fileUploadContainer" 
+                 [ngStyle]="{'margin-top' : dynamicForm.get('ImageURL')!.value ? '5px' :  '20px'}">
+                <ng-container *ngIf="dynamicForm.get('ImageURL')!.value">
+                    <img [src]="dynamicForm.get('ImageURL')!.value" />
+                    <button class="deleteButton" mat-icon-button 
+                            (click)="fileInput.value = ''; dynamicForm.get('ImageURL')?.setValue(null);">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </ng-container>
+                <div *ngIf="!dynamicForm.get('ImageURL')!.value" 
+                     fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+                    <mat-icon style="opacity: 60%;">file_upload</mat-icon>
+                    <button mat-raised-button color="primary" style="width:100%; opacity: 80%;" 
+                            (click)="fileInput.click()">Browse</button> <!-- Trigger file input on button click -->
+                    <small style="margin: 20px">Drag and drop here</small>
+                </div>
+                <input #fileInput class="fileInput" type="file" accept="image/*"
+                       (change)="setFileData($event)" hidden  />
+            </div>
+            <input matInput  readonly  [formControlName]="field.key" [hidden]="true" style="display: none;" />
+        </div>
+      </ng-container>
+  </mat-form-field>
+  
     </div>
-
+    
     <!-- Role Policy checkbox-->
     <div *ngIf="formConfig.policies" class="fields-cont margin-bot">
       <h1 class="form-header">Role Policy Information</h1>

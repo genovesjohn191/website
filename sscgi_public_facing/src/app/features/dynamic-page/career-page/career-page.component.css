@@ -1,0 +1,98 @@
+/* Container to center the entire search and job card section */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Style for the search container to add some spacing and center items */
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+/* Full-width style for input and select fields */
+.search-container mat-form-field {
+    width: 100%;
+}
+
+/* Grid layout for job cards with responsive spacing */
+.jobs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Style for each job card */
+mat-card {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid #000000;
+    box-shadow: inset 0px 3px 3px 1px rgb(44 101 52);
+    transition: transform 0.2s ease;
+    border-radius: 8px;
+}
+
+/* Hover effect for cards */
+mat-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Centering card content */
+mat-card-header, mat-card-content, mat-card-actions {
+    text-align: center;
+}
+
+/* Circular frame for job image */
+.image-container {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.job-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Title styling */
+mat-card-title {
+    color: #166534; /* Title color */
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+
+/* Read More button styling */
+mat-card-actions button {
+    color: #16A34A; /* Read More button color */
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Optional additional styling for hover effect on Read More button */
+mat-card-actions button:hover {
+    background-color: rgba(22, 101, 52, 0.1); /* Subtle background on hover */
+}

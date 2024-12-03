@@ -1,0 +1,419 @@
+<div *ngIf="loading" class="spinner-container">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+<div class="header">
+  <div class="hero-image-container">
+    <img src="assets/discover_career.png" alt="Career Image" class="hero-image" />
+  </div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1>DISCOVER YOUR CAREER</h1>
+      <button mat-button color="primary" class="cta-button">See Opportunities</button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <p class="job-title">Apply for a <span style="color: #166534;font-weight: 900;">{{jobTitle}}</span> Position</p>
+
+  <mat-horizontal-stepper #stepper linear class="full-width-stepper">
+    <!-- My Information Step -->
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>My Information</ng-template>
+      <form [formGroup]="firstFormGroup" class="form-container">
+        <h3>Personal Information</h3>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" required />
+          <mat-error>First Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Middle Name</mat-label>
+          <input matInput formControlName="middleName" />
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" required />
+          <mat-error>Last Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Current Address</mat-label>
+          <input matInput formControlName="currentAddress" required />
+          <mat-error>Current Address is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Permanent Address</mat-label>
+          <input matInput formControlName="permanentAddress" required />
+          <mat-error>Permanent Address is required</mat-error>
+        </mat-form-field>
+
+        <h3>Contact Details</h3>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput formControlName="emailAddress" required />
+          <mat-error>Email is required</mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber" required />
+          <mat-error>Phone Number is required</mat-error>
+        </mat-form-field>
+
+        <div class="form-buttons">
+          <button mat-button matStepperNext class="nextBttn" class="nextBttn" (click)="personalInfo()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Work Experience Step -->
+    <mat-step [stepControl]="experienceEducationForm">
+      <ng-template matStepLabel>My Experience</ng-template>
+      <form [formGroup]="experienceEducationForm" class="form-container">
+        <h3>Work Experience</h3>
+        <div formArrayName="experiences">
+          <div *ngFor="let exp of experiences.controls; let i = index" [formGroupName]="i" class="experience-container">
+            <h4>Experience {{ i + 1 }}</h4>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Job Title</mat-label>
+              <input matInput formControlName="jobTitle" required />
+              <mat-error>Job Title is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Company</mat-label>
+              <input matInput formControlName="company" required />
+              <mat-error>Company is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input matInput formControlName="location" required />
+              <mat-error>Location is required</mat-error>
+            </mat-form-field>
+            <div class="date-range-wrapper">
+              <mat-form-field class="form-field" appearance="outline">
+                <input matInput [matDatepicker]="picker" formControlName="fromDate">
+                <mat-label>From Date</mat-label>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error>From Date is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="form-field" appearance="outline" *ngIf="!exp.get('currentlyWorking').value">
+                <input matInput [matDatepicker]="pickers" formControlName="toDate">
+                <mat-label>To Date</mat-label>
+                <mat-datepicker-toggle matIconSuffix [for]="pickers"></mat-datepicker-toggle>
+                <mat-datepicker #pickers></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <mat-checkbox formControlName="currentlyWorking" class="checkbox">
+              Currently Working Here
+            </mat-checkbox>
+
+            <input type="file" class="file-input" (change)="onFileChange($event)" #fileUpload>
+
+            <h3>Upload Resume</h3>
+            <input type="file" (change)="onFileChange($event)" />
+            <button mat-button color="warn" (click)="removeExperience(i)">Remove</button>
+
+          </div>
+
+        </div>
+
+        <button mat-button color="primary" (click)="addExperience()">Add Experience</button>
+
+        <div class="form-buttons">
+          <button mat-button matStepperPrevious class="backBttn">Back</button>
+          <button mat-button matStepperNext class="nextBttn" (click)="workExpInfo()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Education Step -->
+    <mat-step>
+      <ng-template matStepLabel>Education</ng-template>
+      <form [formGroup]="experienceEducationForm" class="form-container">
+        <h3>Education</h3>
+        <div formArrayName="education">
+          <div *ngFor="let edu of education.controls; let i = index" [formGroupName]="i" class="education-container">
+            <h4>Education {{ i + 1 }}</h4>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>School</mat-label>
+              <input matInput formControlName="school" required />
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Degree</mat-label>
+              <input matInput formControlName="degree" required />
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input matInput formControlName="location" required />
+            </mat-form-field>
+            <div class="date-range-wrapper">
+
+              <mat-form-field class="form-field" appearance="outline">
+                <input matInput [matDatepicker]="startDatePicker" formControlName="fromDate">
+                <mat-label>From Date</mat-label>
+                <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field class="form-field" appearance="outline">
+                <input matInput [matDatepicker]="endDatePicker" formControlName="toDate">
+                <mat-label>To Date</mat-label>
+                <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+              </mat-form-field>
+
+            </div>
+            <button mat-button color="warn" (click)="removeEducation(i)">Remove</button>
+          </div>
+        </div>
+        <button mat-button color="primary" (click)="addEducation()">Add Education</button>
+        <div class="form-buttons">
+          <button mat-button matStepperPrevious class="backBttn">Back</button>
+          <button mat-button matStepperNext class="nextBttn" (click)="educationInfo()">Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+    <!-- Additional Information Step -->
+    <mat-step label="Additional Information">
+      <ng-template matStepLabel>Additional Information</ng-template>
+      <form [formGroup]="additionalInfoForm">
+        <h3>Additional Information</h3>
+        <div formArrayName="questions">
+          <!-- Loop through questions in FormArray -->
+          <div *ngFor="let questionGroup of questions.controls; let i = index" [formGroupName]="i"
+            class="question-container">
+            <h4>{{ i + 1 }}. {{ questionGroup.get('question').value }}</h4>
+
+            <!-- Radio Buttons for Yes/No -->
+            <mat-radio-group formControlName="answer">
+              <mat-radio-button value="yes">Yes</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+
+            <!-- Display 'Specify' field if 'Yes' is selected -->
+            <div *ngIf="questionGroup.get('answer').value === 'yes'" class="additional-input-container">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Please specify</mat-label>
+                <textarea matInput formControlName="specify"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="form-buttons">
+          <button mat-button matStepperPrevious class="backBttn">Back</button>
+          <button mat-button matStepperNext class="nextBttn" (click)="additionalInfo()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <!-- Character Reference -->
+
+    <mat-step label="Character Reference">
+      <ng-template matStepLabel>Character Reference</ng-template>
+      <form [formGroup]="experienceEducationForm" class="form-container">
+        <h3>Character Reference</h3>
+        <div formArrayName="characterReferences">
+          <div *ngFor="let reference of characterReferences.controls; let i = index" class="education-container">
+            <div [formGroupName]="i">
+              <mat-form-field appearance="outline">
+                <mat-label>Reference Name</mat-label>
+                <input matInput formControlName="name" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Company</mat-label>
+                <input matInput formControlName="company" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="number" />
+              </mat-form-field>
+
+              <button mat-button type="button" (click)="removeReference(i)">Remove</button>
+            </div>
+          </div>
+          <button mat-button type="button" (click)="addReference()">Add More References</button>
+        </div>
+        <div class="form-buttons">
+          <button mat-button matStepperPrevious class="backBttn">Back</button>
+          <button mat-button matStepperNext class="nextBttn" (click)="referenceInfo()">Next</button>
+        </div>
+      </form>
+
+    </mat-step>
+
+
+    <!-- Preview Step -->
+    <mat-step>
+      <ng-template matStepLabel>Preview Your Details</ng-template>
+      <div class="preview-container">
+        <form class="form-container1" #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+          <h3>My Information</h3>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.firstName" name="firstName" disabled />
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Middle Name</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.middleName" name="middleName" disabled />
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.lastName" name="lastName" disabled />
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Current Address</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.currentAddress" name="currentAddress" disabled />
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Permanent Address</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.permanentAddress" name="permanentAddress" disabled />
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.emailAddress" name="emailAddress" disabled />
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput [(ngModel)]="personalInfoData.phoneNumber" name="phoneNumber" disabled />
+          </mat-form-field>
+          <button mat-button color="primary" (click)="goToStep(stepper, 0)">Edit My Information</button>
+
+          <h3>Work Experience</h3>
+          <div *ngFor="let workExp of workExpInfoData; let i = index" class="work-experience-container">
+            <h4>Experience {{ i + 1 }}</h4>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Company</mat-label>
+              <input matInput [(ngModel)]="workExp.company" name="company{{i}}" disabled />
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Job Title</mat-label>
+              <input matInput [(ngModel)]="workExp.jobTitle" name="jobTitle{{i}}" disabled />
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input matInput [(ngModel)]="workExp.location" name="location{{i}}" disabled />
+            </mat-form-field>
+
+            <div class="date-range-wrapper">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>From Date</mat-label>
+                <input matInput [value]="workExp.fromDate | date:'MMM d yyyy'" name="fromDate{{i}}" disabled />
+              </mat-form-field>
+
+              <!-- To Date Display -->
+
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>To Date</mat-label>
+                <input matInput [value]="workExp.toDate | date:'MMM d yyyy'" name="toDate{{i}}" disabled />
+              </mat-form-field>
+            </div>
+            <mat-checkbox [(ngModel)]="workExp.currentlyWorking" name="currentlyWorking{{i}}" disabled>
+              Currently Working
+            </mat-checkbox>
+
+
+          </div>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Resume</mat-label>
+            <input matInput [(ngModel)]="workExpInfoData.resume" name="resume" disabled />
+          </mat-form-field>
+          <button mat-button color="primary" (click)="goToStep(stepper, 1)">Edit My Experience</button>
+
+
+          <h3>Education Information</h3>
+          <div *ngFor="let edu of educationInfoData; let i = index" class="education-container">
+            <h4>Education {{ i + 1 }}</h4>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>School</mat-label>
+              <input matInput [(ngModel)]="edu.school" name="school{{i}}" disabled />
+            </mat-form-field>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Degree</mat-label>
+              <input matInput [(ngModel)]="edu.degree" name="degree{{i}}" disabled />
+            </mat-form-field>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input matInput [(ngModel)]="edu.location" name="location{{i}}" disabled />
+            </mat-form-field>
+
+            <div class="date-range-wrapper">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>From Date</mat-label>
+                <input matInput [value]="edu.fromDate | date:'MMM d yyyy'" name="fromDate{{i}}" disabled />
+              </mat-form-field>
+
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>To Date</mat-label>
+                <input matInput [value]="edu.toDate | date:'MMM d yyyy' " name="toDate{{i}}" disabled />
+              </mat-form-field>
+            </div>
+          </div>
+          <button mat-button color="primary" (click)="goToStep(stepper, 2)">Edit My Education</button>
+
+          <h3>Additional Information</h3>
+          <div *ngFor="let info of additionalInfoData; let i = index" class="additional-info-container">
+            <h4>Question {{ i + 1 }}</h4>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Question</mat-label>
+              <input matInput [(ngModel)]="info.question" name="question{{i}}" disabled />
+            </mat-form-field>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Answer</mat-label>
+              <input matInput [(ngModel)]="info.answer" name="answer{{i}}" disabled />
+            </mat-form-field>
+
+            <!-- Specify field, shown only if answer is 'yes' -->
+            <div *ngIf="info.answer === 'yes'">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Specify</mat-label>
+                <input matInput [(ngModel)]="info.specify" name="specify{{i}}" disabled />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <button mat-button color="primary" (click)="goToStep(stepper, 3)">Edit My Additional Info</button>
+
+          <h3>Character References</h3>
+          <div *ngFor="let ref of referenceInfoData; let i = index" class="education-container">
+            <h4>Character Reference {{ i + 1 }}</h4>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>School</mat-label>
+              <input matInput [(ngModel)]="ref.company" name="company{{i}}" disabled />
+            </mat-form-field>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Degree</mat-label>
+              <input matInput [(ngModel)]="ref.name" name="name{{i}}" disabled />
+            </mat-form-field>
+
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Location</mat-label>
+              <input matInput [(ngModel)]="ref.number" name="locanumbertion{{i}}" disabled />
+            </mat-form-field>
+
+          </div>
+          <button mat-button color="primary" (click)="goToStep(stepper, 4)">Edit My Character Reference</button>
+
+          <div class="form-buttons">
+            <button mat-button matStepperPrevious class="backBttn">Back</button>
+            <button mat-button color="primary" class="nextBttn" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

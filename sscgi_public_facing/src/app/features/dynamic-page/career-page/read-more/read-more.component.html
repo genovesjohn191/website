@@ -1,0 +1,44 @@
+<div>
+    <div class="job-details-container">
+        <!-- Header Section with Image -->
+        <div class="header">
+            <div class="header-image-container">
+                <img [src]="data?.imageURL" alt="Job Header Image" class="background-image" />
+                <div class="angular-overlay"></div>
+            </div>
+            <div class="header-text">
+                <h1>{{data?.jobTitle || 'jobTitle'}}</h1>
+                <p>{{data?.shortDescription || 'shortDescription'}}</p>
+            </div>
+        </div>
+
+        <!-- Job Information Sections -->
+        <section class="job-section">
+            <h2>What Are We Looking For?</h2>
+            <p>{{data?.whatAreWeLookingFor || 'whatAreWeLookingFor'}}</p>
+        </section>
+        <section class="job-section">
+            <h2>Job Description</h2>
+            <ul>
+                <li *ngFor="let item of (data?.fullJobDescription?.split('.') || [])">
+                    {{ item.trim() }}
+                </li>
+            </ul>
+        </section>
+
+        <section class="job-section">
+            <h2>Qualifications</h2>
+            <ul>
+                <li *ngFor="let item of (data?.qualification?.split('.') || [])">
+                    {{ item.trim() }}
+                </li>
+            </ul>
+        </section>
+
+        <!-- Footer with Buttons -->
+        <div class="footer-actions">
+            <button mat-raised-button class="custom-button" (click)="apply()">Apply Now</button>
+            <button mat-button class="share"><mat-icon>share</mat-icon> Share</button>
+        </div>
+    </div>
+</div>
