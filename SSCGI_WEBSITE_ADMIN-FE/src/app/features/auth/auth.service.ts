@@ -41,6 +41,7 @@ export class AuthService {
 
 
   login(form: any): Observable<any> {
+    console.log(this.loginUrl)
     let options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
 
     return this.http.post(this.loginUrl, form, options).pipe(
